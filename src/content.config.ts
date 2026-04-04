@@ -1,20 +1,96 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
 
-const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
-		}),
+/**
+ * Hero Section — Primary headline and introduction
+ */
+const hero = defineCollection({
+	loader: glob({ base: './src/content/hero', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		tagline: z.string().optional(),
+		description: z.string().optional(),
+		eyebrow: z.string().optional(),
+		proofSignals: z.array(z.object({
+			label: z.string(),
+			value: z.string().optional(),
+		})).optional(),
+		resumeUrl: z.string().optional(),
+	}),
 });
 
-export const collections = { blog };
+/**
+ * Experience Section — Role history with company and dates
+ */
+const experience = defineCollection({
+	loader: glob({ base: './src/content/experience', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		role: z.string(),
+		company: z.string(),
+		dateRange: z.string(),
+		order: z.number(),
+		location: z.string().optional(),
+	}),
+});
+
+/**
+ * Selected Impact — Metrics and results
+ */
+const selectedImpact = defineCollection({
+	loader: glob({ base: './src/content/selected-impact', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		metric: z.string(),
+		description: z.string().optional(),
+		order: z.number(),
+		icon: z.string().optional(),
+	}),
+});
+
+/**
+ * Case Studies — Project summaries
+ */
+const caseStudies = defineCollection({
+	loader: glob({ base: './src/content/case-studies', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		slug: z.string(),
+		summary: z.string(),
+		tags: z.array(z.string()).optional(),
+		order: z.number().optional(),
+	}),
+});
+
+/**
+ * Technical Focus — Skills and tools (tabbed interface)
+ */
+const technicalFocus = defineCollection({
+	loader: glob({ base: './src/content/technical-focus', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		category: z.enum(['cloud-infrastructure', 'ai-automation', 'system-integrations']),
+	}),
+});
+
+/**
+ * Contact — LinkedIn connection
+ */
+const contact = defineCollection({
+	loader: glob({ base: './src/content/contact', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string().default('Contact'),
+		location: z.string().optional(),
+		linkedinUrl: z.string().url(),
+		linkedinHandle: z.string().optional(),
+		email: z.string().email().optional(),
+	}),
+});
+
+export const collections = {
+	hero,
+	experience,
+	selectedImpact,
+	caseStudies,
+	technicalFocus,
+	contact,
+};

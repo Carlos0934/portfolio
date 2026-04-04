@@ -1,0 +1,197 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const techEntries = await getCollection('technicalFocus');
+const techData = techEntries.map(entry => ({
+	slug: entry.data.category,
+	title: entry.data.title,
+}));
+
+// Define the tab order
+const tabOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
+const tabLabels: Record<string, string> = {
+	'cloud-infrastructure': 'Cloud Infrastructure',
+	'ai-automation': 'AI & Automation',
+	'system-integrations': 'System Integrations',
+};
+
+// Get full content for each tab
+const tabContents = await Promise.all(
+	tabOrder.map(async (category) => {
+		const entry = techEntries.find(e => e.data.category === category);
+		if (!entry) return null;
+		const { Content } = await render(entry);
+		return { category, Content, data: entry.data };
+	})
+).then(results => results.filter(Boolean));
+
+const sectionTitle = "Technical Focus";
+const sectionDescription = "Core areas I work with: systems, cloud, automations, and integrations.";
+---
+
+<section id="technical-focus" class="border-b border-border py-16 section-reveal">
+	<div class="mx-auto max-w-4xl px-4">
+		<h2 class="mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+			{sectionTitle}
+		</h2>
+		<p class="mb-8 text-text-secondary">
+			{sectionDescription}
+		</p>
+
+		<!-- Tabs Container -->
+		<div class="tabs-container">
+			<!-- Tab List - Following ARIA Authoring Practices -->
+			<div role="tablist" aria-label="Technical Focus Areas" class="mb-6 flex gap-1 border-b border-border overflow-x-auto">
+				{tabOrder.map((category, index) => {
+					const isActive = index === 0;
+					return (
+						<button
+							role="tab"
+							id={`tab-${category}`}
+							aria-selected={isActive ? "true" : "false"}
+							aria-controls={`panel-${category}`}
+							tabindex={isActive ? 0 : -1}
+							class="tab-button px-4 py-3 font-mono text-sm whitespace-nowrap transition-all duration-200 border-b-2 focus:outline-none"
+							class:list={[
+								isActive
+									? "border-primary text-text-primary"
+									: "border-transparent text-text-muted hover:text-text-secondary hover:border-border"
+							]}
+						>
+							{tabLabels[category]}
+						</button>
+					);
+				})}
+			</div>
+
+			<!-- Tab Panels -->
+			{tabContents.map(({ category, Content, data }, index) => {
+				const isActive = index === 0;
+				return (
+					<div
+						role="tabpanel"
+						id={`panel-${category}`}
+						aria-labelledby={`tab-${category}`}
+						hidden={!isActive}
+						class="tab-panel"
+					>
+						<h3 class="mb-4 text-lg font-semibold text-text-primary">
+							{data.title}
+						</h3>
+						<div class="prose prose-invert max-w-none text-sm text-text-secondary leading-relaxed">
+							<Content />
+						</div>
+					</div>
+				);
+			})}
+		</div>
+	</div>
+</section>
+
+<script>
+/**
+ * Accessible Tab Interface
+ * Implements WAI-ARIA Authoring Practices for tabs pattern
+ * with full keyboard navigation support
+ */
+
+function initTabs() {
+	const tabContainers = document.querySelectorAll('.tabs-container');
+	
+	tabContainers.forEach(container => {
+		const tablist = container.querySelector('[role="tablist"]');
+		if (!tablist) return;
+
+		const tabs = Array.from(tablist.querySelectorAll('[role="tab"]')) as HTMLElement[];
+		const panels = Array.from(container.querySelectorAll('[role="tabpanel"]')) as HTMLElement[];
+
+		/**
+		 * Activates a tab and updates ARIA states
+		 */
+		function activateTab(newTab: HTMLElement) {
+			// Deactivate all tabs
+			tabs.forEach(tab => {
+				tab.setAttribute('aria-selected', 'false');
+				tab.setAttribute('tabindex', '-1');
+				tab.classList.remove('border-primary', 'text-text-primary');
+				tab.classList.add('border-transparent', 'text-text-muted');
+			});
+
+			// Hide all panels
+			panels.forEach(panel => {
+				panel.hidden = true;
+			});
+
+			// Activate selected tab
+			newTab.setAttribute('aria-selected', 'true');
+			newTab.setAttribute('tabindex', '0');
+			newTab.classList.remove('border-transparent', 'text-text-muted');
+			newTab.classList.add('border-primary', 'text-text-primary');
+
+			// Show corresponding panel
+			const panelId = newTab.getAttribute('aria-controls');
+			const panel = panelId ? document.getElementById(panelId) : null;
+			if (panel) {
+				panel.hidden = false;
+			}
+
+			// Move focus to the activated tab
+			newTab.focus();
+		}
+
+		/**
+		 * Keyboard navigation handler
+		 */
+		function handleKeydown(event: KeyboardEvent) {
+			const currentTab = document.activeElement as HTMLElement;
+			const currentIndex = tabs.indexOf(currentTab);
+			let newIndex = currentIndex;
+
+			switch (event.key) {
+				case 'ArrowRight':
+				case 'ArrowDown': // Support both directional keys
+					event.preventDefault();
+					newIndex = (currentIndex + 1) % tabs.length;
+					break;
+
+				case 'ArrowLeft':
+				case 'ArrowUp': // Support both directional keys
+					event.preventDefault();
+					newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+					break;
+
+				case 'Home':
+					event.preventDefault();
+					newIndex = 0;
+					break;
+
+				case 'End':
+					event.preventDefault();
+					newIndex = tabs.length - 1;
+					break;
+
+				default:
+					return;
+			}
+
+			activateTab(tabs[newIndex]);
+		}
+
+		// Initialize event listeners
+		tabs.forEach(tab => {
+			tab.addEventListener('click', () => activateTab(tab as HTMLElement));
+			tab.addEventListener('keydown', handleKeydown);
+		});
+	});
+}
+
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initTabs);
+} else {
+	initTabs();
+}
+
+// Re-initialize after Astro page transitions
+document.addEventListener('astro:after-swap', initTabs);
+</script>

@@ -1,0 +1,206 @@
+---
+import { NAV_ITEMS } from '../lib/nav';
+import { SITE_TITLE } from '../consts';
+
+// Progress items exclude hero since it's the landing point
+const progressItems = NAV_ITEMS.slice(1);
+---
+
+<aside class="progress-sidebar" aria-label="Section navigation">
+	<nav class="sidebar-nav" aria-label="Page sections">
+		<!-- Logo placeholder -->
+		<div class="sidebar-logo" aria-hidden="true">
+			<div class="logo-circle">
+				<span class="logo-initials">CG</span>
+			</div>
+		</div>
+		
+		<!-- Progress indicators -->
+		<ol class="sidebar-progress" role="list">
+			{progressItems.map((item, index) => (
+				<li>
+					<a
+						href={item.href}
+						class="sidebar-link group"
+						data-section={item.id}
+						aria-label={item.label}
+					>
+						<span class="sidebar-dot" aria-hidden="true"></span>
+						<span class="sidebar-label">{item.label}</span>
+					</a>
+				</li>
+			))}
+		</ol>
+	</nav>
+</aside>
+
+<style>
+	.progress-sidebar {
+		position: fixed;
+		left: 2rem;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 40;
+		display: none;
+	}
+
+	/* Wide laptop first (1440px+) */
+	@media (min-width: 1280px) {
+		.progress-sidebar {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 1.5rem;
+		}
+	}
+
+	.sidebar-nav {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.sidebar-logo {
+		margin-bottom: 1rem;
+	}
+
+	.logo-circle {
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		border: 2px solid var(--color-border);
+		background: var(--color-surface-elevated);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: border-color 0.2s ease;
+	}
+
+	.logo-circle:hover {
+		border-color: var(--color-primary);
+	}
+
+	.logo-initials {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		font-weight: 700;
+		color: var(--color-text-secondary);
+	}
+
+	.sidebar-progress {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.sidebar-link {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.25rem;
+		text-decoration: none;
+		color: var(--color-text-muted);
+		transition: color 0.2s ease;
+		position: relative;
+	}
+
+	.sidebar-link:hover,
+	.sidebar-link:focus-visible {
+		color: var(--color-text-primary);
+	}
+
+	.sidebar-link:focus-visible {
+		outline: 2px solid var(--color-primary);
+		outline-offset: 4px;
+		border-radius: 4px;
+	}
+
+	.sidebar-dot {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--color-border);
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.sidebar-link:hover .sidebar-dot,
+	.sidebar-link:focus-visible .sidebar-dot {
+		background: var(--color-primary);
+		transform: scale(1.2);
+	}
+
+	.sidebar-link.active .sidebar-dot {
+		background: var(--color-primary);
+		box-shadow: 0 0 0 3px rgba(54, 92, 141, 0.3);
+	}
+
+	.sidebar-label {
+		font-size: 0.75rem;
+		font-family: var(--font-mono);
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+		opacity: 0;
+		transform: translateX(-8px);
+		transition: opacity 0.2s ease, transform 0.2s ease;
+		position: absolute;
+		left: 100%;
+		padding-left: 0.5rem;
+		pointer-events: none;
+	}
+
+	.sidebar-link:hover .sidebar-label,
+	.sidebar-link:focus-visible .sidebar-label,
+	.sidebar-link.active .sidebar-label {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	/* Mobile fallback - hidden on small screens */
+	@media (max-width: 1279px) {
+		.progress-sidebar {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	// Progressive enhancement: Active section tracking
+	document.addEventListener('DOMContentLoaded', () => {
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const sections = document.querySelectorAll('section[id]');
+		const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+		if (sections.length === 0 || sidebarLinks.length === 0) return;
+
+		// Intersection Observer for active section tracking
+		const observerOptions = {
+			root: null,
+			rootMargin: '-20% 0px -70% 0px',
+			threshold: 0
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const sectionId = entry.target.getAttribute('id');
+					sidebarLinks.forEach((link) => {
+						const linkSection = link.getAttribute('data-section');
+						if (linkSection === sectionId) {
+							link.classList.add('active');
+						} else {
+							link.classList.remove('active');
+						}
+					});
+				}
+			});
+		}, observerOptions);
+
+		sections.forEach((section) => observer.observe(section));
+	});
+</script>

@@ -1,0 +1,26 @@
+---
+// ValueStrip — Static value propositions, no collection needed
+const values = [
+	{ metric: '10M+', label: 'Daily events processed' },
+	{ metric: '-85ms', label: 'p99 latency reduction' },
+	{ metric: '40%', label: 'Infrastructure cost savings' },
+	{ metric: '85%', label: 'Manual task reduction' },
+];
+---
+
+<section id="value-strip" class="border-b border-border bg-surface-alt py-12 section-reveal">
+	<div class="mx-auto max-w-6xl px-4">
+		<div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+			{values.map((item) => (
+				<div class="flex flex-col items-center justify-center text-center">
+					<span class="font-mono text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
+						{item.metric}
+					</span>
+					<span class="mt-2 text-sm text-text-muted">
+						{item.label}
+					</span>
+				</div>
+			))}
+		</div>
+	</div>
+</section>
