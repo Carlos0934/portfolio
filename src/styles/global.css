@@ -146,11 +146,189 @@ button:focus-visible {
 	border: 0;
 }
 
-/* Section Reveal Animation - Progressive Enhancement */
-/* Uses CSS scroll-driven animations with fallback for unsupported browsers */
+/* ============================================================
+   ANIMATION SYSTEM — Native CSS Utilities
+   ============================================================ */
+
+/* Animation Custom Properties — Tunable timing/distance values */
+:root {
+	/* Timing */
+	--fx-duration-fast: 150ms;
+	--fx-duration-normal: 250ms;
+	--fx-duration-slow: 400ms;
+	--fx-easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--fx-easing-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+
+	/* Distances */
+	--fx-distance-sm: 0.5rem;
+	--fx-distance-md: 1.4rem;
+	--fx-distance-lg: 2rem;
+
+	/* Stagger Delays */
+	--fx-stagger-step: 85ms;
+}
+
+/* ============================================================
+   SCROLL-DRIVEN REVEAL ANIMATIONS
+   Progressive Enhancement: Only active when browser supports
+   ============================================================ */
+
+/* Base Keyframes for Reveals */
+@keyframes fx-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fx-slide-up {
+	from {
+		opacity: 0;
+		transform: translateY(var(--fx-distance-md));
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fx-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes fx-slide-left {
+	from {
+		opacity: 0;
+		transform: translateX(var(--fx-distance-md));
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Progressive Enhancement for Scroll-Driven Animations */
+/* Modern browsers: animation-timeline with view() */
+@supports (animation-timeline: view()) {
+	/* Base Reveal — Fade and slight slide */
+	.fx-reveal {
+		animation: fx-slide-up linear forwards;
+		animation-timeline: view();
+		animation-range: entry 8% cover 32%;
+	}
+
+	/* Reveal Up — Stronger upward motion */
+	.fx-reveal-up {
+		animation: fx-slide-up linear forwards;
+		animation-timeline: view();
+		animation-range: entry 10% cover 38%;
+	}
+
+	/* Reveal Scale — Subtle scale entrance */
+	.fx-reveal-scale {
+		animation: fx-scale-in linear forwards;
+		animation-timeline: view();
+		animation-range: entry 10% cover 34%;
+	}
+
+	/* Reveal Left — Slide in from right */
+	.fx-reveal-left {
+		animation: fx-slide-left linear forwards;
+		animation-timeline: view();
+		animation-range: entry 10% cover 34%;
+	}
+
+	/* Fade Only — Minimal option */
+	.fx-fade {
+		animation: fx-fade-in linear forwards;
+		animation-timeline: view();
+		animation-range: entry 8% cover 28%;
+	}
+
+	/* Per-element stagger via CSS custom property */
+	.fx-stagger-1 { animation-delay: calc(var(--fx-stagger-step) * 1); }
+	.fx-stagger-2 { animation-delay: calc(var(--fx-stagger-step) * 2); }
+	.fx-stagger-3 { animation-delay: calc(var(--fx-stagger-step) * 3); }
+	.fx-stagger-4 { animation-delay: calc(var(--fx-stagger-step) * 4); }
+	.fx-stagger-5 { animation-delay: calc(var(--fx-stagger-step) * 5); }
+	.fx-stagger-6 { animation-delay: calc(var(--fx-stagger-step) * 6); }
+
+	/* Stagger containers — Apply to parent, children auto-stagger */
+	.fx-stagger-group > *:nth-child(1) { animation-delay: calc(var(--fx-stagger-step) * 0); }
+	.fx-stagger-group > *:nth-child(2) { animation-delay: calc(var(--fx-stagger-step) * 1); }
+	.fx-stagger-group > *:nth-child(3) { animation-delay: calc(var(--fx-stagger-step) * 2); }
+	.fx-stagger-group > *:nth-child(4) { animation-delay: calc(var(--fx-stagger-step) * 3); }
+	.fx-stagger-group > *:nth-child(5) { animation-delay: calc(var(--fx-stagger-step) * 4); }
+	.fx-stagger-group > *:nth-child(6) { animation-delay: calc(var(--fx-stagger-step) * 5); }
+	.fx-stagger-group > *:nth-child(n+6) { animation-delay: calc(var(--fx-stagger-step) * 6); }
+}
+
+/* Fallback for browsers without scroll-driven animation support */
+@supports not (animation-timeline: view()) {
+	.fx-reveal,
+	.fx-reveal-up,
+	.fx-reveal-scale,
+	.fx-reveal-left,
+	.fx-fade {
+		opacity: 1;
+		transform: none;
+	}
+
+	.fx-stagger-1,
+	.fx-stagger-2,
+	.fx-stagger-3,
+	.fx-stagger-4,
+	.fx-stagger-5,
+	.fx-stagger-6 {
+		animation-delay: 0s;
+	}
+
+	.fx-stagger-group > * {
+		animation-delay: 0s;
+	}
+}
+
+/* Reduced Motion — Disable all reveal animations */
+@media (prefers-reduced-motion: reduce) {
+	.fx-reveal,
+	.fx-reveal-up,
+	.fx-reveal-scale,
+	.fx-reveal-left,
+	.fx-fade {
+		animation: none !important;
+		opacity: 1 !important;
+		transform: none !important;
+	}
+
+	.fx-stagger-1,
+	.fx-stagger-2,
+	.fx-stagger-3,
+	.fx-stagger-4,
+	.fx-stagger-5,
+	.fx-stagger-6 {
+		animation-delay: 0s !important;
+	}
+
+	.fx-stagger-group > * {
+		animation-delay: 0s !important;
+	}
+}
+
+/* ============================================================
+   LEGACY REVEAL (Section Reveal — Backward Compatibility)
+   ============================================================ */
 @supports (animation-timeline: view()) {
 	.section-reveal {
-		animation: section-fade-in linear;
+		animation: section-fade-in linear forwards;
 		animation-timeline: view();
 		animation-range: entry 0% cover 15%;
 	}
@@ -167,7 +345,6 @@ button:focus-visible {
 	}
 }
 
-/* Fallback for browsers without scroll-driven animation support */
 @supports not (animation-timeline: view()) {
 	.section-reveal {
 		opacity: 1;
@@ -175,7 +352,6 @@ button:focus-visible {
 	}
 }
 
-/* Reduced motion - disable all section reveal animations */
 @media (prefers-reduced-motion: reduce) {
 	.section-reveal {
 		animation: none !important;
@@ -184,7 +360,274 @@ button:focus-visible {
 	}
 }
 
-/* Typography Enhancements */
+/* ============================================================
+   HOVER EFFECTS — Subtle, Premium Interactions
+   ============================================================ */
+
+/* Hover Lift — Subtle elevation on hover */
+.fx-hover-lift {
+	transition:
+		transform var(--fx-duration-normal) var(--fx-easing-out),
+		box-shadow var(--fx-duration-normal) var(--fx-easing-out);
+}
+
+.fx-hover-lift:hover {
+	transform: translateY(-2px);
+	box-shadow:
+		0 4px 12px -2px rgba(0, 0, 0, 0.2),
+		0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.fx-hover-lift:focus-visible {
+	transform: translateY(-2px);
+	box-shadow:
+		0 4px 12px -2px rgba(0, 0, 0, 0.2),
+		0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.fx-hover-lift:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
+
+/* Hover Border — Border color transition on hover */
+.fx-hover-border {
+	transition:
+		border-color var(--fx-duration-fast) var(--fx-easing-in-out),
+		background-color var(--fx-duration-fast) var(--fx-easing-in-out);
+}
+
+.fx-hover-border:hover {
+	border-color: var(--color-primary);
+}
+
+.fx-hover-border:focus-visible {
+	border-color: var(--color-primary);
+}
+
+/* Hover Glow — Subtle primary glow effect */
+.fx-hover-glow {
+	transition:
+		box-shadow var(--fx-duration-normal) var(--fx-easing-out);
+}
+
+.fx-hover-glow:hover {
+	box-shadow: 0 0 20px -4px rgba(54, 92, 141, 0.4);
+}
+
+.fx-hover-glow:focus-visible {
+	box-shadow: 0 0 20px -4px rgba(54, 92, 141, 0.4);
+}
+
+/* Hover Accent — Background shift to primary accent */
+.fx-hover-accent {
+	transition:
+		background-color var(--fx-duration-fast) var(--fx-easing-in-out),
+		border-color var(--fx-duration-fast) var(--fx-easing-in-out);
+}
+
+.fx-hover-accent:hover {
+	background-color: var(--color-surface-elevated);
+	border-color: var(--color-primary);
+}
+
+.fx-hover-accent:focus-visible {
+	background-color: var(--color-surface-elevated);
+	border-color: var(--color-primary);
+}
+
+/* Combined: Lift + Glow (for cards) */
+.fx-hover-card {
+	transition:
+		transform var(--fx-duration-normal) var(--fx-easing-out),
+		box-shadow var(--fx-duration-normal) var(--fx-easing-out),
+		border-color var(--fx-duration-fast) var(--fx-easing-in-out);
+}
+
+.fx-hover-card:hover {
+	transform: translateY(-3px);
+	box-shadow:
+		0 8px 24px -8px rgba(0, 0, 0, 0.3),
+		0 0 16px -4px rgba(54, 92, 141, 0.15);
+	border-color: var(--color-border-strong);
+}
+
+.fx-hover-card:focus-visible {
+	transform: translateY(-3px);
+	box-shadow:
+		0 8px 24px -8px rgba(0, 0, 0, 0.3),
+		0 0 16px -4px rgba(54, 92, 141, 0.15);
+	border-color: var(--color-border-strong);
+}
+
+/* Reduced Motion — Simplify hover effects */
+@media (prefers-reduced-motion: reduce) {
+	.fx-hover-lift,
+	.fx-hover-border,
+	.fx-hover-glow,
+	.fx-hover-accent,
+	.fx-hover-card {
+		transition: none;
+	}
+
+	.fx-hover-lift:hover {
+		transform: none;
+	}
+
+	.fx-hover-card:hover {
+		transform: none;
+	}
+
+	.fx-hover-glow:hover,
+	.fx-hover-card:hover {
+		box-shadow: none;
+	}
+}
+
+/* ============================================================
+   SCROLL-DRIVEN PROGRESS INDICATORS
+   For progress bars or reading indicators
+   ============================================================ */
+
+@supports (animation-timeline: scroll()) {
+	/* Progress bar that fills as user scrolls down */
+	.fx-scroll-progress {
+		animation: fx-progress linear;
+		animation-timeline: scroll(root);
+	}
+
+	@keyframes fx-progress {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+}
+
+@supports not (animation-timeline: scroll()) {
+	.fx-scroll-progress {
+		transform: scaleX(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fx-scroll-progress {
+		animation: none !important;
+		transform: scaleX(1);
+	}
+}
+
+/* ============================================================
+   TIMELINE/VERTICAL LINE ANIMATIONS
+   For experience sections or similar vertical timelines
+   ============================================================ */
+
+@supports (animation-timeline: view()) {
+	/* Timeline dot pulse on scroll into view */
+	.fx-timeline-dot {
+		animation: fx-dot-pulse linear forwards;
+		animation-timeline: view();
+		animation-range: entry 0% cover 30%;
+	}
+
+	@keyframes fx-dot-pulse {
+		0% {
+			transform: scale(0.8);
+			opacity: 0.5;
+		}
+		50% {
+			transform: scale(1.1);
+			opacity: 1;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+	/* Timeline content slide */
+	.fx-timeline-content {
+		animation: fx-slide-left linear forwards;
+		animation-timeline: view();
+		animation-range: entry 0% cover 25%;
+	}
+}
+
+@supports not (animation-timeline: view()) {
+	.fx-timeline-dot {
+		transform: scale(1);
+		opacity: 1;
+	}
+
+	.fx-timeline-content {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fx-timeline-dot {
+		animation: none !important;
+		transform: scale(1) !important;
+		opacity: 1 !important;
+	}
+
+	.fx-timeline-content {
+		animation: none !important;
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+/* ============================================================
+   ENTRANCE ANIMATIONS (Page Load)
+   For elements that should animate on initial page load
+   ============================================================ */
+
+/* Staggered entrance for hero/content */
+@keyframes fx-entrance-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(var(--fx-distance-lg));
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fx-entrance {
+	animation: fx-entrance-fade-up var(--fx-duration-slow) var(--fx-easing-out) forwards;
+	opacity: 0;
+}
+
+.fx-entrance-delay-1 { animation-delay: calc(var(--fx-stagger-step) * 2); }
+.fx-entrance-delay-2 { animation-delay: calc(var(--fx-stagger-step) * 4); }
+.fx-entrance-delay-3 { animation-delay: calc(var(--fx-stagger-step) * 6); }
+.fx-entrance-delay-4 { animation-delay: calc(var(--fx-stagger-step) * 8); }
+.fx-entrance-delay-5 { animation-delay: calc(var(--fx-stagger-step) * 10); }
+
+@media (prefers-reduced-motion: reduce) {
+	.fx-entrance {
+		animation: none;
+		opacity: 1;
+	}
+
+	.fx-entrance-delay-1,
+	.fx-entrance-delay-2,
+	.fx-entrance-delay-3,
+	.fx-entrance-delay-4,
+	.fx-entrance-delay-5 {
+		animation-delay: 0s;
+	}
+}
+
+/* ============================================================
+   TYPOGRAPHY ENHANCEMENTS
+   ============================================================ */
+
 /* Improved description readability */
 .hero-description {
 	line-height: 1.75;
@@ -225,5 +668,10 @@ button:focus-visible {
 	.eyebrow-status__cursor {
 		animation: none;
 		opacity: 0.3;
+	}
+
+	.fx-entrance {
+		animation: none;
+		opacity: 1;
 	}
 }

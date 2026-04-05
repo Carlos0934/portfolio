@@ -7,15 +7,15 @@ const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order |
 
 <section id="case-studies" class="border-b border-border py-16 section-reveal">
 	<div class="mx-auto max-w-6xl px-4">
-		<h2 class="mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+		<h2 class="fx-reveal mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
 			Case Studies
 		</h2>
-		<p class="mb-8 max-w-2xl text-text-secondary">
+		<p class="fx-reveal-up mb-8 max-w-2xl text-text-secondary">
 			Work across fintech, logistics, and B2B SaaS environments—focused on systems that reduce operational friction and enable better decisions.
 		</p>
-		<div class="grid gap-8 lg:grid-cols-2">
+		<div class="grid gap-8 lg:grid-cols-2 fx-stagger-group">
 			{cases.map((item) => (
-				<article class="flex flex-col rounded-lg border border-border bg-surface-elevated p-6 transition-colors hover:border-border-strong">
+				<article class="fx-reveal-up fx-hover-card flex flex-col rounded-lg border border-border bg-surface-elevated p-6">
 					<h3 class="mb-2 text-xl font-semibold text-text-primary">
 						{item.data.title}
 					</h3>

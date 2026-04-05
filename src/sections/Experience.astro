@@ -16,10 +16,10 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		<h2 class="mb-8 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
 			Experience
 		</h2>
-		<div class="space-y-8">
+		<div class="space-y-8 fx-stagger-group">
 			{sortedExperiences.map((item) => (
-				<article class="relative border-l-2 border-border pl-6">
-					<div class="absolute left-0 top-0 h-2 w-2 -translate-x-[5px] rounded-full bg-primary" aria-hidden="true" />
+				<article class="fx-reveal-left relative border-l-2 border-border pl-6">
+					<div class="fx-timeline-dot absolute left-0 top-0 h-2 w-2 -translate-x-[5px] rounded-full bg-primary" aria-hidden="true" />
 					<div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
 						<h3 class="text-lg font-semibold text-text-primary">
 							{item.data.role}

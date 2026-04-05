@@ -10,9 +10,9 @@ const values = [
 
 <section id="value-strip" class="border-b border-border bg-surface-alt py-12 section-reveal">
 	<div class="mx-auto max-w-6xl px-4">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 fx-stagger-group">
 			{values.map((item) => (
-				<div class="flex flex-col items-center justify-center text-center">
+				<div class="fx-reveal-up fx-hover-lift flex flex-col items-center justify-center text-center rounded-lg border border-transparent px-3 py-4">
 					<span class="font-mono text-base font-bold tracking-tight text-text-primary">
 						{item.label}
 					</span>

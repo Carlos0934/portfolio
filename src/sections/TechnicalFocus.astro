@@ -16,14 +16,14 @@ const tabLabels: Record<string, string> = {
 };
 
 // Get full content for each tab
-const tabContents = await Promise.all(
+const tabContents = (await Promise.all(
 	tabOrder.map(async (category) => {
 		const entry = techEntries.find(e => e.data.category === category);
 		if (!entry) return null;
 		const { Content } = await render(entry);
 		return { category, Content, data: entry.data };
 	})
-).then(results => results.filter(Boolean));
+)).filter((result): result is NonNullable<typeof result> => result !== null);
 
 const sectionTitle = "Technical Focus";
 const sectionDescription = "Core areas I work with: systems, cloud, automations, and integrations.";
@@ -31,17 +31,17 @@ const sectionDescription = "Core areas I work with: systems, cloud, automations,
 
 <section id="technical-focus" class="border-b border-border py-16 section-reveal">
 	<div class="mx-auto max-w-4xl px-4">
-		<h2 class="mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+		<h2 class="fx-reveal mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
 			{sectionTitle}
 		</h2>
-		<p class="mb-8 text-text-secondary">
+		<p class="fx-reveal-up mb-8 text-text-secondary">
 			{sectionDescription}
 		</p>
 
 		<!-- Tabs Container -->
 		<div class="tabs-container">
 			<!-- Tab List - Following ARIA Authoring Practices -->
-			<div role="tablist" aria-label="Technical Focus Areas" class="mb-6 flex gap-1 border-b border-border overflow-x-auto">
+			<div role="tablist" aria-label="Technical Focus Areas" class="tab-list mb-6 flex gap-1 border-b border-border overflow-x-auto md:overflow-x-visible">
 				{tabOrder.map((category, index) => {
 					const isActive = index === 0;
 					return (
@@ -51,39 +51,42 @@ const sectionDescription = "Core areas I work with: systems, cloud, automations,
 							aria-selected={isActive ? "true" : "false"}
 							aria-controls={`panel-${category}`}
 							tabindex={isActive ? 0 : -1}
-							class="tab-button px-4 py-3 font-mono text-sm whitespace-nowrap transition-all duration-200 border-b-2 focus:outline-none"
+							class="tab-button relative px-4 py-3 font-mono text-sm whitespace-nowrap transition-colors duration-200 focus:outline-none"
 							class:list={[
 								isActive
-									? "border-primary text-text-primary"
-									: "border-transparent text-text-muted hover:text-text-secondary hover:border-border"
+									? "text-text-primary"
+									: "text-text-muted hover:text-text-secondary"
 							]}
 						>
 							{tabLabels[category]}
 						</button>
 					);
 				})}
+				<span class="tab-indicator" aria-hidden="true"></span>
 			</div>
 
 			<!-- Tab Panels -->
-			{tabContents.map(({ category, Content, data }, index) => {
-				const isActive = index === 0;
-				return (
-					<div
-						role="tabpanel"
-						id={`panel-${category}`}
-						aria-labelledby={`tab-${category}`}
-						hidden={!isActive}
-						class="tab-panel"
-					>
-						<h3 class="mb-4 text-lg font-semibold text-text-primary">
-							{data.title}
-						</h3>
-						<div class="prose prose-invert max-w-none text-sm text-text-secondary leading-relaxed">
-							<Content />
+			<div class="tab-panels">
+				{tabContents.map(({ category, Content, data }, index) => {
+					const isActive = index === 0;
+					return (
+						<div
+							role="tabpanel"
+							id={`panel-${category}`}
+							aria-labelledby={`tab-${category}`}
+							hidden={!isActive}
+							class:list={["tab-panel", { "tab-panel-active": isActive }]}
+						>
+							<h3 class="mb-4 text-lg font-semibold text-text-primary">
+								{data.title}
+							</h3>
+							<div class="prose prose-invert max-w-none text-sm text-text-secondary leading-relaxed">
+								<Content />
+							</div>
 						</div>
-					</div>
-				);
-			})}
+					);
+				})}
+			</div>
 		</div>
 	</div>
 </section>
@@ -99,11 +102,24 @@ function initTabs() {
 	const tabContainers = document.querySelectorAll('.tabs-container');
 	
 	tabContainers.forEach(container => {
+		if (container instanceof HTMLElement && container.dataset.tabsReady === 'true') return;
+		if (container instanceof HTMLElement) {
+			container.dataset.tabsReady = 'true';
+		}
+
 		const tablist = container.querySelector('[role="tablist"]');
 		if (!tablist) return;
 
 		const tabs = Array.from(tablist.querySelectorAll('[role="tab"]')) as HTMLElement[];
 		const panels = Array.from(container.querySelectorAll('[role="tabpanel"]')) as HTMLElement[];
+		const indicator = tablist.querySelector('.tab-indicator') as HTMLElement | null;
+
+		function positionIndicator(activeTab: HTMLElement) {
+			if (!indicator) return;
+
+			indicator.style.width = `${activeTab.offsetWidth}px`;
+			indicator.style.transform = `translateX(${activeTab.offsetLeft}px)`;
+		}
 
 		/**
 		 * Activates a tab and updates ARIA states
@@ -113,30 +129,40 @@ function initTabs() {
 			tabs.forEach(tab => {
 				tab.setAttribute('aria-selected', 'false');
 				tab.setAttribute('tabindex', '-1');
-				tab.classList.remove('border-primary', 'text-text-primary');
-				tab.classList.add('border-transparent', 'text-text-muted');
+				tab.classList.remove('text-text-primary');
+				tab.classList.add('text-text-muted');
 			});
 
 			// Hide all panels
 			panels.forEach(panel => {
+				panel.classList.remove('tab-panel-active');
 				panel.hidden = true;
 			});
 
 			// Activate selected tab
 			newTab.setAttribute('aria-selected', 'true');
 			newTab.setAttribute('tabindex', '0');
-			newTab.classList.remove('border-transparent', 'text-text-muted');
-			newTab.classList.add('border-primary', 'text-text-primary');
+			newTab.classList.remove('text-text-muted');
+			newTab.classList.add('text-text-primary');
+			positionIndicator(newTab);
 
 			// Show corresponding panel
 			const panelId = newTab.getAttribute('aria-controls');
 			const panel = panelId ? document.getElementById(panelId) : null;
 			if (panel) {
 				panel.hidden = false;
+				panel.classList.remove('tab-panel-active');
+				void panel.offsetWidth;
+				panel.classList.add('tab-panel-active');
 			}
 
 			// Move focus to the activated tab
 			newTab.focus();
+		}
+
+		const activeTab = tabs.find(tab => tab.getAttribute('aria-selected') === 'true') || tabs[0];
+		if (activeTab) {
+			positionIndicator(activeTab);
 		}
 
 		/**
@@ -182,6 +208,13 @@ function initTabs() {
 			tab.addEventListener('click', () => activateTab(tab as HTMLElement));
 			tab.addEventListener('keydown', handleKeydown);
 		});
+
+		window.addEventListener('resize', () => {
+			const currentActiveTab = tabs.find(tab => tab.getAttribute('aria-selected') === 'true');
+			if (currentActiveTab) {
+				positionIndicator(currentActiveTab);
+			}
+		});
 	});
 }
 
@@ -195,3 +228,63 @@ if (document.readyState === 'loading') {
 // Re-initialize after Astro page transitions
 document.addEventListener('astro:after-swap', initTabs);
 </script>
+
+<style>
+	.tab-panels {
+		position: relative;
+	}
+
+	.tab-list {
+		position: relative;
+		scrollbar-width: none;
+	}
+
+	.tab-list::-webkit-scrollbar {
+		display: none;
+	}
+
+	.tab-indicator {
+		position: absolute;
+		left: 0;
+		bottom: -1px;
+		height: 3px;
+		width: 0;
+		border-radius: 999px;
+		background: var(--color-primary);
+		transform: translateX(0);
+		transition:
+			transform 240ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1)),
+			width 240ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1));
+		pointer-events: none;
+	}
+
+	.tab-panel {
+		transform-origin: top center;
+	}
+
+	.tab-panel-active {
+		animation: tab-panel-in 220ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+	}
+
+	@keyframes tab-panel-in {
+		from {
+			opacity: 0;
+			transform: translateY(10px) scale(0.985);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.tab-indicator {
+			transition: none;
+		}
+
+		.tab-panel-active {
+			animation: none;
+		}
+	}
+</style>
