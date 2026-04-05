@@ -1,14 +1,14 @@
 ---
-title: "Carlos García"
-tagline: "Systems Engineer & Technical Builder"
-description: "I design and implement backend systems that reduce operational friction, automate workflows, and enable better decisions through data."
+title: "Carlos Engel Olivo"
+tagline: "Backend & Platform Engineer — Operational Systems, AI Leverage"
+description: "I build backend systems and automation pipelines that turn operational complexity into leverage, integrating AI tooling to accelerate delivery and reduce toil."
 eyebrow: "Available for collaboration"
 proofSignals:
   - label: "Years in Backend"
     value: "8+"
-  - label: "Systems Delivered"
-    value: "40+"
-  - label: "Automation Pipelines"
-    value: "15+"
+  - label: "Open Source"
+    value: "Active"
+  - label: "Systems Focus"
+    value: "Platform"
 resumeUrl: "#"
 ---

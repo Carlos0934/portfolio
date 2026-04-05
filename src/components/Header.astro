@@ -1,6 +1,7 @@
 ---
 import { NAV_ITEMS } from '../lib/nav';
 import { SITE_TITLE } from '../consts';
+import LogoMark from './LogoMark.astro';
 
 // Mobile nav excludes hero (landing section)
 const mobileNavItems = NAV_ITEMS.slice(1);
@@ -10,9 +11,7 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 	<nav class="header-nav" aria-label="Main navigation">
 		<!-- Logo -->
 		<a href="#hero" class="logo-link">
-			<div class="logo-circle" aria-hidden="true">
-				<span class="logo-initials">CG</span>
-			</div>
+			<LogoMark size="sm" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
 		
@@ -38,7 +37,7 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 	</nav>
 	
 	<!-- Mobile Drawer -->
-	<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+	<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu" inert aria-hidden="true">
 		<div class="drawer-content">
 			<nav class="drawer-nav" aria-label="Navigation menu">
 				<ul class="drawer-list" role="list">
@@ -96,27 +95,8 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		color: var(--color-primary);
 	}
 	
-	.logo-circle {
-		width: 2.5rem;
-		height: 2.5rem;
-		border-radius: 50%;
-		border: 2px solid var(--color-border);
-		background: var(--color-surface-elevated);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: border-color 0.2s ease;
-	}
-	
-	.logo-link:hover .logo-circle,
-	.logo-link:focus-visible .logo-circle {
-		border-color: var(--color-primary);
-	}
-	
-	.logo-initials {
-		font-size: 0.75rem;
-		font-weight: 700;
-		color: var(--color-text-secondary);
+	.logo-link :global(.logo-mark) {
+		transition: color 0.2s ease;
 	}
 	
 	.logo-text {
@@ -329,6 +309,10 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 			this.isOpen = true;
 			this.previousActiveElement = document.activeElement;
 			
+			// Remove inert and aria-hidden before opening
+			this.drawer.removeAttribute('inert');
+			this.drawer.removeAttribute('aria-hidden');
+			
 			// Update ARIA
 			this.toggleBtn.setAttribute('aria-expanded', 'true');
 			this.toggleBtn.setAttribute('aria-label', 'Close navigation menu');
@@ -360,6 +344,12 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 			
 			// Restore body scroll
 			document.body.style.overflow = '';
+			
+			// Restore inert and aria-hidden after transition
+			setTimeout(() => {
+				this.drawer.setAttribute('inert', '');
+				this.drawer.setAttribute('aria-hidden', 'true');
+			}, 250);
 			
 			// Restore focus to toggle button
 			if (this.previousActiveElement) {

@@ -16,10 +16,10 @@ Industrial clients needed better visibility into equipment health to prevent cos
 
 ## Implementation
 
-Designed an event streaming architecture using Kafka for real-time sensor data ingestion. Implemented feature engineering pipelines that transformed raw telemetry into ML-ready datasets. Deployed inference endpoints that served predictions with <200ms latency.
+Designed an event streaming architecture using Kafka for real-time sensor data ingestion. Implemented feature engineering pipelines that transformed raw telemetry into ML-ready datasets. Deployed inference endpoints that served predictions with low-latency response times.
 
 ## Results
 
-- 30% reduction in unplanned equipment downtime
-- 10x improvement in data freshness (from hourly to near real-time)
-- Observable pipeline with automated alerting on data quality issues
+- Near-real-time ingestion replaced hourly batch cycles for fresher predictions
+- Automated alerting surfaces data quality issues before they reach consumers
+- Observable pipeline with structured logging for operational clarity

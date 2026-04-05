@@ -1,7 +1,7 @@
 ---
-title: "Latency Reduction"
-metric: "-85ms p99"
-description: "Reduced API response latency for critical transaction endpoints by implementing strategic caching and query optimization."
+title: "Latency Optimization"
+metric: "Optimized"
+description: "Improved API response times for critical transaction endpoints through strategic caching and query optimization."
 order: 1
 icon: "clock"
 ---

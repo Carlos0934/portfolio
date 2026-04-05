@@ -73,7 +73,7 @@ const technicalFocus = defineCollection({
 });
 
 /**
- * Contact — LinkedIn connection
+ * Contact — LinkedIn and GitHub connection
  */
 const contact = defineCollection({
 	loader: glob({ base: './src/content/contact', pattern: '**/*.{md,mdx}' }),
@@ -82,6 +82,8 @@ const contact = defineCollection({
 		location: z.string().optional(),
 		linkedinUrl: z.string().url(),
 		linkedinHandle: z.string().optional(),
+		githubUrl: z.string().url().optional(),
+		githubHandle: z.string().optional(),
 		email: z.string().email().optional(),
 	}),
 });

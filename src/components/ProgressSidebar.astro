@@ -1,6 +1,6 @@
 ---
 import { NAV_ITEMS } from '../lib/nav';
-import { SITE_TITLE } from '../consts';
+import LogoMark from './LogoMark.astro';
 
 // Progress items exclude hero since it's the landing point
 const progressItems = NAV_ITEMS.slice(1);
@@ -8,11 +8,9 @@ const progressItems = NAV_ITEMS.slice(1);
 
 <aside class="progress-sidebar" aria-label="Section navigation">
 	<nav class="sidebar-nav" aria-label="Page sections">
-		<!-- Logo placeholder -->
-		<div class="sidebar-logo" aria-hidden="true">
-			<div class="logo-circle">
-				<span class="logo-initials">CG</span>
-			</div>
+		<!-- Logo -->
+		<div class="sidebar-logo">
+			<LogoMark size="md" />
 		</div>
 		
 		<!-- Progress indicators -->
@@ -63,29 +61,6 @@ const progressItems = NAV_ITEMS.slice(1);
 
 	.sidebar-logo {
 		margin-bottom: 1rem;
-	}
-
-	.logo-circle {
-		width: 3rem;
-		height: 3rem;
-		border-radius: 50%;
-		border: 2px solid var(--color-border);
-		background: var(--color-surface-elevated);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: border-color 0.2s ease;
-	}
-
-	.logo-circle:hover {
-		border-color: var(--color-primary);
-	}
-
-	.logo-initials {
-		font-family: var(--font-mono);
-		font-size: 0.875rem;
-		font-weight: 700;
-		color: var(--color-text-secondary);
 	}
 
 	.sidebar-progress {

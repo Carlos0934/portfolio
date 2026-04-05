@@ -20,6 +20,6 @@ Built a GraphQL API backed by Kubernetes controllers that exposed self-service i
 
 ## Results
 
-- Environment provisioning time reduced from days to minutes
-- 90% of new projects adopted standardized platform tooling
-- Significant reduction in configuration-related incidents
+- Environment provisioning standardized with infrastructure-as-code
+- Self-service tooling reduced configuration-related incidents
+- Audit trails provided visibility into infrastructure changes

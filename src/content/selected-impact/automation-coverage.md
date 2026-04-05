@@ -1,6 +1,6 @@
 ---
-title: "Automation Coverage"
-metric: "85% reduction"
+title: "Workflow Automation"
+metric: "Automated"
 description: "Decreased manual operational tasks through systematic workflow automation and self-service tooling."
 order: 3
 icon: "gear"

@@ -78,6 +78,7 @@
 /* Base Styles */
 html {
 	scroll-behavior: smooth;
+	overflow-x: clip;
 }
 
 body {
@@ -86,6 +87,7 @@ body {
 	color: var(--color-text-primary);
 	margin: 0;
 	padding: 0;
+	overflow-x: clip;
 	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;

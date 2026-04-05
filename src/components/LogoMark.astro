@@ -1,0 +1,96 @@
+---
+/**
+ * LogoMark — Orbital O mark with two orbit rings/planets
+ * Operator Core: white mark on transparent/dark context
+ * Compact, crisp, reusable across Header, ProgressSidebar, and Hero
+ */
+interface Props {
+	size?: 'sm' | 'md' | 'lg';
+	class?: string;
+}
+
+const { size = 'md', class: className } = Astro.props;
+
+const sizeMap = {
+	sm: { container: '2rem', stroke: '1.5', gap: '0.15rem' },
+	md: { container: '2.5rem', stroke: '2', gap: '0.2rem' },
+	lg: { container: '3rem', stroke: '2.5', gap: '0.25rem' },
+};
+
+const { container, stroke, gap } = sizeMap[size];
+---
+
+<div
+	class:list={['logo-mark', className]}
+	style={`--container: ${container}; --stroke: ${stroke}; --gap: ${gap};`}
+	aria-label="Carlos Engel Olivo logo"
+>
+	<svg
+		viewBox="0 0 40 40"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		aria-hidden="true"
+		class="logo-mark__svg"
+	>
+		<!-- Central orbital O ring -->
+		<circle
+			cx="20"
+			cy="20"
+			r="8"
+			stroke="currentColor"
+			stroke-width="var(--stroke)"
+			fill="none"
+		/>
+
+		<!-- Orbit path 1 (tilted top-left to bottom-right) -->
+		<ellipse
+			cx="20"
+			cy="20"
+			rx="14"
+			ry="6"
+			stroke="currentColor"
+			stroke-width="1.5"
+			fill="none"
+			transform="rotate(-30 20 20)"
+		/>
+
+		<!-- Orbit path 2 (tilted top-right to bottom-left) -->
+		<ellipse
+			cx="20"
+			cy="20"
+			rx="12"
+			ry="5"
+			stroke="currentColor"
+			stroke-width="1.5"
+			fill="none"
+			transform="rotate(45 20 20)"
+		/>
+
+		<!-- Planet dot on orbit 1 -->
+		<circle cx="32" cy="14" r="3" fill="currentColor" />
+
+		<!-- Planet dot on orbit 2 -->
+		<circle cx="10" cy="28" r="2" fill="currentColor" />
+	</svg>
+</div>
+
+<style>
+	.logo-mark {
+		width: var(--container);
+		height: var(--container);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-text-secondary);
+		transition: color 0.2s ease;
+	}
+
+	.logo-mark:hover {
+		color: var(--color-primary);
+	}
+
+	.logo-mark__svg {
+		width: 100%;
+		height: 100%;
+	}
+</style>

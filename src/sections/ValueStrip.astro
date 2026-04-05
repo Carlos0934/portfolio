@@ -1,23 +1,23 @@
 ---
 // ValueStrip — Static value propositions, no collection needed
 const values = [
-	{ metric: '10M+', label: 'Daily events processed' },
-	{ metric: '-85ms', label: 'p99 latency reduction' },
-	{ metric: '40%', label: 'Infrastructure cost savings' },
-	{ metric: '85%', label: 'Manual task reduction' },
+	{ label: 'Platform Engineering', description: 'Backend systems designed for scale and reliability' },
+	{ label: 'Operational Clarity', description: 'Reducing complexity through clean architecture' },
+	{ label: 'System Integration', description: 'Connecting tools and workflows into cohesive pipelines' },
+	{ label: 'AI-Enabled Automation', description: 'Practical automation that removes friction' },
 ];
 ---
 
 <section id="value-strip" class="border-b border-border bg-surface-alt py-12 section-reveal">
 	<div class="mx-auto max-w-6xl px-4">
-		<div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
 			{values.map((item) => (
 				<div class="flex flex-col items-center justify-center text-center">
-					<span class="font-mono text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
-						{item.metric}
-					</span>
-					<span class="mt-2 text-sm text-text-muted">
+					<span class="font-mono text-base font-bold tracking-tight text-text-primary">
 						{item.label}
+					</span>
+					<span class="mt-2 text-sm text-text-muted max-w-[200px]">
+						{item.description}
 					</span>
 				</div>
 			))}
