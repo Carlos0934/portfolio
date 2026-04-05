@@ -10,5 +10,5 @@ proofSignals:
     value: "Active"
   - label: "Systems Focus"
     value: "Platform"
-resumeUrl: "#"
+resumeUrl: ""
 ---
