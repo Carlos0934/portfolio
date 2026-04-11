@@ -1,12 +1,9 @@
 ---
-title: "System Integrations"
+title: "Connectivity & APIs"
 category: "system-integrations"
 ---
 
-Connecting disparate services through robust APIs, queues, and data layers—prioritizing stability and maintainability over architectural novelty.
+Designing integration-heavy systems that connect travel providers, quoting engines, and multi-tenant SaaS products.
 
-- **API design**: REST, GraphQL, gRPC with versioning and backward compatibility
-- **Data pipelines**: ETL/ELT, real-time streaming, batch processing
-- **Message queues**: Kafka, RabbitMQ, SQS for reliable async communication
-- **Database patterns**: Read replicas, connection pooling, query optimization
-- **Error handling**: Circuit breakers, retries with backoff, dead letter queues
+- **Provider integrations**: SiteMinder, TravelClick, Omnibees, Gin RateFox, TravelGate HotelX, and other travel APIs
+- **Data & caching**: PostgreSQL, MongoDB, Redis, DAX, DynamoDB

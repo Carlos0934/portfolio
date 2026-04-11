@@ -1,25 +1,25 @@
 ---
-title: "Internal Tooling Platform"
-slug: "internal-tooling"
-summary: "Developed self-service infrastructure for engineering teams to provision environments, manage secrets, and monitor deployments."
+title: "Multi-Tenant SaaS Platform APIs"
+slug: "multi-tenant-saas-platform-apis"
+summary: "Built GraphQL and REST backends for multi-tenant SaaS products connecting insurers, service providers, agents, and internal operations."
 tags:
-  - Go
-  - Kubernetes
-  - Terraform
-  - Internal Tools
+  - NestJS
+  - GraphQL
+  - MongoDB
+  - Multi-Tenant SaaS
 order: 2
 ---
 
 ## Context
 
-Engineering teams spent significant time on manual environment setup, leading to inconsistencies and delayed feature delivery.
+Growing SaaS products needed backend services that could support multiple user roles, shared infrastructure, and integrations with storage and notification systems.
 
 ## Implementation
 
-Built a GraphQL API backed by Kubernetes controllers that exposed self-service infrastructure operations. Implemented audit logging, secret management integration, and opinionated templates that enforced best practices by default.
+Built GraphQL APIs with NestJS and TypeScript for Sektor.app, integrating S3 and multi-tenant data models to connect insurance companies, providers, and agents. Developed the backend API for Centuria.app with graph-based relationships, activities, and task management on MongoDB, and supported event-driven notifications with AWS SNS and EventBridge.
 
 ## Results
 
-- Environment provisioning standardized with infrastructure-as-code
-- Self-service tooling reduced configuration-related incidents
-- Audit trails provided visibility into infrastructure changes
+- Multi-role SaaS capabilities delivered on shared backend foundations
+- Event-driven integrations improved scalability for notifications and workflow events
+- Backend services aligned product requirements with maintainable domain boundaries

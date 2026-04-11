@@ -1,27 +1,25 @@
 ---
-title: "AI & MCP Tooling"
-slug: "ai-mcp-tools"
-summary: "Built open-source tools leveraging Model Context Protocol (MCP) and AI integration patterns for developer productivity."
+title: "Real-Time Streaming API"
+slug: "real-time-streaming-api"
+summary: "Created a Go-based real-time API and Chrome-powered scraper that tracked 128 roulette tables and emitted deduplicated live results over WebSockets."
 tags:
-  - TypeScript
-  - MCP
-  - AI Integration
-  - Open Source
+  - Go
+  - WebSockets
+  - Goroutines
+  - Browser Automation
 order: 3
 ---
 
 ## Context
 
-AI-assisted development workflows needed better integration between language models and external tools. MCP provides a standardized protocol for connecting AI systems to data sources and tools.
+The product required a live-data backend capable of collecting fast-changing table results and pushing clean updates to connected clients without duplicates.
 
 ## Implementation
 
-Developed Web Search MCP Server — an open-source MCP server that enables AI assistants to perform web searches through a standardized interface. Built with TypeScript and designed for easy integration with AI clients supporting the Model Context Protocol.
-
-Additional projects include TeacherApp (educational content platform) and Linky URL Shortener — demonstrating practical AI integration patterns for real-world applications.
+Built a real-time API in Go backed by goroutine-based workers and a Chrome-driven scraper that monitored 128 roulette tables. Added normalization and deduplication logic before broadcasting updates via WebSockets so consumers could react to a clean event stream.
 
 ## Results
 
-- Open-source MCP server with publicly verifiable GitHub repository
-- Contributions to AI tooling ecosystem usable by any MCP-compatible client
-- Real-world patterns for prompt engineering and tool integration
+- Continuous live tracking across 128 active tables
+- Deduplicated event delivery for downstream consumers
+- Low-latency real-time updates over persistent WebSocket connections

@@ -10,7 +10,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
 	{ label: 'Hero', href: '#hero', id: 'hero' },
-	{ label: 'Value', href: '#value-strip', id: 'value-strip' },
+	{ label: 'Deliverables', href: '#value-strip', id: 'value-strip' },
 	{ label: 'Case Studies', href: '#case-studies', id: 'case-studies' },
 	{ label: 'Experience', href: '#experience', id: 'experience' },
 	{ label: 'Technical', href: '#technical-focus', id: 'technical-focus' },

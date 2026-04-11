@@ -1,13 +1,9 @@
 ---
-title: "AI & Automation"
+title: "Full-Stack Delivery"
 category: "ai-automation"
 ---
 
-Applying AI-assisted tooling and scripting to eliminate repetitive tasks—building systems that reduce toil rather than create it.
+Shipping product and platform systems across backend, frontend, and service layers with a strong emphasis on maintainability.
 
-- **MCP tooling**: Model Context Protocol servers, AI client integrations, prompt engineering patterns
-- **Workflow automation**: Event-driven pipelines, scheduled jobs, idempotent operations
-- **AI-assisted development**: Code generation, review automation, intelligent tooling
-- **Scripting**: Python, Go, Bash for operational tasks and data transformation
-- **Integration patterns**: Webhooks, queues, streaming for connecting services
-- **Developer experience**: CLI tools, internal platforms, self-service infrastructure
+- **Languages & runtime**: TypeScript, JavaScript, C#, Go, SQL, Node.js
+- **Frameworks & services**: NestJS, React, Next.js, .NET 8, GraphQL, Serverless Framework

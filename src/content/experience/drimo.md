@@ -1,11 +1,9 @@
 ---
 role: "Software Developer"
 company: "Drimo"
-dateRange: "2017 — 2019"
+dateRange: "Jul 2022 – Jun 2023"
 order: 3
-location: "Santo Domingo"
+location: "Remote"
 ---
 
-Developed data ingestion pipelines processing customer analytics from multiple sources. Built internal tools that automated manual workflows for operational teams.
-
-Participated in on-call rotation and contributed to observability improvements through structured logging and alerting.
+Built cross-platform web and mobile applications with React. Maintained and optimized serverless APIs on AWS for reliability and cost efficiency. Developed features for a NestJS and GraphQL microservices ecosystem. Migrated the company's blog and website to Next.js via automated web scraping, improving load speed and SEO.

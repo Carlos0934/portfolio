@@ -20,25 +20,25 @@ const techEntries = await getCollection('technicalFocus');
 
 const sectionTitle = 'Technical Focus';
 const sectionDescription =
-	'Core capabilities I use to design, operate, and connect systems with reliability, leverage, and maintainability in mind.';
+	'Backend engineering, platform delivery, and integration work — organized by capability area.';
 
 const sectionOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
 
 const focusMeta: Record<(typeof sectionOrder)[number], FocusMeta> = {
 	'cloud-infrastructure': {
-		eyebrow: 'Platform Reliability',
-		signal: 'Infrastructure decisions optimized for deployment confidence, observability, and cost control.',
-		tags: ['Kubernetes', 'Terraform', 'Observability'],
+		eyebrow: 'Cloud Delivery',
+		signal: 'AWS-based backends tuned for deployment speed, reliability, and lower-latency workloads.',
+		tags: ['AWS', 'Serverless', 'GitHub Actions'],
 	},
 	'ai-automation': {
-		eyebrow: 'Automation Systems',
-		signal: 'AI and workflow tooling focused on removing repetitive work without increasing operational fragility.',
-		tags: ['MCP Tooling', 'Python / Go', 'Internal DX'],
+		eyebrow: 'Full-Stack Systems',
+		signal: 'Product and platform work across JavaScript/TypeScript, .NET, and Go with maintainable service boundaries.',
+		tags: ['TypeScript', '.NET 8', 'Go'],
 	},
 	'system-integrations': {
-		eyebrow: 'Service Connectivity',
-		signal: 'Integration layers designed around stability, versioning, and predictable asynchronous behavior.',
-		tags: ['APIs', 'Queues', 'Data Pipelines'],
+		eyebrow: 'Provider Connectivity',
+		signal: 'Integration layers built for hotel providers, quoting flows, and event-driven service coordination.',
+		tags: ['Travel Tech', 'GraphQL', 'Event-Driven'],
 	},
 };
 
@@ -97,7 +97,7 @@ const dossiers = sectionOrder
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
 		<div class="fx-reveal mb-10 max-w-3xl md:mb-14">
 			<p class="focus-section-kicker mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
-				Capability dossier
+				Capability areas
 			</p>
 			<h2 class="text-2xl font-bold tracking-tight text-text-primary md:text-4xl">
 				{sectionTitle}
@@ -308,7 +308,7 @@ const dossiers = sectionOrder
 
 	.focus-dossier__title {
 		margin: 0.45rem 0 0;
-		font-size: 1.45rem;
+		font-size: 1.55rem;
 		font-weight: 700;
 		letter-spacing: -0.03em;
 		color: var(--color-text-primary);

@@ -1,0 +1,265 @@
+---
+/**
+ * RegionMap — Canvas-based map showing the contiguous US and
+ * Dominican Republic with signal dots.  Operator Core aesthetic.
+ *
+ * Projection: equirectangular with cos(lat) correction at 31 °N
+ * so landmasses read at plausible relative proportions.
+ */
+---
+
+<div class="region-map" role="img" aria-label="Map showing coverage across the United States and the Dominican Republic">
+	<canvas
+		id="region-map-canvas"
+		class="region-map__canvas"
+		width="960"
+		height="420"
+	></canvas>
+	<div class="region-map__labels">
+		<span class="region-map__label">
+			<span class="region-map__dot region-map__dot--us"></span>
+			United States
+		</span>
+		<span class="region-map__label">
+			<span class="region-map__dot region-map__dot--dr"></span>
+			Dominican Republic
+		</span>
+	</div>
+</div>
+
+<!-- Graceful degradation: static text if JS disabled or canvas unsupported -->
+<noscript>
+	<p class="text-sm text-text-muted">Coverage: United States &amp; Dominican Republic</p>
+</noscript>
+
+<style>
+	.region-map {
+		position: relative;
+		width: 100%;
+		max-width: 48rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		overflow: hidden;
+	}
+
+	.region-map__canvas {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 960 / 420;
+	}
+
+	.region-map__labels {
+		display: flex;
+		gap: var(--spacing-6);
+		padding: var(--spacing-3) var(--spacing-4);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.region-map__label {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-2);
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.region-map__dot {
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+	}
+
+	.region-map__dot--us {
+		background-color: var(--color-primary);
+		box-shadow: 0 0 6px var(--color-primary);
+	}
+
+	.region-map__dot--dr {
+		background-color: var(--color-signal);
+		box-shadow: 0 0 6px var(--color-signal);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.region-map__dot--us,
+		.region-map__dot--dr {
+			box-shadow: none;
+		}
+	}
+</style>
+
+<script>
+	/**
+	 * RegionMap canvas renderer
+	 * Draws the contiguous US and DR with geographically plausible
+	 * proportions.  Uses equirectangular projection with a cos(31°N)
+	 * correction factor so that 1° lon ≈ 1° lat in pixel distance.
+	 */
+	(function () {
+		const canvas = document.getElementById('region-map-canvas');
+		if (!canvas || !(canvas instanceof HTMLCanvasElement)) return;
+
+		const context = canvas.getContext('2d');
+		if (!context) return;
+		const ctx = context;
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		// Operator Core tokens from computed styles
+		const root = getComputedStyle(document.documentElement);
+		const C = {
+			primary: root.getPropertyValue('--color-primary').trim() || '#365C8D',
+			signal: root.getPropertyValue('--color-signal').trim() || '#20899F',
+			border: root.getPropertyValue('--color-border').trim() || '#2A3140',
+			borderStrong: root.getPropertyValue('--color-border-strong').trim() || '#384256',
+			surfaceElevated: root.getPropertyValue('--color-surface-elevated').trim() || '#202634',
+		};
+
+		// ── Bounding box ──────────────────────────────────────────
+		// Spans the full US width plus Caribbean gap so the DR sits
+		// clearly southeast of Florida rather than crammed against it.
+		const LON_MIN = -130;   // Pacific coast
+		const LON_MAX = -55;    // Atlantic / east of DR
+		const LAT_MIN = 13;     // Caribbean
+		const LAT_MAX = 49;     // northern US / Canada border
+
+		// ── Projection ────────────────────────────────────────────
+		const PAD = 40;
+		const W = canvas.width;
+		const H = canvas.height;
+		const DW = W - 2 * PAD;   // drawable width  (880)
+		const DH = H - 2 * PAD;   // drawable height (340)
+		const LON_SPAN = LON_MAX - LON_MIN; // 75°
+		const LAT_SPAN = LAT_MAX - LAT_MIN; // 36°
+		const COS_REF = Math.cos(31 * Math.PI / 180); // ≈ 0.73 at gulf-coast latitude
+
+		function toX(lon) {
+			return PAD + ((lon - LON_MIN) / LON_SPAN) * COS_REF * DW + DW * (1 - COS_REF) / 2;
+		}
+		function toY(lat) {
+			return PAD + ((LAT_MAX - lat) / LAT_SPAN) * DH;
+		}
+
+		// ── Landmass outlines (simplified, lon/lat) ───────────────
+
+		// Contiguous US — clockwise from the Pacific NW.
+		// Includes a recognisable Florida peninsula taper.
+		const US = [
+			[-124, 42], [-124, 48], [-123, 49], [-117, 49], [-111, 49], [-104, 49],
+			[-100, 49], [-95, 49], [-89, 48], [-84, 47], [-82, 45], [-80, 43],
+			[-77, 43], [-74, 41], [-72, 41], [-70, 42], [-67, 45], [-67, 47],
+			[-70, 43], [-73, 41], [-75, 39], [-76, 38], [-76, 37], [-77, 35],
+			[-79, 34], [-81, 31], [-81, 25], [-83, 27], [-85, 30], [-88, 30],
+			[-89, 29], [-93, 30], [-97, 26], [-97, 28], [-95, 30], [-94, 30],
+			[-90, 29], [-90, 31], [-93, 31], [-94, 34], [-94, 37], [-95, 40],
+			[-100, 40], [-102, 41], [-104, 41], [-109, 41], [-111, 42], [-114, 43],
+			[-117, 43], [-120, 42], [-122, 42], [-124, 42],
+		];
+
+		// Dominican Republic — simplified island outline
+		const DR = [
+			[-74, 18.5], [-73, 19.8], [-72, 19.8], [-71, 19.7],
+			[-69, 19.1], [-68, 18.6], [-68.5, 18.0], [-69, 17.8],
+			[-70, 17.8], [-71, 17.6], [-72, 17.8], [-73, 18.0],
+			[-74, 18.2], [-74, 18.5],
+		];
+
+		// Signal dots — major cities / hubs (lon, lat)
+		const US_DOTS = [
+			/* 0  NYC      */ [-74.0, 40.7],
+			/* 1  Chicago  */ [-87.6, 41.9],
+			/* 2  SF       */ [-122.4, 37.8],
+			/* 3  LA       */ [-118.2, 34.1],
+			/* 4  Houston  */ [-95.4, 29.8],
+			/* 5  Miami    */ [-80.2, 25.8],
+			/* 6  Austin   */ [-97.7, 30.3],
+			/* 7  Denver   */ [-105.0, 39.7],
+			/* 8  Boston   */ [-71.1, 42.4],
+			/* 9  Seattle  */ [-122.3, 47.6],
+		];
+
+		const DR_DOTS = [
+			/* 0  Santo Domingo  */ [-69.9, 18.5],
+			/* 1  Santiago       */ [-70.7, 19.8],
+			/* 2  Punta Cana     */ [-68.5, 18.4],
+			/* 3  Barahona       */ [-71.1, 18.0],
+		];
+
+		// US→DR connection pairs  [usIndex, drIndex]
+		const LINKS = [[0, 0], [5, 2], [0, 1], [6, 0]];
+
+		// ── Render ────────────────────────────────────────────────
+		ctx.clearRect(0, 0, W, H);
+
+		// Subtle graticule grid
+		ctx.strokeStyle = C.border + '25';
+		ctx.lineWidth = 0.5;
+		for (let lon = -130; lon <= -55; lon += 10) {
+			const x = toX(lon);
+			ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+		}
+		for (let lat = 15; lat <= 50; lat += 5) {
+			const y = toY(lat);
+			ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+		}
+
+		// Polygon helper
+		function drawPoly(pts, stroke, fill, w) {
+			if (pts.length < 3) return;
+			ctx.beginPath();
+			ctx.moveTo(toX(pts[0][0]), toY(pts[0][1]));
+			for (let i = 1; i < pts.length; i++) ctx.lineTo(toX(pts[i][0]), toY(pts[i][1]));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+			ctx.strokeStyle = stroke;
+			ctx.lineWidth = w;
+			ctx.stroke();
+		}
+
+		drawPoly(US, C.borderStrong + '55', C.border + '18', 1);
+		drawPoly(DR, C.signal + '45', C.signal + '12', 1);
+
+		// Connection arcs (subtle, dashed)
+		LINKS.forEach(([ui, di]) => {
+			const u = US_DOTS[ui], d = DR_DOTS[di];
+			if (!u || !d) return;
+			const x1 = toX(u[0]), y1 = toY(u[1]);
+			const x2 = toX(d[0]), y2 = toY(d[1]);
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			// Control point arcs upward (north) to suggest flight path
+			ctx.quadraticCurveTo((x1 + x2) / 2, Math.min(y1, y2) - 25, x2, y2);
+			ctx.strokeStyle = C.primary + '1C';
+			ctx.lineWidth = 0.75;
+			ctx.setLineDash([3, 5]);
+			ctx.stroke();
+			ctx.setLineDash([]);
+		});
+
+		// Signal dot helper — small glow + solid core
+		function drawDot(x, y, color, r) {
+			if (!prefersReducedMotion) {
+				const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+				g.addColorStop(0, color + '20');
+				g.addColorStop(1, color + '00');
+				ctx.beginPath();
+				ctx.arc(x, y, r * 3, 0, Math.PI * 2);
+				ctx.fillStyle = g;
+				ctx.fill();
+			}
+			ctx.beginPath();
+			ctx.arc(x, y, r, 0, Math.PI * 2);
+			ctx.fillStyle = color;
+			ctx.fill();
+		}
+
+		US_DOTS.forEach(([lon, lat]) => drawDot(toX(lon), toY(lat), C.primary, 2));
+		DR_DOTS.forEach(([lon, lat]) => drawDot(toX(lon), toY(lat), C.signal, 2));
+	})();
+</script>

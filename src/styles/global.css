@@ -153,6 +153,29 @@ button:focus-visible {
 	border: 0;
 }
 
+/* Readability Utilities */
+.text-readable {
+	max-width: 68ch;
+	font-size: clamp(0.98rem, 0.95rem + 0.12vw, 1.04rem);
+	line-height: 1.72;
+	letter-spacing: -0.005em;
+	color: var(--color-text-secondary);
+	text-wrap: pretty;
+}
+
+.text-readable p {
+	margin: 0;
+}
+
+.text-readable p + p {
+	margin-top: 0.8rem;
+}
+
+.text-readable strong {
+	color: var(--color-text-primary);
+	font-weight: 600;
+}
+
 /* ============================================================
    ANIMATION SYSTEM — Native CSS Utilities
    ============================================================ */

@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import { NAV_ITEMS } from '../lib/nav';
 import { SITE_TITLE, LINKEDIN_URL, GITHUB_URL } from '../consts';
 import LogoMark from './LogoMark.astro';
-import resumeFile from '../assets/resume.pdf?url';
 
 const mobileNavItems = NAV_ITEMS.slice(1);
 const contactEntries = await getCollection('contact');
@@ -14,7 +13,8 @@ const { linkedinUrl, githubUrl, email } = contact?.data ?? {};
 const { resumeUrl } = hero?.data ?? {};
 const linkedInHref = linkedinUrl || LINKEDIN_URL;
 const githubHref = githubUrl || GITHUB_URL;
-const resumeHref = resumeUrl && resumeUrl !== '#' ? resumeUrl : resumeFile;
+const localResumeHref = '/Carlos-Olivo-CV.pdf';
+const resumeHref = resumeUrl && resumeUrl !== '#' ? resumeUrl : localResumeHref;
 const externalLinks = [
 	{ label: 'LinkedIn', href: linkedInHref },
 	{ label: 'GitHub', href: githubHref },
@@ -35,7 +35,12 @@ const externalLinks = [
 				) : (
 					<a href="#contact" class="top-contact-chip top-contact-chip--ghost">Contact</a>
 				)}
-				<a href={resumeHref} download="Carlos-Engel-Olivo-CV.pdf" class="top-contact-chip top-contact-chip--primary">
+				<a
+					href={resumeHref}
+					download="Carlos-Olivo-CV.pdf"
+					class="top-contact-chip top-contact-chip--primary"
+					data-resume-download
+				>
 					CV
 				</a>
 			</div>
@@ -581,9 +586,54 @@ const externalLinks = [
 		}
 	}
 
+	class ResumeDownloadLink {
+		link: HTMLAnchorElement | null;
+
+		constructor() {
+			this.link = document.querySelector('[data-resume-download]');
+			if (!this.link) return;
+
+			this.link.addEventListener('click', (event) => this.handleClick(event));
+		}
+
+		async handleClick(event: MouseEvent) {
+			const link = this.link;
+			if (!link) return;
+
+			const href = link.href;
+			if (!href) return;
+
+			const url = new URL(href, window.location.href);
+			if (url.origin !== window.location.origin) return;
+
+			event.preventDefault();
+
+			try {
+				const response = await fetch(url.toString());
+				if (!response.ok) {
+					window.location.href = url.toString();
+					return;
+				}
+
+				const blob = await response.blob();
+				const objectUrl = URL.createObjectURL(blob);
+				const downloadLink = document.createElement('a');
+				downloadLink.href = objectUrl;
+				downloadLink.download = link.download || 'Carlos-Olivo-CV.pdf';
+				document.body.append(downloadLink);
+				downloadLink.click();
+				downloadLink.remove();
+				window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+			} catch {
+				window.location.href = url.toString();
+			}
+		}
+	}
+
 	document.addEventListener('DOMContentLoaded', () => {
 		new HeaderState();
 		new MobileDrawer();
 		new EmailCopyButton();
+		new ResumeDownloadLink();
 	});
 </script>

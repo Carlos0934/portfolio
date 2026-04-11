@@ -3,10 +3,7 @@ title: "Cloud Infrastructure"
 category: "cloud-infrastructure"
 ---
 
-Building and maintaining cloud-native infrastructure with an emphasis on reliability and operational clarity.
+Building and operating AWS-backed SaaS platforms with automation, performance tuning, and delivery discipline.
 
-- **Kubernetes**: Cluster design, operator patterns, workload orchestration
-- **Terraform**: Infrastructure as code, modular composition, state management
-- **Observability**: Metrics pipelines, distributed tracing, structured logging
-- **CI/CD**: GitOps workflows, deployment automation, rollback strategies
-- **Cost discipline**: Right-sizing, reserved capacity, resource tagging
+- **Cloud & infrastructure**: AWS (Lambda, SNS, EventBridge, DAX, S3), Docker, GitHub Actions
+- **Platform optimization**: Reduced Lambda cold starts, automated deployments, and background workers for production workloads

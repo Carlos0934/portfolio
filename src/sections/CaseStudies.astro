@@ -5,27 +5,32 @@ const caseEntries = await getCollection('caseStudies');
 const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
 ---
 
-<section id="case-studies" class="border-b border-border py-16 section-reveal">
+<section id="case-studies" class="border-b border-border py-14 section-reveal md:py-20">
 	<div class="mx-auto max-w-6xl px-4">
-		<h2 class="fx-reveal mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
-			Case Studies
-		</h2>
-		<p class="fx-reveal-up mb-8 max-w-2xl text-text-secondary">
-			Work across fintech, logistics, and B2B SaaS environments—focused on systems that reduce operational friction and enable better decisions.
-		</p>
-		<div class="grid gap-8 lg:grid-cols-2 fx-stagger-group">
+		<div class="mb-8 md:mb-12">
+			<p class="fx-reveal mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
+				Proof of work
+			</p>
+			<h2 class="fx-reveal text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+				Selected Case Studies
+			</h2>
+			<p class="fx-reveal-up mt-3 max-w-2xl text-base text-text-secondary md:text-lg">
+				Backend and platform projects where integration reliability, event-driven architecture, and operational efficiency were the primary objectives.
+			</p>
+		</div>
+		<div class="grid gap-6 lg:grid-cols-2 fx-stagger-group">
 			{cases.map((item) => (
-				<article class="fx-reveal-up fx-hover-card flex flex-col rounded-lg border border-border bg-surface-elevated p-6">
-					<h3 class="mb-2 text-xl font-semibold text-text-primary">
+				<article class="fx-reveal-up flex flex-col rounded-lg border border-border bg-surface-elevated p-5 md:p-6 transition-colors hover:border-border-strong">
+					<h3 class="mb-2 text-lg font-bold tracking-tight text-text-primary md:text-xl">
 						{item.data.title}
 					</h3>
-					<p class="mb-4 flex-1 text-text-secondary">
+					<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
 						{item.data.summary}
 					</p>
 					{item.data.tags && item.data.tags.length > 0 && (
 						<div class="flex flex-wrap gap-2">
 							{item.data.tags.map((tag) => (
-								<span class="rounded-sm bg-surface px-2 py-1 font-mono text-xs text-text-muted">
+								<span class="inline-flex items-center rounded-sm bg-surface px-2.5 py-1 font-mono text-xs font-medium text-text-muted border border-border">
 									{tag}
 								</span>
 							))}

@@ -1,9 +1,9 @@
 ---
-title: "Workflow Automation"
-metric: "Automated"
-description: "Decreased manual operational tasks through systematic workflow automation and self-service tooling."
+title: "Provider & Quote Reliability"
+metric: "Real-time"
+description: "Implemented hotel provider integrations, DAX-backed views, and quote-flow improvements for faster, more reliable travel inventory responses."
 order: 3
 icon: "gear"
 ---
 
-Built internal CLI tools and CI/CD pipelines that transformed manual deployment processes into automated workflows. Introduced infrastructure-as-code practices that enabled teams to self-serve environment provisioning.
+Delivered connectivity across multiple hotel providers and optimized exchange-rate and promotions retrieval so quoting services could respond with less database pressure and better consistency.

@@ -9,14 +9,14 @@ const { Content } = await render(hero);
 const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 ---
 
-<section id="hero" class="border-b border-border py-8 sm:py-10 md:py-20 lg:py-24 section-reveal">
+<section id="hero" class="border-b border-border py-6 sm:py-8 md:py-14 lg:py-16 section-reveal">
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
-		<div class="grid gap-6 sm:gap-7 md:gap-10 lg:grid-cols-5 lg:gap-16">
+		<div class="grid gap-5 sm:gap-6 md:gap-8 lg:grid-cols-5 lg:gap-12">
 			<!-- Left Column: Content Stack -->
 			<div class="lg:col-span-3 flex flex-col">
 				<!-- Eyebrow / Availability status -->
 				{eyebrow && (
-					<div class="fx-entrance fx-entrance-delay-1 mb-2 flex items-center gap-2 md:mb-3">
+					<div class="fx-entrance fx-entrance-delay-1 mb-1.5 flex items-center gap-2 md:mb-2">
 						<span class="relative flex h-2 w-2">
 							<span class="absolute inline-flex h-full w-full animate-pulse rounded-full bg-signal opacity-75"></span>
 							<span class="relative inline-flex h-2 w-2 rounded-full bg-signal"></span>
@@ -29,13 +29,13 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 				)}
 
 				<!-- Mobile Intro Row -->
-				<div class="fx-entrance fx-entrance-delay-2 mb-3 flex items-center gap-3 md:hidden">
+				<div class="fx-entrance fx-entrance-delay-2 mb-2 flex items-center gap-3 md:hidden">
 					<div class="min-w-0 flex-1">
 						<h1 class="mb-1.5 text-[1.9rem] leading-[0.96] font-bold tracking-tight text-text-primary sm:text-[2.1rem]">
 							{title}
 						</h1>
 						{tagline && (
-							<p class="max-w-[18ch] text-sm font-medium leading-snug text-primary sm:text-[0.95rem]">
+							<p class="max-w-[22ch] text-sm font-medium leading-snug text-text-primary sm:text-[0.95rem]">
 								{tagline}
 							</p>
 						)}
@@ -59,38 +59,38 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 				</div>
 
 				<!-- Title -->
-				<h1 class="fx-entrance fx-entrance-delay-2 mb-2 hidden text-4xl font-bold tracking-tight text-text-primary md:block md:text-5xl lg:text-6xl">
+				<h1 class="fx-entrance fx-entrance-delay-2 mb-1.5 hidden text-4xl font-bold tracking-tight text-text-primary md:block md:text-[2.8rem] lg:text-5xl">
 					{title}
 				</h1>
 
 				<!-- Tagline -->
 				{tagline && (
-					<p class="fx-entrance fx-entrance-delay-3 mb-3 hidden text-lg font-medium text-primary md:mb-4 md:block md:text-2xl">
+					<p class="fx-entrance fx-entrance-delay-3 mb-3 hidden text-lg font-medium leading-snug text-text-primary md:mb-4 md:block md:text-xl lg:text-2xl lg:leading-snug">
 						{tagline}
 					</p>
 				)}
 
 				<!-- Description -->
 				{description && (
-					<p class="fx-entrance fx-entrance-delay-4 mb-4 max-w-prose text-[0.95rem] leading-relaxed tracking-wide text-text-secondary sm:text-lg md:mb-6 md:text-xl md:leading-relaxed">
+					<p class="fx-entrance fx-entrance-delay-4 mb-3 max-w-prose text-[0.95rem] leading-relaxed text-text-secondary sm:text-base md:mb-4 md:text-lg">
 						{description}
 					</p>
 				)}
 
 				<!-- Content Body (Markdown) -->
-				<div class="fx-entrance fx-entrance-delay-5 mb-5 prose prose-invert prose-sm max-w-none text-text-secondary md:mb-8">
+				<div class="fx-entrance fx-entrance-delay-5 mb-4 prose prose-invert prose-sm max-w-none text-text-secondary md:mb-6">
 					<Content />
 				</div>
 
 				<!-- Proof Signals -->
 				{proofSignals && proofSignals.length > 0 && (
-					<div class="fx-entrance fx-entrance-delay-5 mb-5 grid grid-cols-3 gap-3 border-l-2 border-border pl-3 md:mb-8 md:flex md:flex-wrap md:gap-6 md:pl-4">
+					<div class="fx-entrance fx-entrance-delay-5 mb-4 grid grid-cols-3 gap-3 border-l-2 border-border-strong pl-3 md:mb-6 md:flex md:flex-wrap md:gap-6 md:pl-4">
 						{proofSignals.map((signal) => (
-							<div class="flex min-w-0 flex-col fx-hover-lift">
-								<span class="font-mono text-xl font-bold text-text-primary md:text-2xl">
+							<div class="flex min-w-0 flex-col gap-0.5 fx-hover-lift">
+								<span class="font-mono text-xl font-bold tracking-tight text-text-primary md:text-2xl">
 									{signal.value}
 								</span>
-								<span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-text-muted md:text-xs md:tracking-wider">
+								<span class="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-text-secondary md:text-sm md:tracking-wider">
 									{signal.label}
 								</span>
 							</div>

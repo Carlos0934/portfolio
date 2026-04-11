@@ -12,13 +12,16 @@ const experiencesWithContent = await Promise.all(
 const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="experience" class="experience-section border-b border-border bg-surface-alt py-16 section-reveal md:py-20">
+<section id="experience" class="experience-section border-b border-border bg-surface-alt py-12 section-reveal md:py-16">
 	<div class="mx-auto max-w-4xl px-4">
-		<h2 class="mb-8 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+		<p class="mb-2 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
+			Career path
+		</p>
+		<h2 class="mb-6 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
 			Experience
 		</h2>
 
-		<div class="experience-list space-y-8" data-experience-list>
+		<div class="experience-list space-y-6" data-experience-list>
 			{sortedExperiences.map((item, index) => (
 				<article class="experience-entry relative pl-6" style={`--experience-delay: ${index * 90}ms;`}>
 					<div class="experience-marker" aria-hidden="true">
@@ -26,7 +29,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 						<div class="experience-dot"></div>
 					</div>
 
-					<div class="experience-entry__header mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+					<div class="experience-entry__header mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
 						<h3 class="experience-entry__title text-lg font-semibold text-text-primary">
 							{item.data.role}
 						</h3>
@@ -40,7 +43,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 						{item.data.location && <span> · {item.data.location}</span>}
 					</div>
 
-					<div class="experience-entry__body prose prose-invert max-w-none text-sm text-text-secondary">
+					<div class="experience-entry__body text-readable">
 						<item.Content />
 					</div>
 				</article>
@@ -113,10 +116,10 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 <style>
 	.experience-entry {
 		opacity: 0;
-		transform: translate3d(0, 28px, 0);
+		transform: translate3d(0, 16px, 0);
 		transition:
-			opacity 520ms var(--fx-easing-out),
-			transform 620ms var(--fx-easing-out),
+			opacity 420ms var(--fx-easing-out),
+			transform 500ms var(--fx-easing-out),
 			border-color 220ms var(--fx-easing-out);
 	}
 
@@ -176,7 +179,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 	.experience-entry__meta,
 	.experience-entry__body {
 		opacity: 0;
-		transform: translate3d(0, 18px, 0);
+		transform: translate3d(0, 12px, 0);
 	}
 
 	.experience-entry.is-visible {

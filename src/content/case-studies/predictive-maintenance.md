@@ -1,25 +1,25 @@
 ---
-title: "Predictive Maintenance Pipeline"
-slug: "predictive-maintenance"
-summary: "Built a data pipeline that ingests sensor telemetry and feeds ML models for predicting equipment failures in industrial settings."
+title: "Hotel Connectivity & Quote Performance"
+slug: "hotel-connectivity-quote-performance"
+summary: "Built hotel provider integrations and DAX-backed data paths that improved synchronization, quote responsiveness, and API consistency across travel inventory systems."
 tags:
-  - Python
-  - Kafka
-  - TimescaleDB
-  - ML Ops
+  - .NET
+  - DAX
+  - Travel APIs
+  - Background Workers
 order: 1
 ---
 
 ## Context
 
-Industrial clients needed better visibility into equipment health to prevent costly unplanned downtime.
+Travel quoting and connectivity flows depended on multiple third-party providers with different behaviors, latency profiles, and data constraints.
 
 ## Implementation
 
-Designed an event streaming architecture using Kafka for real-time sensor data ingestion. Implemented feature engineering pipelines that transformed raw telemetry into ML-ready datasets. Deployed inference endpoints that served predictions with low-latency response times.
+Implemented provider integrations for SiteMinder (SiteConnect), TravelClick, Omnibees, Gin RateFox, and TravelGate HotelX, while also supporting Hotelbeds, DerbySoft, SynXis, and Expedia Rapid API. Added a DAX-backed exchange-rate materialized view and a promotions materialized view powered by background workers to reduce quote-time data access overhead.
 
 ## Results
 
-- Near-real-time ingestion replaced hourly batch cycles for fresher predictions
-- Automated alerting surfaces data quality issues before they reach consumers
-- Observable pipeline with structured logging for operational clarity
+- Real-time rate and availability synchronization across multiple hotel providers
+- Lower quote-service query load through cached exchange-rate and promotions paths
+- Improved API consistency and operational reliability for provider integrations

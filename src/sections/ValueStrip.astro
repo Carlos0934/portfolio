@@ -1,22 +1,25 @@
 ---
-// ValueStrip — Static value propositions, no collection needed
+// ValueStrip — Core capability areas for quick scanning
 const values = [
-	{ label: 'Platform Engineering', description: 'Backend systems designed for scale and reliability' },
-	{ label: 'Operational Clarity', description: 'Reducing complexity through clean architecture' },
-	{ label: 'System Integration', description: 'Connecting tools and workflows into cohesive pipelines' },
-	{ label: 'AI-Enabled Automation', description: 'Practical automation that removes friction' },
+	{ label: 'Scalable APIs', description: 'REST and GraphQL backends built for multi-tenant SaaS, travel platforms, and high-throughput workloads.' },
+	{ label: 'Event-Driven Systems', description: 'SNS, EventBridge, background workers, and real-time pipelines that keep services decoupled and responsive.' },
+	{ label: 'Provider Integrations', description: 'Hotel connectivity, rate synchronization, and quoting flows across 8+ travel inventory providers.' },
+	{ label: 'Cloud Automation', description: 'AWS deployments, CI/CD, and performance tuning that cut cold starts, reduce toil, and improve reliability.' },
 ];
 ---
 
-<section id="value-strip" class="border-b border-border bg-surface-alt py-12 section-reveal">
+<section id="value-strip" class="border-b border-border bg-surface-alt py-10 section-reveal md:py-14">
 	<div class="mx-auto max-w-6xl px-4">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 fx-stagger-group">
+		<p class="mb-6 font-mono text-xs uppercase tracking-[0.22em] text-text-muted md:mb-8">
+			What I deliver
+		</p>
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 fx-stagger-group">
 			{values.map((item) => (
-				<div class="fx-reveal-up fx-hover-lift flex flex-col items-center justify-center text-center rounded-lg border border-transparent px-3 py-4">
-					<span class="font-mono text-base font-bold tracking-tight text-text-primary">
+				<div class="fx-reveal-up flex flex-col gap-2 rounded-lg border border-border bg-surface px-4 py-5 transition-colors hover:border-border-strong hover:bg-surface-elevated">
+					<span class="text-base font-bold tracking-tight text-text-primary md:text-lg">
 						{item.label}
 					</span>
-					<span class="mt-2 text-sm text-text-muted max-w-[200px]">
+					<span class="text-sm leading-relaxed text-text-secondary">
 						{item.description}
 					</span>
 				</div>
