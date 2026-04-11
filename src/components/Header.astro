@@ -1,21 +1,64 @@
 ---
+import { getCollection } from 'astro:content';
 import { NAV_ITEMS } from '../lib/nav';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, LINKEDIN_URL, GITHUB_URL } from '../consts';
 import LogoMark from './LogoMark.astro';
+import resumeFile from '../assets/resume.pdf?url';
 
-// Mobile nav excludes hero (landing section)
 const mobileNavItems = NAV_ITEMS.slice(1);
+const contactEntries = await getCollection('contact');
+const heroEntries = await getCollection('hero');
+const contact = contactEntries[0];
+const hero = heroEntries[0];
+const { linkedinUrl, githubUrl, email } = contact?.data ?? {};
+const { resumeUrl } = hero?.data ?? {};
+const linkedInHref = linkedinUrl || LINKEDIN_URL;
+const githubHref = githubUrl || GITHUB_URL;
+const resumeHref = resumeUrl && resumeUrl !== '#' ? resumeUrl : resumeFile;
+const externalLinks = [
+	{ label: 'LinkedIn', href: linkedInHref },
+	{ label: 'GitHub', href: githubHref },
+];
 ---
 
-<header class="mobile-header">
+<header class="site-header" data-scrolled="false">
+	<div class="top-contact-bar">
+		<div class="top-contact-bar__inner">
+			<div class="top-contact-bar__actions">
+				{email ? (
+					<>
+						<a href={`mailto:${email}`} class="top-contact-email">{email}</a>
+						<button type="button" class="top-contact-chip top-contact-chip--ghost" data-copy-email data-email={email}>
+							Copy
+						</button>
+					</>
+				) : (
+					<a href="#contact" class="top-contact-chip top-contact-chip--ghost">Contact</a>
+				)}
+				<a href={resumeHref} download="Carlos-Engel-Olivo-CV.pdf" class="top-contact-chip top-contact-chip--primary">
+					CV
+				</a>
+			</div>
+
+			<div class="top-contact-bar__links" aria-label="External links">
+				{externalLinks.map((link, index) => (
+					<>
+						{index > 0 && <span class="top-contact-bar__separator" aria-hidden="true">/</span>}
+						<a href={link.href} target="_blank" rel="noopener noreferrer" class="top-contact-link">
+							{link.label}
+						</a>
+					</>
+				))}
+			</div>
+		</div>
+	</div>
+
 	<nav class="header-nav" aria-label="Main navigation">
-		<!-- Logo -->
 		<a href="#hero" class="logo-link">
 			<LogoMark size="sm" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
-		
-		<!-- Mobile Menu Button -->
+
 		<button
 			class="menu-button"
 			id="menu-toggle"
@@ -35,8 +78,7 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 			</svg>
 		</button>
 	</nav>
-	
-	<!-- Mobile Drawer -->
+
 	<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu" inert aria-hidden="true">
 		<div class="drawer-content">
 			<nav class="drawer-nav" aria-label="Navigation menu">
@@ -52,31 +94,144 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 			</nav>
 		</div>
 	</div>
-	
-	<!-- Backdrop overlay -->
+
 	<div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
 </header>
 
 <style>
-	.mobile-header {
+	.site-header {
 		position: sticky;
 		top: 0;
-		z-index: 50;
-		border-bottom: 1px solid var(--color-border);
-		background: rgba(26, 30, 38, 0.95);
-		backdrop-filter: blur(8px);
-		-webkit-backdrop-filter: blur(8px);
+		z-index: 60;
+		isolation: isolate;
+		border-bottom: 1px solid transparent;
+		background-color: rgb(16 18 20 / 0.82);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+		transition:
+			background-color var(--fx-duration-normal) var(--fx-easing-out),
+			border-color var(--fx-duration-normal) var(--fx-easing-out),
+			box-shadow var(--fx-duration-normal) var(--fx-easing-out);
 	}
-	
+
+	.site-header[data-scrolled="true"] {
+		border-bottom-color: rgb(56 66 86 / 0.82);
+		background-color: rgb(26 30 38 / 0.95);
+		box-shadow: 0 12px 28px rgb(0 0 0 / 0.18);
+	}
+
+	.top-contact-bar__inner,
+	.header-nav {
+		width: min(100%, 78rem);
+		margin: 0 auto;
+		padding-inline: 1rem;
+	}
+
+	.top-contact-bar {
+		padding: 0.85rem 0;
+		transition: padding var(--fx-duration-normal) var(--fx-easing-out);
+	}
+
+	.site-header[data-scrolled="true"] .top-contact-bar {
+		padding: 0.62rem 0;
+	}
+
+	.top-contact-bar__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem 1.25rem;
+		flex-wrap: wrap;
+	}
+
+	.top-contact-bar__actions,
+	.top-contact-bar__links {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.top-contact-email,
+	.top-contact-link {
+		text-decoration: none;
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		letter-spacing: 0.02em;
+		color: var(--color-text-secondary);
+		transition: color var(--fx-duration-fast) ease;
+	}
+
+	.top-contact-email:hover,
+	.top-contact-email:focus-visible,
+	.top-contact-link:hover,
+	.top-contact-link:focus-visible {
+		color: var(--color-text-primary);
+	}
+
+	.top-contact-chip {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.5rem;
+		padding: 0 1rem;
+		border: 1px solid rgb(56 66 86 / 0.72);
+		border-radius: 999px;
+		background: rgb(28 31 37 / 0.72);
+		color: var(--color-text-primary);
+		font-family: var(--font-mono);
+		font-size: 0.74rem;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			background-color var(--fx-duration-fast) ease,
+			border-color var(--fx-duration-fast) ease,
+			color var(--fx-duration-fast) ease,
+			transform var(--fx-duration-fast) ease;
+	}
+
+	.top-contact-chip:hover,
+	.top-contact-chip:focus-visible {
+		border-color: var(--color-primary);
+		color: var(--color-text-primary);
+		transform: translateY(-1px);
+	}
+
+	.top-contact-chip--ghost {
+		background: transparent;
+		color: var(--color-text-secondary);
+	}
+
+	.top-contact-chip--primary {
+		background: rgb(255 255 255 / 0.06);
+	}
+
+	.top-contact-bar__separator {
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		color: var(--color-text-muted);
+	}
+
 	.header-nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--spacing-4);
-		max-width: 640px;
-		margin: 0 auto;
+		padding-top: 0;
+		padding-bottom: 0.85rem;
+		border-top: 1px solid rgb(42 49 64 / 0.45);
+		transition:
+			padding-bottom var(--fx-duration-normal) var(--fx-easing-out),
+			border-top-color var(--fx-duration-normal) var(--fx-easing-out);
 	}
-	
+
+	.site-header[data-scrolled="true"] .header-nav {
+		padding-bottom: 0.62rem;
+		border-top-color: rgb(56 66 86 / 0.72);
+	}
+
 	.logo-link {
 		display: flex;
 		align-items: center;
@@ -87,29 +242,22 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		font-size: 0.875rem;
 		font-weight: 700;
 		letter-spacing: -0.01em;
-		transition: color 0.2s ease;
+		transition: color var(--fx-duration-fast) ease;
 	}
-	
+
 	.logo-link:hover,
 	.logo-link:focus-visible {
 		color: var(--color-primary);
 	}
-	
+
 	.logo-link :global(.logo-mark) {
-		transition: color 0.2s ease;
+		transition: color var(--fx-duration-fast) ease;
 	}
-	
+
 	.logo-text {
 		display: none;
 	}
-	
-	@media (min-width: 480px) {
-		.logo-text {
-			display: inline;
-		}
-	}
-	
-	/* Menu Button */
+
 	.menu-button {
 		display: flex;
 		align-items: center;
@@ -122,31 +270,30 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		background: var(--color-surface);
 		color: var(--color-text-secondary);
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: all var(--fx-duration-fast) ease;
 	}
-	
+
 	.menu-button:hover {
 		border-color: var(--color-primary);
 		color: var(--color-text-primary);
 	}
-	
+
 	.menu-button:focus-visible {
 		outline: 2px solid var(--color-primary);
 		outline-offset: 2px;
 	}
-	
+
 	.menu-button[aria-expanded="true"] {
 		border-color: var(--color-primary);
 		color: var(--color-primary);
 	}
-	
+
 	.menu-icon,
 	.close-icon {
 		width: 1.25rem;
 		height: 1.25rem;
 	}
-	
-	/* Mobile Drawer */
+
 	.mobile-drawer {
 		position: fixed;
 		top: 0;
@@ -161,20 +308,20 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		overflow-y: auto;
 		z-index: 100;
 	}
-	
+
 	.mobile-drawer[data-open="true"] {
 		transform: translateX(0);
 	}
-	
+
 	.drawer-content {
 		padding: var(--spacing-16) var(--spacing-6);
 	}
-	
+
 	.drawer-nav {
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	.drawer-list {
 		list-style: none;
 		margin: 0;
@@ -183,7 +330,7 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		flex-direction: column;
 		gap: var(--spacing-2);
 	}
-	
+
 	.drawer-link {
 		display: block;
 		padding: var(--spacing-3) var(--spacing-4);
@@ -196,59 +343,73 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 		border-radius: var(--radius-sm);
 		transition: all 0.15s ease;
 	}
-	
+
 	.drawer-link:hover {
 		background: var(--color-surface-elevated);
 		color: var(--color-text-primary);
 		border-left: 2px solid var(--color-primary);
 		padding-left: calc(var(--spacing-4) - 2px);
 	}
-	
+
 	.drawer-link:focus-visible {
 		outline: 2px solid var(--color-primary);
 		outline-offset: -2px;
 	}
-	
+
 	.drawer-link.active {
 		background: var(--color-surface-elevated);
 		color: var(--color-primary);
 		border-left: 3px solid var(--color-primary);
 		padding-left: calc(var(--spacing-4) - 3px);
 	}
-	
-	/* Backdrop */
+
 	.drawer-backdrop {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgba(16, 18, 20, 0.8);
+		background: rgb(16 18 20 / 0.8);
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 0.25s ease, visibility 0.25s ease;
 		z-index: 90;
 	}
-	
+
 	.drawer-backdrop[data-visible="true"] {
 		opacity: 1;
 		visibility: visible;
 	}
-	
-	/* Hide on desktop (Progress Sidebar handles navigation) */
+
+	@media (min-width: 480px) {
+		.logo-text {
+			display: inline;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.top-contact-bar__inner {
+			align-items: flex-start;
+		}
+
+		.top-contact-bar__links {
+			gap: 0.5rem;
+		}
+	}
+
 	@media (min-width: 1280px) {
-		.mobile-header {
+		.header-nav {
 			display: none;
 		}
 	}
-	
-	/* Reduced motion */
+
 	@media (prefers-reduced-motion: reduce) {
+		.site-header,
+		.top-contact-email,
+		.top-contact-link,
+		.top-contact-chip,
 		.mobile-drawer,
-		.drawer-backdrop {
-			transition: none;
-		}
-		
+		.drawer-backdrop,
 		.drawer-link {
 			transition: none;
 		}
@@ -256,130 +417,173 @@ const mobileNavItems = NAV_ITEMS.slice(1);
 </style>
 
 <script>
-	// Mobile Drawer Controller
 	class MobileDrawer {
+		drawer: HTMLElement | null;
+		backdrop: HTMLElement | null;
+		toggleBtn: HTMLButtonElement | null;
+		drawerLinks: NodeListOf<HTMLAnchorElement>;
+		isOpen: boolean;
+		previousActiveElement: Element | null;
+
 		constructor() {
 			this.drawer = document.getElementById('mobile-drawer');
 			this.backdrop = document.getElementById('drawer-backdrop');
-			this.toggleBtn = document.getElementById('menu-toggle');
+			this.toggleBtn = document.getElementById('menu-toggle') as HTMLButtonElement | null;
 			this.drawerLinks = document.querySelectorAll('[data-nav-link]');
 			this.isOpen = false;
 			this.previousActiveElement = null;
-			
+
 			if (!this.drawer || !this.toggleBtn || !this.backdrop) return;
-			
+
 			this.init();
 		}
-		
+
 		init() {
-			// Toggle button
-			this.toggleBtn.addEventListener('click', () => this.toggle());
-			
-			// Close on backdrop click
-			this.backdrop.addEventListener('click', () => this.close());
-			
-			// Close on nav link click
-			this.drawerLinks.forEach(link => {
-				link.addEventListener('click', () => {
-					this.close();
-					// Smooth scroll is handled by native browser behavior
-				});
+			this.toggleBtn?.addEventListener('click', () => this.toggle());
+			this.backdrop?.addEventListener('click', () => this.close());
+
+			this.drawerLinks.forEach((link) => {
+				link.addEventListener('click', () => this.close());
 			});
-			
-			// Close on Escape key
-			document.addEventListener('keydown', (e) => {
+
+			document.addEventListener('keydown', (e: KeyboardEvent) => {
 				if (e.key === 'Escape' && this.isOpen) {
 					this.close();
 				}
 			});
-			
-			// Trap focus within drawer when open
-			this.drawer.addEventListener('keydown', (e) => {
+
+			this.drawer?.addEventListener('keydown', (e: KeyboardEvent) => {
 				if (e.key === 'Tab' && this.isOpen) {
 					this.trapFocus(e);
 				}
 			});
 		}
-		
+
 		toggle() {
 			this.isOpen ? this.close() : this.open();
 		}
-		
+
 		open() {
+			if (!this.drawer || !this.toggleBtn || !this.backdrop) return;
+
 			this.isOpen = true;
 			this.previousActiveElement = document.activeElement;
-			
-			// Remove inert and aria-hidden before opening
+
 			this.drawer.removeAttribute('inert');
 			this.drawer.removeAttribute('aria-hidden');
-			
-			// Update ARIA
 			this.toggleBtn.setAttribute('aria-expanded', 'true');
 			this.toggleBtn.setAttribute('aria-label', 'Close navigation menu');
-			
-			// Show drawer
 			this.drawer.setAttribute('data-open', 'true');
 			this.backdrop.setAttribute('data-visible', 'true');
-			
-			// Prevent body scroll
 			document.body.style.overflow = 'hidden';
-			
-			// Focus first link
-			setTimeout(() => {
-				const firstLink = this.drawer.querySelector('a');
-				if (firstLink) firstLink.focus();
+
+			window.setTimeout(() => {
+				const firstLink = this.drawer?.querySelector('a');
+				if (firstLink instanceof HTMLElement) firstLink.focus();
 			}, 100);
 		}
-		
+
 		close() {
+			if (!this.drawer || !this.toggleBtn || !this.backdrop) return;
+
 			this.isOpen = false;
-			
-			// Update ARIA
 			this.toggleBtn.setAttribute('aria-expanded', 'false');
 			this.toggleBtn.setAttribute('aria-label', 'Open navigation menu');
-			
-			// Hide drawer
 			this.drawer.setAttribute('data-open', 'false');
 			this.backdrop.setAttribute('data-visible', 'false');
-			
-			// Restore body scroll
 			document.body.style.overflow = '';
-			
-			// Restore inert and aria-hidden after transition
-			setTimeout(() => {
-				this.drawer.setAttribute('inert', '');
-				this.drawer.setAttribute('aria-hidden', 'true');
+
+			window.setTimeout(() => {
+				this.drawer?.setAttribute('inert', '');
+				this.drawer?.setAttribute('aria-hidden', 'true');
 			}, 250);
-			
-			// Restore focus to toggle button
-			if (this.previousActiveElement) {
+
+			if (this.previousActiveElement instanceof HTMLElement) {
 				this.previousActiveElement.focus();
 			}
 		}
-		
-		trapFocus(e) {
-			const focusableElements = this.drawer.querySelectorAll('a, button');
+
+		trapFocus(e: KeyboardEvent) {
+			if (!this.drawer) return;
+
+			const focusableElements = this.drawer.querySelectorAll<HTMLElement>('a, button');
 			const firstElement = focusableElements[0];
 			const lastElement = focusableElements[focusableElements.length - 1];
-			
+
+			if (!firstElement || !lastElement) return;
+
 			if (e.shiftKey) {
-				// Shift + Tab
 				if (document.activeElement === firstElement) {
 					e.preventDefault();
 					lastElement.focus();
 				}
-			} else {
-				// Tab
-				if (document.activeElement === lastElement) {
-					e.preventDefault();
-					firstElement.focus();
-				}
+			} else if (document.activeElement === lastElement) {
+				e.preventDefault();
+				firstElement.focus();
 			}
 		}
 	}
-	
-	// Initialize on DOM ready
+
+	class HeaderState {
+		header: HTMLElement | null;
+		hero: HTMLElement | null;
+
+		constructor() {
+			this.header = document.querySelector('.site-header');
+			this.hero = document.getElementById('hero');
+
+			if (!this.header) return;
+
+			const header = this.header;
+			const hero = this.hero;
+
+			if (!hero || !('IntersectionObserver' in window)) {
+				header.setAttribute('data-scrolled', 'true');
+				return;
+			}
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					const [entry] = entries;
+					const isNearTop = entry.isIntersecting && entry.intersectionRatio > 0.2;
+					header.setAttribute('data-scrolled', isNearTop ? 'false' : 'true');
+				},
+				{
+					threshold: [0, 0.2, 0.6],
+					rootMargin: '-72px 0px 0px 0px',
+				}
+			);
+
+			observer.observe(hero);
+		}
+	}
+
+	class EmailCopyButton {
+		button: HTMLButtonElement | null;
+
+		constructor() {
+			this.button = document.querySelector('[data-copy-email]');
+			if (!this.button) return;
+
+			const button = this.button as HTMLButtonElement;
+
+			button.addEventListener('click', async () => {
+				const email = button.dataset.email;
+				if (!email || !navigator.clipboard) return;
+
+				await navigator.clipboard.writeText(email);
+				const originalLabel = button.textContent;
+				button.textContent = 'Copied';
+				window.setTimeout(() => {
+					button.textContent = originalLabel;
+				}, 1400);
+			});
+		}
+	}
+
 	document.addEventListener('DOMContentLoaded', () => {
+		new HeaderState();
 		new MobileDrawer();
+		new EmailCopyButton();
 	});
 </script>

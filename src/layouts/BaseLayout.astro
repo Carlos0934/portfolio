@@ -2,7 +2,6 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import ProgressSidebar from '../components/ProgressSidebar.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 interface Props {
@@ -24,9 +23,6 @@ const { title, description } = Astro.props;
 		
 		<!-- Mobile Header with Logo -->
 		<Header />
-		
-		<!-- Progress Sidebar for wide screens -->
-		<ProgressSidebar />
 		
 		<main id="main-content" tabindex="-1" class="min-h-screen">
 			<slot />

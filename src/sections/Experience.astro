@@ -8,31 +8,39 @@ const experiencesWithContent = await Promise.all(
 		return { ...entry, Content };
 	})
 );
+
 const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="experience" class="border-b border-border bg-surface-alt py-16 section-reveal">
+<section id="experience" class="experience-section border-b border-border bg-surface-alt py-16 section-reveal md:py-20">
 	<div class="mx-auto max-w-4xl px-4">
 		<h2 class="mb-8 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
 			Experience
 		</h2>
-		<div class="space-y-8 fx-stagger-group">
-			{sortedExperiences.map((item) => (
-				<article class="fx-reveal-left relative border-l-2 border-border pl-6">
-					<div class="fx-timeline-dot absolute left-0 top-0 h-2 w-2 -translate-x-[5px] rounded-full bg-primary" aria-hidden="true" />
-					<div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-						<h3 class="text-lg font-semibold text-text-primary">
+
+		<div class="experience-list space-y-8" data-experience-list>
+			{sortedExperiences.map((item, index) => (
+				<article class="experience-entry relative pl-6" style={`--experience-delay: ${index * 90}ms;`}>
+					<div class="experience-marker" aria-hidden="true">
+						<div class="experience-line"></div>
+						<div class="experience-dot"></div>
+					</div>
+
+					<div class="experience-entry__header mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+						<h3 class="experience-entry__title text-lg font-semibold text-text-primary">
 							{item.data.role}
 						</h3>
-						<span class="text-text-muted">
+						<span class="experience-entry__company text-text-muted">
 							@ {item.data.company}
 						</span>
 					</div>
-					<div class="mb-3 font-mono text-sm text-text-muted">
+
+					<div class="experience-entry__meta mb-3 font-mono text-sm text-text-muted">
 						{item.data.dateRange}
 						{item.data.location && <span> · {item.data.location}</span>}
 					</div>
-					<div class="prose prose-invert max-w-none text-sm text-text-secondary">
+
+					<div class="experience-entry__body prose prose-invert max-w-none text-sm text-text-secondary">
 						<item.Content />
 					</div>
 				</article>
@@ -40,3 +48,189 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		</div>
 	</div>
 </section>
+
+<script>
+	function getExperienceThreshold() {
+		const width = window.innerWidth;
+		if (width < 640) return 0.18;
+		if (width < 1024) return 0.24;
+		return 0.3;
+	}
+
+	function initExperienceAppear() {
+		const section = document.getElementById('experience');
+		const list = section?.querySelector('[data-experience-list]');
+		if (!section || !list) return;
+
+		const items = Array.from(list.querySelectorAll('.experience-entry')) as HTMLElement[];
+		if (!items.length) return;
+
+		items.forEach((item) => {
+			const marker = item.querySelector('.experience-marker') as HTMLElement | null;
+			if (!marker) return;
+
+			const travel = Math.max(marker.offsetHeight - 8, 0);
+			item.style.setProperty('--experience-marker-travel', `${travel}px`);
+		});
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+			section.classList.add('is-visible');
+			items.forEach((item) => item.classList.add('is-visible'));
+			return;
+		}
+
+		const threshold = getExperienceThreshold();
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+
+					section.classList.add('is-visible');
+					items.forEach((item) => item.classList.add('is-visible'));
+					observer.disconnect();
+				});
+			},
+			{
+				threshold,
+				rootMargin: '0px 0px -6% 0px',
+			}
+		);
+
+		observer.observe(section);
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initExperienceAppear);
+	} else {
+		initExperienceAppear();
+	}
+
+	document.addEventListener('astro:after-swap', initExperienceAppear);
+	window.addEventListener('resize', initExperienceAppear);
+</script>
+
+<style>
+	.experience-entry {
+		opacity: 0;
+		transform: translate3d(0, 28px, 0);
+		transition:
+			opacity 520ms var(--fx-easing-out),
+			transform 620ms var(--fx-easing-out),
+			border-color 220ms var(--fx-easing-out);
+	}
+
+	.experience-marker {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 10px;
+	}
+
+	.experience-line {
+		position: absolute;
+		left: 50%;
+		top: 4px;
+		bottom: 0;
+		width: 2px;
+		transform: translateX(-50%);
+		overflow: hidden;
+	}
+
+	.experience-line::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgb(54 92 141 / 0.95), rgb(56 66 86 / 0.68));
+		transform-origin: bottom center;
+		transform: scaleY(0);
+		opacity: 0;
+		transition:
+			transform 760ms var(--fx-easing-out),
+			opacity 260ms var(--fx-easing-out);
+		transition-delay: var(--experience-delay, 0ms);
+	}
+
+	.experience-dot {
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		z-index: 1;
+		width: 8px;
+		height: 8px;
+		border-radius: 999px;
+		background: var(--color-primary);
+		opacity: 0;
+		transform: translateX(-50%) translateY(0) scale(0.45);
+		transition:
+			opacity 320ms var(--fx-easing-out),
+			transform 900ms var(--fx-easing-out),
+			box-shadow 420ms var(--fx-easing-out);
+		transition-delay: var(--experience-delay, 0ms);
+		box-shadow: 0 0 0 0 rgb(54 92 141 / 0);
+	}
+
+	.experience-entry__title,
+	.experience-entry__company,
+	.experience-entry__meta,
+	.experience-entry__body {
+		opacity: 0;
+		transform: translate3d(0, 18px, 0);
+	}
+
+	.experience-entry.is-visible {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+		transition-delay: var(--experience-delay, 0ms);
+	}
+
+	.experience-entry.is-visible .experience-line::before {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+
+	.experience-entry.is-visible .experience-dot {
+		opacity: 1;
+		transform: translateX(-50%) translateY(calc(-1 * var(--experience-marker-travel, 40px))) scale(1);
+		box-shadow: 0 0 0 6px rgb(54 92 141 / 0.12);
+	}
+
+	.experience-entry.is-visible .experience-entry__title,
+	.experience-entry.is-visible .experience-entry__company,
+	.experience-entry.is-visible .experience-entry__meta,
+	.experience-entry.is-visible .experience-entry__body {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+		transition-property: opacity, transform;
+		transition-duration: 420ms, 520ms;
+		transition-timing-function: var(--fx-easing-out), var(--fx-easing-out);
+	}
+
+	.experience-entry.is-visible .experience-entry__title,
+	.experience-entry.is-visible .experience-entry__company {
+		transition-delay: calc(var(--experience-delay, 0ms) + 90ms);
+	}
+
+	.experience-entry.is-visible .experience-entry__meta {
+		transition-delay: calc(var(--experience-delay, 0ms) + 190ms);
+	}
+
+	.experience-entry.is-visible .experience-entry__body {
+		transition-delay: calc(var(--experience-delay, 0ms) + 310ms);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.experience-entry,
+		.experience-line::before,
+		.experience-dot,
+		.experience-entry__title,
+		.experience-entry__company,
+		.experience-entry__meta,
+		.experience-entry__body {
+			opacity: 1;
+			transform: none;
+			transition: none;
+		}
+	}
+</style>

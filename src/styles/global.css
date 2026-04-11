@@ -78,7 +78,14 @@
 /* Base Styles */
 html {
 	scroll-behavior: smooth;
+	scroll-padding-top: 6rem;
 	overflow-x: clip;
+}
+
+@media (max-width: 1279px) {
+	html {
+		scroll-padding-top: 8rem;
+	}
 }
 
 body {
@@ -216,6 +223,17 @@ button:focus-visible {
 	}
 }
 
+@keyframes fx-slide-right {
+	from {
+		opacity: 0;
+		transform: translateX(calc(var(--fx-distance-md) * -1));
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
 /* Progressive Enhancement for Scroll-Driven Animations */
 /* Modern browsers: animation-timeline with view() */
 @supports (animation-timeline: view()) {
@@ -243,6 +261,13 @@ button:focus-visible {
 	/* Reveal Left — Slide in from right */
 	.fx-reveal-left {
 		animation: fx-slide-left linear forwards;
+		animation-timeline: view();
+		animation-range: entry 10% cover 34%;
+	}
+
+	/* Reveal Right — Slide in from left */
+	.fx-reveal-right {
+		animation: fx-slide-right linear forwards;
 		animation-timeline: view();
 		animation-range: entry 10% cover 34%;
 	}
@@ -278,6 +303,7 @@ button:focus-visible {
 	.fx-reveal-up,
 	.fx-reveal-scale,
 	.fx-reveal-left,
+	.fx-reveal-right,
 	.fx-fade {
 		opacity: 1;
 		transform: none;
@@ -303,6 +329,7 @@ button:focus-visible {
 	.fx-reveal-up,
 	.fx-reveal-scale,
 	.fx-reveal-left,
+	.fx-reveal-right,
 	.fx-fade {
 		animation: none !important;
 		opacity: 1 !important;
@@ -635,8 +662,7 @@ button:focus-visible {
 	color: var(--color-text-secondary);
 }
 
-/* Eyebrow Status - Subtle cursor effect */
-/* Professional, low-motion accent for the availability status */
+/* Eyebrow Status */
 .eyebrow-status {
 	display: inline-flex;
 	align-items: center;
@@ -647,27 +673,25 @@ button:focus-visible {
 	display: inline-block;
 	width: 0.15em;
 	height: 1.1em;
-	background-color: var(--color-signal);
-	opacity: 0.6;
-	animation: cursor-blink 1.2s ease-in-out infinite;
+	background-color: rgb(255 255 255 / 0.9);
+	opacity: 1;
+	animation: cursor-blink 1s steps(1, end) infinite;
 	margin-left: 0.25em;
 	vertical-align: middle;
 }
 
 @keyframes cursor-blink {
-	0%, 100% {
-		opacity: 0.6;
+	0%, 49% {
+		opacity: 1;
 	}
-	50% {
+	50%, 100% {
 		opacity: 0;
 	}
 }
 
-/* Reduced motion - remove cursor animation */
 @media (prefers-reduced-motion: reduce) {
 	.eyebrow-status__cursor {
 		animation: none;
-		opacity: 0.3;
 	}
 
 	.fx-entrance {

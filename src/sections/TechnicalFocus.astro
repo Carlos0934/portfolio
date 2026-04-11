@@ -1,290 +1,440 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 
-const techEntries = await getCollection('technicalFocus');
-const techData = techEntries.map(entry => ({
-	slug: entry.data.category,
-	title: entry.data.title,
-}));
-
-// Define the tab order
-const tabOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
-const tabLabels: Record<string, string> = {
-	'cloud-infrastructure': 'Cloud Infrastructure',
-	'ai-automation': 'AI & Automation',
-	'system-integrations': 'System Integrations',
+type FocusItem = {
+	label: string;
+	value: string;
 };
 
-// Get full content for each tab
-const tabContents = (await Promise.all(
-	tabOrder.map(async (category) => {
-		const entry = techEntries.find(e => e.data.category === category);
-		if (!entry) return null;
-		const { Content } = await render(entry);
-		return { category, Content, data: entry.data };
-	})
-)).filter((result): result is NonNullable<typeof result> => result !== null);
+type FocusMeta = {
+	eyebrow: string;
+	signal: string;
+	tags: string[];
+};
 
-const sectionTitle = "Technical Focus";
-const sectionDescription = "Core areas I work with: systems, cloud, automations, and integrations.";
+type FocusCardGroup = {
+	items: FocusItem[];
+};
+
+const techEntries = await getCollection('technicalFocus');
+
+const sectionTitle = 'Technical Focus';
+const sectionDescription =
+	'Core capabilities I use to design, operate, and connect systems with reliability, leverage, and maintainability in mind.';
+
+const sectionOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
+
+const focusMeta: Record<(typeof sectionOrder)[number], FocusMeta> = {
+	'cloud-infrastructure': {
+		eyebrow: 'Platform Reliability',
+		signal: 'Infrastructure decisions optimized for deployment confidence, observability, and cost control.',
+		tags: ['Kubernetes', 'Terraform', 'Observability'],
+	},
+	'ai-automation': {
+		eyebrow: 'Automation Systems',
+		signal: 'AI and workflow tooling focused on removing repetitive work without increasing operational fragility.',
+		tags: ['MCP Tooling', 'Python / Go', 'Internal DX'],
+	},
+	'system-integrations': {
+		eyebrow: 'Service Connectivity',
+		signal: 'Integration layers designed around stability, versioning, and predictable asynchronous behavior.',
+		tags: ['APIs', 'Queues', 'Data Pipelines'],
+	},
+};
+
+function parseFocusBody(body: string): { summary: string; items: FocusItem[] } {
+	const lines = body
+		.split('\n')
+		.map((line) => line.trim())
+		.filter(Boolean);
+
+	const summary = lines.find((line) => !line.startsWith('-')) ?? '';
+	const items = lines
+		.filter((line) => line.startsWith('-'))
+		.map((line) => {
+			const strongMatch = line.match(/^-\s+\*\*(.+?)\*\*:\s*(.+)$/);
+			if (strongMatch) {
+				return {
+					label: strongMatch[1],
+					value: strongMatch[2],
+				};
+			}
+
+			return {
+				label: 'Note',
+				value: line.replace(/^-\s+/, ''),
+			};
+		});
+
+	return { summary, items };
+}
+
+function buildCardGroups(items: FocusItem[]): FocusCardGroup[] {
+	return items.slice(0, 2).map((item) => ({ items: [item] }));
+}
+
+const dossiers = sectionOrder
+	.map((category, index) => {
+		const entry = techEntries.find((item) => item.data.category === category);
+		if (!entry) return null;
+
+		const { summary, items } = parseFocusBody(entry.body ?? '');
+		const revealDirection = index % 2 === 0 ? 'right' : 'left';
+		return {
+			index: String(index + 1).padStart(2, '0'),
+			revealDirection,
+			category,
+			title: entry.data.title,
+			summary,
+			cardGroups: buildCardGroups(items),
+			...focusMeta[category],
+		};
+	})
+	.filter((item): item is NonNullable<typeof item> => item !== null);
 ---
 
-<section id="technical-focus" class="border-b border-border py-16 section-reveal">
-	<div class="mx-auto max-w-4xl px-4">
-		<h2 class="fx-reveal mb-2 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
-			{sectionTitle}
-		</h2>
-		<p class="fx-reveal-up mb-8 text-text-secondary">
-			{sectionDescription}
-		</p>
+<section id="technical-focus" class="border-b border-border py-16 section-reveal md:py-20">
+	<div class="mx-auto max-w-6xl px-4 lg:px-8">
+		<div class="fx-reveal mb-10 max-w-3xl md:mb-14">
+			<p class="focus-section-kicker mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
+				Capability dossier
+			</p>
+			<h2 class="text-2xl font-bold tracking-tight text-text-primary md:text-4xl">
+				{sectionTitle}
+			</h2>
+			<p class="mt-3 text-base leading-relaxed text-text-secondary md:text-lg">
+				{sectionDescription}
+			</p>
+		</div>
 
-		<!-- Tabs Container -->
-		<div class="tabs-container">
-			<!-- Tab List - Following ARIA Authoring Practices -->
-			<div role="tablist" aria-label="Technical Focus Areas" class="tab-list mb-6 flex gap-1 border-b border-border overflow-x-auto md:overflow-x-visible">
-				{tabOrder.map((category, index) => {
-					const isActive = index === 0;
-					return (
-						<button
-							role="tab"
-							id={`tab-${category}`}
-							aria-selected={isActive ? "true" : "false"}
-							aria-controls={`panel-${category}`}
-							tabindex={isActive ? 0 : -1}
-							class="tab-button relative px-4 py-3 font-mono text-sm whitespace-nowrap transition-colors duration-200 focus:outline-none"
-							class:list={[
-								isActive
-									? "text-text-primary"
-									: "text-text-muted hover:text-text-secondary"
-							]}
-						>
-							{tabLabels[category]}
-						</button>
-					);
-				})}
-				<span class="tab-indicator" aria-hidden="true"></span>
-			</div>
+		<div class="space-y-4 md:space-y-5">
+			{dossiers.map((focus) => (
+				<article
+					class="focus-dossier"
+					data-reveal-direction={focus.revealDirection}
+				>
+					<div class="focus-dossier__summary">
+						<div class="focus-dossier__index" aria-hidden="true">{focus.index}</div>
+						<div class="min-w-0">
+							<p class="focus-dossier__eyebrow">{focus.eyebrow}</p>
+							<h3 class="focus-dossier__title">{focus.title}</h3>
+							<p class="focus-dossier__description">{focus.summary}</p>
 
-			<!-- Tab Panels -->
-			<div class="tab-panels">
-				{tabContents.map(({ category, Content, data }, index) => {
-					const isActive = index === 0;
-					return (
-						<div
-							role="tabpanel"
-							id={`panel-${category}`}
-							aria-labelledby={`tab-${category}`}
-							hidden={!isActive}
-							class:list={["tab-panel", { "tab-panel-active": isActive }]}
-						>
-							<h3 class="mb-4 text-lg font-semibold text-text-primary">
-								{data.title}
-							</h3>
-							<div class="prose prose-invert max-w-none text-sm text-text-secondary leading-relaxed">
-								<Content />
-							</div>
+							<ul class="focus-dossier__tags" role="list">
+								{focus.tags.map((tag) => (
+									<li class="focus-dossier__tag">{tag}</li>
+								))}
+							</ul>
 						</div>
-					);
-				})}
-			</div>
+					</div>
+
+					<div class="focus-dossier__detail">
+						<div class="focus-dossier__signal-block">
+							<p class="focus-dossier__label">Primary signal</p>
+							<p class="focus-dossier__signal">{focus.signal}</p>
+						</div>
+
+						<div class="focus-dossier__items">
+							{focus.cardGroups.map((group) => (
+								<section class="focus-dossier__detail-card">
+									<dl class="focus-dossier__item-stack">
+										{group.items.map((item) => (
+											<div class="focus-dossier__item-row">
+												<dt>{item.label}</dt>
+												<dd>{item.value}</dd>
+											</div>
+										))}
+									</dl>
+								</section>
+							))}
+						</div>
+					</div>
+				</article>
+			))}
 		</div>
 	</div>
 </section>
 
 <script>
-/**
- * Accessible Tab Interface
- * Implements WAI-ARIA Authoring Practices for tabs pattern
- * with full keyboard navigation support
- */
+	function initTechnicalFocusReveal() {
+		const section = document.getElementById('technical-focus');
+		if (!section) return;
 
-function initTabs() {
-	const tabContainers = document.querySelectorAll('.tabs-container');
-	
-	tabContainers.forEach(container => {
-		if (container instanceof HTMLElement && container.dataset.tabsReady === 'true') return;
-		if (container instanceof HTMLElement) {
-			container.dataset.tabsReady = 'true';
+		const dossiers = Array.from(section.querySelectorAll('.focus-dossier')) as HTMLElement[];
+		if (!dossiers.length) return;
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+			dossiers.forEach((dossier) => dossier.classList.add('is-visible'));
+			return;
 		}
 
-		const tablist = container.querySelector('[role="tablist"]');
-		if (!tablist) return;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+					entry.target.classList.add('is-visible');
+					observer.unobserve(entry.target);
+				});
+			},
+			{
+				threshold: 0.18,
+				rootMargin: '0px 0px -8% 0px',
+			}
+		);
 
-		const tabs = Array.from(tablist.querySelectorAll('[role="tab"]')) as HTMLElement[];
-		const panels = Array.from(container.querySelectorAll('[role="tabpanel"]')) as HTMLElement[];
-		const indicator = tablist.querySelector('.tab-indicator') as HTMLElement | null;
+		dossiers.forEach((dossier, index) => {
+			const rect = dossier.getBoundingClientRect();
+			const alreadyVisible = rect.top < window.innerHeight * 0.88;
 
-		function positionIndicator(activeTab: HTMLElement) {
-			if (!indicator) return;
-
-			indicator.style.width = `${activeTab.offsetWidth}px`;
-			indicator.style.transform = `translateX(${activeTab.offsetLeft}px)`;
-		}
-
-		/**
-		 * Activates a tab and updates ARIA states
-		 */
-		function activateTab(newTab: HTMLElement) {
-			// Deactivate all tabs
-			tabs.forEach(tab => {
-				tab.setAttribute('aria-selected', 'false');
-				tab.setAttribute('tabindex', '-1');
-				tab.classList.remove('text-text-primary');
-				tab.classList.add('text-text-muted');
-			});
-
-			// Hide all panels
-			panels.forEach(panel => {
-				panel.classList.remove('tab-panel-active');
-				panel.hidden = true;
-			});
-
-			// Activate selected tab
-			newTab.setAttribute('aria-selected', 'true');
-			newTab.setAttribute('tabindex', '0');
-			newTab.classList.remove('text-text-muted');
-			newTab.classList.add('text-text-primary');
-			positionIndicator(newTab);
-
-			// Show corresponding panel
-			const panelId = newTab.getAttribute('aria-controls');
-			const panel = panelId ? document.getElementById(panelId) : null;
-			if (panel) {
-				panel.hidden = false;
-				panel.classList.remove('tab-panel-active');
-				void panel.offsetWidth;
-				panel.classList.add('tab-panel-active');
+			if (alreadyVisible) {
+				dossier.classList.add('is-visible');
+				return;
 			}
 
-			// Move focus to the activated tab
-			newTab.focus();
-		}
-
-		const activeTab = tabs.find(tab => tab.getAttribute('aria-selected') === 'true') || tabs[0];
-		if (activeTab) {
-			positionIndicator(activeTab);
-		}
-
-		/**
-		 * Keyboard navigation handler
-		 */
-		function handleKeydown(event: KeyboardEvent) {
-			const currentTab = document.activeElement as HTMLElement;
-			const currentIndex = tabs.indexOf(currentTab);
-			let newIndex = currentIndex;
-
-			switch (event.key) {
-				case 'ArrowRight':
-				case 'ArrowDown': // Support both directional keys
-					event.preventDefault();
-					newIndex = (currentIndex + 1) % tabs.length;
-					break;
-
-				case 'ArrowLeft':
-				case 'ArrowUp': // Support both directional keys
-					event.preventDefault();
-					newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-					break;
-
-				case 'Home':
-					event.preventDefault();
-					newIndex = 0;
-					break;
-
-				case 'End':
-					event.preventDefault();
-					newIndex = tabs.length - 1;
-					break;
-
-				default:
-					return;
-			}
-
-			activateTab(tabs[newIndex]);
-		}
-
-		// Initialize event listeners
-		tabs.forEach(tab => {
-			tab.addEventListener('click', () => activateTab(tab as HTMLElement));
-			tab.addEventListener('keydown', handleKeydown);
+			dossier.style.transitionDelay = `${Math.min(index * 70, 180)}ms`;
+			observer.observe(dossier);
 		});
+	}
 
-		window.addEventListener('resize', () => {
-			const currentActiveTab = tabs.find(tab => tab.getAttribute('aria-selected') === 'true');
-			if (currentActiveTab) {
-				positionIndicator(currentActiveTab);
-			}
-		});
-	});
-}
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initTechnicalFocusReveal);
+	} else {
+		initTechnicalFocusReveal();
+	}
 
-// Initialize on DOM ready
-if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', initTabs);
-} else {
-	initTabs();
-}
-
-// Re-initialize after Astro page transitions
-document.addEventListener('astro:after-swap', initTabs);
+	document.addEventListener('astro:after-swap', initTechnicalFocusReveal);
 </script>
 
 <style>
-	.tab-panels {
-		position: relative;
-	}
-
-	.tab-list {
-		position: relative;
-		scrollbar-width: none;
-	}
-
-	.tab-list::-webkit-scrollbar {
-		display: none;
-	}
-
-	.tab-indicator {
-		position: absolute;
-		left: 0;
-		bottom: -1px;
-		height: 3px;
-		width: 0;
-		border-radius: 999px;
-		background: var(--color-primary);
-		transform: translateX(0);
+	.focus-dossier {
+		display: grid;
+		gap: 1.5rem;
+		padding: 1.35rem;
+		perspective: 1600px;
+		transform-style: preserve-3d;
+		border: 1px solid rgb(42 49 64 / 0.9);
+		border-radius: 1rem;
+		background:
+			linear-gradient(180deg, rgb(28 31 37 / 0.84), rgb(24 28 34 / 0.96)),
+			var(--color-surface);
+		box-shadow:
+			0 1px 0 rgb(255 255 255 / 0.03) inset,
+			0 18px 40px rgb(0 0 0 / 0.14);
 		transition:
-			transform 240ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1)),
-			width 240ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1));
-		pointer-events: none;
+			opacity 760ms cubic-bezier(0.16, 1, 0.3, 1),
+			transform 880ms cubic-bezier(0.16, 1, 0.3, 1),
+			box-shadow 460ms cubic-bezier(0.16, 1, 0.3, 1),
+			filter 760ms cubic-bezier(0.16, 1, 0.3, 1);
+		will-change: transform, opacity;
+		filter: saturate(0.88) brightness(0.9);
 	}
 
-	.tab-panel {
-		transform-origin: top center;
+	.focus-dossier[data-reveal-direction='left'] {
+		opacity: 0;
+		transform:
+			perspective(1600px)
+			translate3d(-96px, 34px, -120px)
+			rotateY(14deg)
+			rotateX(5deg)
+			scale(0.94);
 	}
 
-	.tab-panel-active {
-		animation: tab-panel-in 220ms var(--fx-easing-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+	.focus-dossier[data-reveal-direction='right'] {
+		opacity: 0;
+		transform:
+			perspective(1600px)
+			translate3d(96px, 34px, -120px)
+			rotateY(-14deg)
+			rotateX(5deg)
+			scale(0.94);
 	}
 
-	@keyframes tab-panel-in {
-		from {
-			opacity: 0;
-			transform: translateY(10px) scale(0.985);
+	.focus-dossier.is-visible {
+		opacity: 1;
+		transform:
+			perspective(1600px)
+			translate3d(0, 0, 0)
+			rotateY(0deg)
+			rotateX(0deg)
+			scale(1);
+		filter: saturate(1) brightness(1);
+	}
+
+	.focus-dossier.is-visible:hover {
+		transform:
+			perspective(1600px)
+			translate3d(0, -6px, 0)
+			rotateY(0deg)
+			rotateX(0deg)
+			scale(1.01);
+		box-shadow:
+			0 1px 0 rgb(255 255 255 / 0.04) inset,
+			0 24px 48px rgb(0 0 0 / 0.2);
+	}
+
+	.focus-dossier__summary {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		align-items: start;
+	}
+
+	.focus-dossier__index {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 3rem;
+		height: 3rem;
+		padding: 0 0.75rem;
+		border: 1px solid rgb(56 66 86 / 0.8);
+		border-radius: 999px;
+		background: rgb(16 18 20 / 0.42);
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		letter-spacing: 0.16em;
+		color: var(--color-text-secondary);
+	}
+
+	.focus-dossier__eyebrow,
+	.focus-dossier__label {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		color: var(--color-text-muted);
+	}
+
+	.focus-dossier__title {
+		margin: 0.45rem 0 0;
+		font-size: 1.45rem;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		color: var(--color-text-primary);
+	}
+
+	.focus-dossier__description {
+		margin: 0.85rem 0 0;
+		max-width: 34rem;
+		font-size: 1rem;
+		line-height: 1.7;
+		color: var(--color-text-secondary);
+	}
+
+	.focus-dossier__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.focus-dossier__tag {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45rem 0.7rem;
+		border: 1px solid rgb(56 66 86 / 0.72);
+		border-radius: 999px;
+		background: rgb(16 18 20 / 0.3);
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		color: var(--color-text-secondary);
+	}
+
+	.focus-dossier__detail {
+		display: grid;
+		gap: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgb(56 66 86 / 0.4);
+	}
+
+	.focus-dossier__signal-block {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.focus-dossier__signal {
+		margin: 0;
+		max-width: 34rem;
+		font-size: 0.93rem;
+		line-height: 1.55;
+		color: var(--color-text-primary);
+	}
+
+	.focus-dossier__items {
+		display: grid;
+		gap: 0.8rem;
+		margin: 0;
+	}
+
+	.focus-dossier__detail-card {
+		display: grid;
+		min-height: 7.5rem;
+		padding: 0.8rem 0.9rem;
+		border: 1px solid rgb(56 66 86 / 0.36);
+		border-radius: 0.85rem;
+		background: rgb(16 18 20 / 0.2);
+	}
+
+	.focus-dossier__item-stack {
+		display: grid;
+		gap: 0.7rem;
+		margin: 0;
+	}
+
+	.focus-dossier__item-row {
+		display: grid;
+		gap: 0.22rem;
+	}
+
+	.focus-dossier__item-row + .focus-dossier__item-row {
+		padding-top: 0.7rem;
+		border-top: 1px solid rgb(56 66 86 / 0.2);
+	}
+
+	.focus-dossier__item-row dt {
+		font-family: var(--font-mono);
+		font-size: 0.76rem;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+	}
+
+	.focus-dossier__item-row dd {
+		margin: 0;
+		font-size: 0.86rem;
+		line-height: 1.5;
+		color: var(--color-text-secondary);
+	}
+
+	@media (min-width: 64rem) {
+		.focus-dossier {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+			gap: 2rem;
+			padding: 1.7rem;
 		}
 
-		to {
-			opacity: 1;
-			transform: translateY(0) scale(1);
+		.focus-dossier__detail {
+			padding-top: 0;
+			padding-left: 2rem;
+			border-top: 0;
+			border-left: 1px solid rgb(56 66 86 / 0.42);
+		}
+
+		.focus-dossier__items {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.tab-indicator {
+		.focus-dossier {
+			opacity: 1;
+			transform: none;
 			transition: none;
-		}
-
-		.tab-panel-active {
-			animation: none;
 		}
 	}
 </style>
