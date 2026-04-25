@@ -1,0 +1,586 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const downloadHref = '/Carlos-Olivo-CV.pdf';
+const linkedInHref = 'https://www.linkedin.com/in/carlos-engel-olivo-carmona-a1184917b/';
+const githubHref = 'https://github.com/Carlos0934';
+
+const experiences = [
+	{
+		role: 'Backend Developer — Hotel Connectivity & Quoting Systems',
+		roleEs: 'Backend Developer — Conectividad hotelera y sistemas de cotización',
+		company: 'PriceTravel Holding',
+		date: 'Jun 2024 – Present · Remote (US)',
+		dateEs: 'Jun 2024 – Presente · Remoto (US)',
+		items: [
+			'Designed and implemented hotel provider integrations including SiteMinder (SiteConnect), TravelClick, Omnibees, Gin RateFox, and TravelGate HotelX, enabling real-time rate and availability synchronization.',
+			'Provided technical support and performance optimization for Hotelbeds, DerbySoft, SynXis, and Expedia Rapid API integrations, improving reliability and API consistency.',
+			'Built a DAX-backed materialized view for exchange rates, powered by a background worker, reducing currency retrieval latency and eliminating redundant database queries.',
+			'Developed a DAX-optimized promotions materialized view for internal supply, cutting quote service query load and improving responsiveness.',
+			'Collaborated with the quoting service team to enhance the currency conversion flow, improving system accuracy and overall performance.',
+		],
+		itemsEs: [
+			'Diseñé e implementé integraciones con proveedores hoteleros como SiteMinder (SiteConnect), TravelClick, Omnibees, Gin RateFox y TravelGate HotelX, habilitando sincronización de tarifas y disponibilidad en tiempo real.',
+			'Brindé soporte técnico y optimización de rendimiento para integraciones con Hotelbeds, DerbySoft, SynXis y Expedia Rapid API, mejorando la confiabilidad y consistencia de las APIs.',
+			'Construí una vista materializada de tasas de cambio respaldada por DAX y alimentada por un background worker, reduciendo la latencia de consulta y eliminando accesos redundantes a base de datos.',
+			'Desarrollé una vista materializada de promociones optimizada con DAX para supply interno, reduciendo carga en el servicio de cotización y mejorando la capacidad de respuesta.',
+			'Colaboré con el equipo de quoting para mejorar el flujo de conversión de moneda, elevando la precisión del sistema y el rendimiento general.',
+		],
+	},
+	{
+		role: 'Backend Developer — SaaS Platforms & Cloud Infrastructure',
+		roleEs: 'Backend Developer — Plataformas SaaS e infraestructura cloud',
+		company: 'ListoApp (Chile)',
+		date: 'Feb 2024 – Present · Remote (US)',
+		dateEs: 'Feb 2024 – Presente · Remoto (US)',
+		items: [
+			'Reduced AWS Lambda cold start duration by 50% and package size by 500% through a pre-deployment bundling process.',
+			'Implemented event-driven architectures using AWS SNS and EventBridge for a scalable notification system.',
+			'Built GraphQL APIs with NestJS and TypeScript integrated with S3 and multi-tenant SaaS models for Sektor.app, connecting insurance companies, service providers, and agents.',
+			'Developed the backend API for Centuria.app, a multi-role network management platform with graph-based structures, activities, and task management using MongoDB.',
+			'Created the real-time API and Chrome-based scraper for RoulettesView.com, tracking 128 roulette tables and emitting deduplicated live results via WebSockets using Go and goroutines.',
+			'Implemented CI/CD pipelines with GitHub Actions to automate AWS deployments and ensure continuous integration.',
+		],
+		itemsEs: [
+			'Reduje el cold start de AWS Lambda en 50% y el tamaño del paquete en 500% mediante un proceso de bundling previo al despliegue.',
+			'Implementé arquitecturas orientadas a eventos con AWS SNS y EventBridge para un sistema de notificaciones escalable.',
+			'Construí APIs GraphQL con NestJS y TypeScript integradas con S3 y modelos SaaS multi-tenant para Sektor.app, conectando aseguradoras, proveedores de servicio y agentes.',
+			'Desarrollé la API backend para Centuria.app, una plataforma multi-rol de gestión de redes con estructuras basadas en grafos, actividades y gestión de tareas usando MongoDB.',
+			'Creé la API en tiempo real y el scraper basado en Chrome para RoulettesView.com, monitoreando 128 mesas de ruleta y emitiendo resultados deduplicados por WebSockets usando Go y goroutines.',
+			'Implementé pipelines CI/CD con GitHub Actions para automatizar despliegues en AWS y asegurar integración continua.',
+		],
+	},
+	{
+		role: 'Software Developer — Web & Mobile Development',
+		roleEs: 'Software Developer — Desarrollo web y móvil',
+		company: 'Drimo',
+		date: 'Jul 2022 – Jun 2023 · Remote',
+		dateEs: 'Jul 2022 – Jun 2023 · Remoto',
+		items: [
+			'Designed, developed, and debugged cross-platform mobile and web applications using React.',
+			'Maintained and optimized multiple serverless APIs deployed on AWS, improving reliability and cost efficiency.',
+			'Developed new features for a microservices ecosystem using NestJS and GraphQL to ensure smooth service communication.',
+			'Migrated the company’s blog and website to Next.js via automated web scraping, improving load speed and SEO performance.',
+		],
+		itemsEs: [
+			'Diseñé, desarrollé y depuré aplicaciones móviles y web cross-platform usando React.',
+			'Mantuve y optimicé múltiples APIs serverless desplegadas en AWS, mejorando confiabilidad y eficiencia de costos.',
+			'Desarrollé nuevas funcionalidades para un ecosistema de microservicios usando NestJS y GraphQL, asegurando comunicación fluida entre servicios.',
+			'Migré el blog y sitio web de la compañía a Next.js mediante scraping automatizado, mejorando velocidad de carga y rendimiento SEO.',
+		],
+	},
+];
+
+const stackGroups = [
+	{ label: 'Languages & Runtime', labelEs: 'Lenguajes y runtime', value: 'TypeScript, JavaScript, C#, Go, SQL, Node.js' },
+	{ label: 'Frameworks & Services', labelEs: 'Frameworks y servicios', value: 'NestJS, React, Next.js, .NET 8, GraphQL, Serverless Framework' },
+	{ label: 'Cloud & Infrastructure', labelEs: 'Cloud e infraestructura', value: 'AWS Lambda, SNS, EventBridge, DAX, S3, Docker, GitHub Actions' },
+	{ label: 'Data & Caching', labelEs: 'Datos y caching', value: 'PostgreSQL, MongoDB, Redis, DAX, DynamoDB' },
+];
+---
+
+<BaseLayout
+	title="CV"
+	description="Readable CV for Carlos Olivo with English and Spanish versions plus a downloadable PDF."
+>
+	<section class="cv-page">
+		<div class="cv-shell">
+			<header class="cv-hero">
+				<div>
+					<p class="cv-kicker">Curriculum Vitae</p>
+					<h1>Carlos Olivo</h1>
+					<p class="cv-role">Senior Software Engineer · Full-Stack & Platform Architecture</p>
+				</div>
+				<div class="cv-actions">
+					<div class="cv-language-toggle" role="group" aria-label="Choose CV language">
+						<button type="button" class="cv-toggle-button is-active" data-cv-language="en" aria-pressed="true" aria-controls="cv-en">
+							EN
+						</button>
+						<button type="button" class="cv-toggle-button" data-cv-language="es" aria-pressed="false" aria-controls="cv-es">
+							ES
+						</button>
+					</div>
+					<a href={downloadHref} download="Carlos-Olivo-CV.pdf" class="cv-button cv-button--primary">Download PDF</a>
+					<a href="/" class="cv-button">Portfolio</a>
+				</div>
+			</header>
+
+			<section class="cv-card" id="cv-en" data-cv-panel="en" aria-labelledby="cv-en-title" lang="en">
+				<div class="cv-heading-row">
+					<div>
+						<p class="cv-kicker">English version</p>
+						<h2 id="cv-en-title">Senior Software Engineer</h2>
+					</div>
+					<p class="cv-meta">
+						United States · Open to Remote or Hybrid<br />
+						<a href="mailto:hello@carlos-olivo.dev">hello@carlos-olivo.dev</a> ·
+						<a href={linkedInHref} target="_blank" rel="noreferrer">LinkedIn</a> ·
+						<a href={githubHref} target="_blank" rel="noreferrer">GitHub</a>
+					</p>
+				</div>
+
+				<p class="cv-summary">
+					Full-stack engineer focused on building scalable APIs, event-driven systems, and SaaS architectures with JavaScript/TypeScript, .NET, and Go. Experienced integrating complex travel-tech providers, optimizing distributed workloads, and automating deployments. I bridge architecture and execution, translating ideas into maintainable, high-performance software.
+				</p>
+
+				<div class="cv-section-title">
+					<h3>Professional Experience</h3>
+					<span>Select Roles</span>
+				</div>
+
+				<div class="cv-experience-list">
+					{experiences.map((experience) => (
+						<article class="cv-job">
+							<div class="cv-job-header">
+								<div>
+									<h4>{experience.role}</h4>
+									<p>{experience.company}</p>
+								</div>
+								<span>{experience.date}</span>
+							</div>
+							<ul>
+								{experience.items.map((item) => <li>{item}</li>)}
+							</ul>
+						</article>
+					))}
+				</div>
+
+				<div class="cv-section-title">
+					<h3>Knowledge Areas</h3>
+				</div>
+				<p class="cv-compact">Full-stack web development with JavaScript/TypeScript, .NET, and Go. Event-driven systems, hotel provider connectivity, and API integrations.</p>
+
+				<div class="cv-section-title">
+					<h3>Tools & Developer Stack</h3>
+				</div>
+				<div class="cv-stack-grid">
+					{stackGroups.map((group) => (
+						<div>
+							<h4>{group.label}</h4>
+							<p>{group.value}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section class="cv-card" id="cv-es" data-cv-panel="es" aria-labelledby="cv-es-title" lang="es" hidden>
+				<div class="cv-heading-row">
+					<div>
+						<p class="cv-kicker">Versión en español</p>
+						<h2 id="cv-es-title">Senior Software Engineer</h2>
+					</div>
+					<p class="cv-meta">
+						Estados Unidos · Abierto a remoto o híbrido<br />
+						<a href="mailto:hello@carlos-olivo.dev">hello@carlos-olivo.dev</a> ·
+						<a href={linkedInHref} target="_blank" rel="noreferrer">LinkedIn</a> ·
+						<a href={githubHref} target="_blank" rel="noreferrer">GitHub</a>
+					</p>
+				</div>
+
+				<p class="cv-summary">
+					Ingeniero full-stack enfocado en construir APIs escalables, sistemas orientados a eventos y arquitecturas SaaS con JavaScript/TypeScript, .NET y Go. Tengo experiencia integrando proveedores complejos de travel-tech, optimizando cargas distribuidas y automatizando despliegues. Conecto arquitectura y ejecución para convertir ideas en software mantenible y de alto rendimiento.
+				</p>
+
+				<div class="cv-section-title">
+					<h3>Experiencia Profesional</h3>
+					<span>Roles seleccionados</span>
+				</div>
+
+				<div class="cv-experience-list">
+					{experiences.map((experience) => (
+						<article class="cv-job">
+							<div class="cv-job-header">
+								<div>
+									<h4>{experience.roleEs}</h4>
+									<p>{experience.company}</p>
+								</div>
+								<span>{experience.dateEs}</span>
+							</div>
+							<ul>
+								{experience.itemsEs.map((item) => <li>{item}</li>)}
+							</ul>
+						</article>
+					))}
+				</div>
+
+				<div class="cv-section-title">
+					<h3>Áreas de Conocimiento</h3>
+				</div>
+				<p class="cv-compact">Desarrollo web full-stack con JavaScript/TypeScript, .NET y Go. Sistemas orientados a eventos, conectividad con proveedores hoteleros e integraciones de APIs.</p>
+
+				<div class="cv-section-title">
+					<h3>Herramientas y Stack de Desarrollo</h3>
+				</div>
+				<div class="cv-stack-grid">
+					{stackGroups.map((group) => (
+						<div>
+							<h4>{group.labelEs}</h4>
+							<p>{group.value}</p>
+						</div>
+					))}
+				</div>
+			</section>
+		</div>
+	</section>
+</BaseLayout>
+
+<script>
+	const initCvLanguageToggle = () => {
+		const languageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-cv-language]'));
+		const languagePanels = Array.from(document.querySelectorAll<HTMLElement>('[data-cv-panel]'));
+
+		if (languageButtons.length === 0 || languagePanels.length === 0) return;
+
+		const setLanguage = (language: string) => {
+			languageButtons.forEach((button) => {
+				const isActive = button.dataset.cvLanguage === language;
+				button.classList.toggle('is-active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+
+			languagePanels.forEach((panel) => {
+				const isActive = panel.dataset.cvPanel === language;
+				panel.hidden = !isActive;
+			});
+		};
+
+		languageButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const language = button.dataset.cvLanguage;
+				if (!language) return;
+
+				setLanguage(language);
+			});
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initCvLanguageToggle, { once: true });
+	} else {
+		initCvLanguageToggle();
+	}
+</script>
+
+<style>
+	.cv-page {
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 22rem),
+			var(--color-background);
+		padding: 4rem 1rem 5rem;
+	}
+
+	.cv-shell {
+		width: min(100%, 72rem);
+		margin: 0 auto;
+	}
+
+	.cv-hero {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.cv-kicker,
+	.cv-section-title span {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.cv-hero h1,
+	.cv-card h2,
+	.cv-section-title h3,
+	.cv-job h4 {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-weight: 400;
+		color: var(--color-text-primary);
+		letter-spacing: 0;
+	}
+
+	.cv-hero h1 {
+		margin-top: 0.35rem;
+		font-size: clamp(2.4rem, 5vw, 4.4rem);
+		line-height: 1;
+	}
+
+	.cv-role {
+		margin: 0.8rem 0 0;
+		max-width: 42rem;
+		color: var(--color-text-secondary);
+		font-size: 1rem;
+	}
+
+	.cv-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.75rem;
+		align-items: center;
+	}
+
+	.cv-language-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		min-height: 2.75rem;
+		padding: 0.25rem;
+		border: 1px solid var(--color-outline);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-container-lowest);
+	}
+
+	.cv-button,
+	.cv-toggle-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.75rem;
+		padding: 0 1rem;
+		border-radius: var(--radius-lg);
+		color: var(--color-text-secondary);
+		background: transparent;
+		text-decoration: none;
+		font-family: var(--font-mono);
+		font-size: 0.74rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+	}
+
+	.cv-button {
+		border: 1px solid var(--color-outline);
+	}
+
+	.cv-toggle-button {
+		width: 2.65rem;
+		min-height: 2.25rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius-md);
+		cursor: pointer;
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
+	}
+
+	.cv-button:hover,
+	.cv-button:focus-visible,
+	.cv-toggle-button:hover,
+	.cv-toggle-button:focus-visible {
+		color: var(--color-text-primary);
+		background: var(--color-surface-container-high);
+	}
+
+	.cv-button--primary {
+		color: var(--color-text-primary);
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+	}
+
+	.cv-toggle-button.is-active {
+		color: var(--color-text-primary);
+		background: var(--color-primary);
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+	}
+
+	.cv-card {
+		margin-top: 1.25rem;
+		padding: clamp(1.25rem, 3vw, 2.25rem);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-container-low);
+	}
+
+	.cv-card[hidden] {
+		display: none;
+	}
+
+	.cv-heading-row,
+	.cv-job-header,
+	.cv-section-title {
+		display: flex;
+		justify-content: space-between;
+		gap: 1.25rem;
+	}
+
+	.cv-heading-row {
+		align-items: start;
+		margin-bottom: 1.5rem;
+	}
+
+	.cv-card h2 {
+		margin-top: 0.35rem;
+		font-size: clamp(1.5rem, 3vw, 2.35rem);
+		line-height: 1.15;
+	}
+
+	.cv-meta {
+		margin: 0;
+		max-width: 30rem;
+		text-align: right;
+		color: var(--color-text-secondary);
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		line-height: 1.7;
+	}
+
+	.cv-meta a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.cv-meta a:hover,
+	.cv-meta a:focus-visible {
+		color: var(--color-text-primary);
+	}
+
+	.cv-summary,
+	.cv-compact {
+		margin: 0;
+		color: var(--color-text-secondary);
+		font-size: 0.98rem;
+		line-height: 1.75;
+	}
+
+	.cv-summary {
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.cv-section-title {
+		align-items: center;
+		margin-top: 1.6rem;
+		margin-bottom: 1rem;
+	}
+
+	.cv-section-title h3 {
+		font-size: 0.94rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.cv-experience-list {
+		display: grid;
+		gap: 1.35rem;
+	}
+
+	.cv-job {
+		padding-bottom: 1.35rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.cv-job:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.cv-job-header {
+		align-items: baseline;
+		margin-bottom: 0.75rem;
+	}
+
+	.cv-job h4 {
+		font-size: 1rem;
+		line-height: 1.4;
+	}
+
+	.cv-job-header p,
+	.cv-job-header span {
+		margin: 0.2rem 0 0;
+		color: var(--color-text-secondary);
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		line-height: 1.5;
+	}
+
+	.cv-job-header span {
+		flex: 0 0 auto;
+		text-align: right;
+		color: var(--color-text-muted);
+	}
+
+	.cv-job ul {
+		margin: 0;
+		padding-left: 1.1rem;
+		color: var(--color-text-secondary);
+		font-size: 0.93rem;
+		line-height: 1.65;
+	}
+
+	.cv-job li + li {
+		margin-top: 0.45rem;
+	}
+
+	.cv-job li::marker {
+		color: var(--color-secondary);
+	}
+
+	.cv-stack-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem 1.25rem;
+	}
+
+	.cv-stack-grid div {
+		border-top: 1px solid var(--color-border);
+		padding-top: 0.8rem;
+	}
+
+	.cv-stack-grid h4 {
+		margin: 0 0 0.35rem;
+		color: var(--color-text-primary);
+		font-size: 0.9rem;
+		font-weight: 700;
+	}
+
+	.cv-stack-grid p {
+		margin: 0;
+		color: var(--color-text-secondary);
+		font-size: 0.92rem;
+		line-height: 1.55;
+	}
+
+	@media (max-width: 760px) {
+		.cv-page {
+			padding-top: 2.5rem;
+		}
+
+		.cv-hero,
+		.cv-heading-row,
+		.cv-job-header,
+		.cv-section-title {
+			display: block;
+		}
+
+		.cv-actions {
+			justify-content: flex-start;
+			margin-top: 1.25rem;
+		}
+
+		.cv-language-toggle {
+			width: auto;
+		}
+
+		.cv-toggle-button {
+			flex: 0 0 auto;
+		}
+
+		.cv-meta,
+		.cv-job-header span {
+			display: block;
+			text-align: left;
+			margin-top: 0.75rem;
+		}
+
+		.cv-stack-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

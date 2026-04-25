@@ -6,15 +6,12 @@ import LogoMark from './LogoMark.astro';
 
 const mobileNavItems = NAV_ITEMS.slice(1);
 const contactEntries = await getCollection('contact');
-const heroEntries = await getCollection('hero');
 const contact = contactEntries[0];
-const hero = heroEntries[0];
 const { linkedinUrl, githubUrl, email } = contact?.data ?? {};
-const { resumeUrl } = hero?.data ?? {};
 const linkedInHref = linkedinUrl || LINKEDIN_URL;
 const githubHref = githubUrl || GITHUB_URL;
-const localResumeHref = '/Carlos-Olivo-CV.pdf';
-const resumeHref = resumeUrl && resumeUrl !== '#' ? resumeUrl : localResumeHref;
+const cvPageHref = '/cv';
+const isHomePage = Astro.url.pathname === '/';
 const externalLinks = [
 	{ label: 'LinkedIn', href: linkedInHref },
 	{ label: 'GitHub', href: githubHref },
@@ -35,14 +32,14 @@ const externalLinks = [
 				) : (
 					<a href="#contact" class="top-contact-chip top-contact-chip--ghost">Contact</a>
 				)}
-				<a
-					href={resumeHref}
-					download="Carlos-Olivo-CV.pdf"
-					class="top-contact-chip top-contact-chip--primary"
-					data-resume-download
-				>
-					CV
-				</a>
+				{Astro.url.pathname !== cvPageHref && (
+					<a
+						href={cvPageHref}
+						class="top-contact-chip top-contact-chip--primary"
+					>
+						CV
+					</a>
+				)}
 			</div>
 
 			<div class="top-contact-bar__links" aria-label="External links">
@@ -59,7 +56,7 @@ const externalLinks = [
 	</div>
 
 	<nav class="header-nav" aria-label="Main navigation">
-		<a href="#hero" class="logo-link">
+		<a href={isHomePage ? '#hero' : '/#hero'} class="logo-link">
 			<LogoMark size="sm" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
@@ -90,7 +87,7 @@ const externalLinks = [
 				<ul class="drawer-list" role="list">
 					{mobileNavItems.map((item) => (
 						<li>
-							<a href={item.href} class="drawer-link" data-nav-link>
+							<a href={isHomePage ? item.href : `/${item.href}`} class="drawer-link" data-nav-link>
 								{item.label}
 							</a>
 						</li>
@@ -109,20 +106,18 @@ const externalLinks = [
 		top: 0;
 		z-index: 60;
 		isolation: isolate;
-		border-bottom: 1px solid transparent;
-		background-color: rgb(16 18 20 / 0.82);
+		border-bottom: 1px solid var(--color-border);
+		background-color: rgba(31, 34, 40, 0.82);
 		backdrop-filter: blur(14px);
 		-webkit-backdrop-filter: blur(14px);
 		transition:
 			background-color var(--fx-duration-normal) var(--fx-easing-out),
-			border-color var(--fx-duration-normal) var(--fx-easing-out),
-			box-shadow var(--fx-duration-normal) var(--fx-easing-out);
+			border-color var(--fx-duration-normal) var(--fx-easing-out);
 	}
 
 	.site-header[data-scrolled="true"] {
-		border-bottom-color: rgb(56 66 86 / 0.82);
-		background-color: rgb(26 30 38 / 0.95);
-		box-shadow: 0 12px 28px rgb(0 0 0 / 0.18);
+		border-bottom-color: var(--color-border-strong);
+		background-color: rgba(31, 34, 40, 0.95);
 	}
 
 	.top-contact-bar__inner,
@@ -180,13 +175,13 @@ const externalLinks = [
 		justify-content: center;
 		min-height: 2.5rem;
 		padding: 0 1rem;
-		border: 1px solid rgb(56 66 86 / 0.72);
-		border-radius: 999px;
-		background: rgb(28 31 37 / 0.72);
+		border: 1px solid var(--color-outline);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-container-low);
 		color: var(--color-text-primary);
 		font-family: var(--font-mono);
 		font-size: 0.74rem;
-		font-weight: 500;
+		font-weight: 400;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		text-decoration: none;
@@ -211,7 +206,7 @@ const externalLinks = [
 	}
 
 	.top-contact-chip--primary {
-		background: rgb(255 255 255 / 0.06);
+		background: var(--color-surface-container);
 	}
 
 	.top-contact-bar__separator {
@@ -226,7 +221,7 @@ const externalLinks = [
 		justify-content: space-between;
 		padding-top: 0;
 		padding-bottom: 0.85rem;
-		border-top: 1px solid rgb(42 49 64 / 0.45);
+		border-top: 1px solid var(--color-border);
 		transition:
 			padding-bottom var(--fx-duration-normal) var(--fx-easing-out),
 			border-top-color var(--fx-duration-normal) var(--fx-easing-out);
@@ -234,7 +229,7 @@ const externalLinks = [
 
 	.site-header[data-scrolled="true"] .header-nav {
 		padding-bottom: 0.62rem;
-		border-top-color: rgb(56 66 86 / 0.72);
+		border-top-color: var(--color-border-strong);
 	}
 
 	.logo-link {
@@ -245,8 +240,9 @@ const externalLinks = [
 		color: var(--color-text-primary);
 		font-family: var(--font-mono);
 		font-size: 0.875rem;
-		font-weight: 700;
-		letter-spacing: -0.01em;
+		font-weight: 400;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		transition: color var(--fx-duration-fast) ease;
 	}
 
@@ -271,8 +267,8 @@ const externalLinks = [
 		height: 2.5rem;
 		padding: 0;
 		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
-		background: var(--color-surface);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-container-low);
 		color: var(--color-text-secondary);
 		cursor: pointer;
 		transition: all var(--fx-duration-fast) ease;
@@ -306,7 +302,7 @@ const externalLinks = [
 		width: 280px;
 		max-width: 85vw;
 		height: 100vh;
-		background: var(--color-surface);
+		background: var(--color-surface-container-lowest);
 		border-left: 1px solid var(--color-border);
 		transform: translateX(100%);
 		transition: transform 0.25s ease;
@@ -343,14 +339,14 @@ const externalLinks = [
 		color: var(--color-text-secondary);
 		font-family: var(--font-sans);
 		font-size: 1rem;
-		font-weight: 500;
+		font-weight: 400;
 		letter-spacing: 0.02em;
-		border-radius: var(--radius-sm);
+		border-radius: 0px;
 		transition: all 0.15s ease;
 	}
 
 	.drawer-link:hover {
-		background: var(--color-surface-elevated);
+		background: var(--color-surface-container-high);
 		color: var(--color-text-primary);
 		border-left: 2px solid var(--color-primary);
 		padding-left: calc(var(--spacing-4) - 2px);
@@ -362,7 +358,7 @@ const externalLinks = [
 	}
 
 	.drawer-link.active {
-		background: var(--color-surface-elevated);
+		background: var(--color-surface-container-high);
 		color: var(--color-primary);
 		border-left: 3px solid var(--color-primary);
 		padding-left: calc(var(--spacing-4) - 3px);
@@ -374,7 +370,7 @@ const externalLinks = [
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgb(16 18 20 / 0.8);
+		background: rgba(31, 34, 40, 0.8);
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 0.25s ease, visibility 0.25s ease;
