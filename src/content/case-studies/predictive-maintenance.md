@@ -3,11 +3,12 @@ title: "Hotel Connectivity & Quote Performance"
 slug: "hotel-connectivity-quote-performance"
 summary: "Built hotel provider integrations and DAX-backed data paths that improved synchronization, quote responsiveness, and API consistency across travel inventory systems."
 tags:
-  - .NET
-  - DAX
-  - Travel APIs
-  - Background Workers
-order: 1
+  - Provider Integration
+  - Quote Performance
+  - Data Reliability
+  - Operational Efficiency
+order: 2
+url: "https://pricetravel.com"
 ---
 
 ## Context

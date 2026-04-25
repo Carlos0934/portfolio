@@ -58,6 +58,7 @@ const caseStudies = defineCollection({
 		summary: z.string(),
 		tags: z.array(z.string()).optional(),
 		order: z.number().optional(),
+		url: z.string().url().optional(),
 	}),
 });
 

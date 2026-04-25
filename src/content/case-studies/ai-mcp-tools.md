@@ -3,11 +3,11 @@ title: "Real-Time Streaming API"
 slug: "real-time-streaming-api"
 summary: "Created a Go-based real-time API and Chrome-powered scraper that tracked 128 roulette tables and emitted deduplicated live results over WebSockets."
 tags:
-  - Go
-  - WebSockets
-  - Goroutines
-  - Browser Automation
-order: 3
+  - Real-Time Data
+  - Event Streaming
+  - Data Normalization
+  - Live Monitoring
+order: 4
 ---
 
 ## Context

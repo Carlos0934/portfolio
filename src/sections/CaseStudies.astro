@@ -3,41 +3,179 @@ import { getCollection } from 'astro:content';
 
 const caseEntries = await getCollection('caseStudies');
 const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
+const cardClass = 'case-card flex flex-col rounded-lg border border-border bg-surface-container p-5 md:p-6 transition-colors hover:border-border-strong';
 ---
 
-<section id="case-studies" class="border-b border-border py-14 section-reveal md:py-20">
+<section id="case-studies" class="case-studies border-b border-border py-14 md:py-20 bg-background">
 	<div class="mx-auto max-w-6xl px-4">
 		<div class="mb-8 md:mb-12">
-			<p class="fx-reveal mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
+			<p class="case-studies__eyebrow mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
 				Proof of work
 			</p>
-			<h2 class="fx-reveal text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+			<h2 class="case-studies__title text-2xl font-normal tracking-tight text-text-primary md:text-3xl">
 				Selected Case Studies
 			</h2>
-			<p class="fx-reveal-up mt-3 max-w-2xl text-base text-text-secondary md:text-lg">
+			<p class="case-studies__intro mt-3 max-w-2xl text-base text-text-secondary md:text-lg">
 				Backend and platform projects where integration reliability, event-driven architecture, and operational efficiency were the primary objectives.
 			</p>
 		</div>
-		<div class="grid gap-6 lg:grid-cols-2 fx-stagger-group">
+		<div class="grid gap-6 lg:grid-cols-2">
 			{cases.map((item) => (
-				<article class="fx-reveal-up flex flex-col rounded-lg border border-border bg-surface-elevated p-5 md:p-6 transition-colors hover:border-border-strong">
-					<h3 class="mb-2 text-lg font-bold tracking-tight text-text-primary md:text-xl">
-						{item.data.title}
-					</h3>
-					<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
-						{item.data.summary}
-					</p>
-					{item.data.tags && item.data.tags.length > 0 && (
-						<div class="flex flex-wrap gap-2">
-							{item.data.tags.map((tag) => (
-								<span class="inline-flex items-center rounded-sm bg-surface px-2.5 py-1 font-mono text-xs font-medium text-text-muted border border-border">
-									{tag}
-								</span>
-							))}
-						</div>
-					)}
-				</article>
+				item.data.url ? (
+					<a class={`${cardClass} case-card--linked hover:bg-surface-container-high focus-visible:bg-surface-container-high`} href={item.data.url} target="_blank" rel="noreferrer">
+						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl">
+							{item.data.title}
+						</h3>
+						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
+							{item.data.summary}
+						</p>
+						{item.data.tags && item.data.tags.length > 0 && (
+							<div class="mb-5 flex flex-wrap gap-2">
+								{item.data.tags.map((tag) => (
+									<span class="inline-flex items-center rounded-md bg-transparent px-2 py-1 font-mono text-xs font-normal uppercase tracking-[0.05em] text-text-muted border border-border-strong">
+										{tag}
+									</span>
+								))}
+							</div>
+						)}
+						<span class="mt-auto font-mono text-xs uppercase tracking-[0.14em] text-text-muted transition-colors">
+							View project -&gt;
+						</span>
+					</a>
+				) : (
+					<article class={cardClass}>
+						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl">
+							{item.data.title}
+						</h3>
+						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
+							{item.data.summary}
+						</p>
+						{item.data.tags && item.data.tags.length > 0 && (
+							<div class="flex flex-wrap gap-2">
+								{item.data.tags.map((tag) => (
+									<span class="inline-flex items-center rounded-md bg-transparent px-2 py-1 font-mono text-xs font-normal uppercase tracking-[0.05em] text-text-muted border border-border-strong">
+										{tag}
+									</span>
+								))}
+							</div>
+						)}
+					</article>
+				)
 			))}
 		</div>
 	</div>
 </section>
+
+<script>
+	const initCaseStudiesReveal = () => {
+		const section = document.querySelector<HTMLElement>('.case-studies');
+		if (!section || section.dataset.revealInitialized === 'true') return;
+
+		section.dataset.revealInitialized = 'true';
+
+		const revealItems = section.querySelectorAll<HTMLElement>(
+			'.case-studies__eyebrow, .case-studies__title, .case-studies__intro, .case-card'
+		);
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+			revealItems.forEach((item) => item.classList.add('is-visible'));
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) return;
+
+					section.classList.add('is-visible');
+					observer.disconnect();
+				});
+			},
+			{ rootMargin: '0px 0px -10% 0px', threshold: 0.18 }
+		);
+
+		observer.observe(section);
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initCaseStudiesReveal, { once: true });
+	} else {
+		initCaseStudiesReveal();
+	}
+</script>
+
+<style>
+	.case-studies__eyebrow,
+	.case-studies__title,
+	.case-studies__intro,
+	.case-card {
+		opacity: 0;
+		transform: translateY(1.15rem);
+		transition:
+			opacity 440ms cubic-bezier(0.16, 1, 0.3, 1),
+			transform 440ms cubic-bezier(0.16, 1, 0.3, 1),
+			background-color 150ms ease,
+			border-color 150ms ease,
+			color 150ms ease;
+	}
+
+	.case-studies.is-visible .case-studies__eyebrow,
+	.case-studies.is-visible .case-studies__title,
+	.case-studies.is-visible .case-studies__intro,
+	.case-studies.is-visible .case-card,
+	.case-studies__eyebrow.is-visible,
+	.case-studies__title.is-visible,
+	.case-studies__intro.is-visible,
+	.case-card.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.case-studies.is-visible .case-studies__title {
+		transition-delay: 70ms;
+	}
+
+	.case-studies.is-visible .case-studies__intro {
+		transition-delay: 140ms;
+	}
+
+	.case-studies.is-visible .case-card:nth-child(1) {
+		transition-delay: 160ms;
+	}
+
+	.case-studies.is-visible .case-card:nth-child(2) {
+		transition-delay: 240ms;
+	}
+
+	.case-studies.is-visible .case-card:nth-child(3) {
+		transition-delay: 320ms;
+	}
+
+	.case-studies.is-visible .case-card:nth-child(4) {
+		transition-delay: 400ms;
+	}
+
+	.case-card {
+		text-decoration: none;
+	}
+
+	.case-card--linked:hover > span:last-child,
+	.case-card--linked:focus-visible > span:last-child {
+		color: var(--color-text-primary);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.case-studies__eyebrow,
+		.case-studies__title,
+		.case-studies__intro,
+		.case-card {
+			opacity: 1;
+			transform: none;
+			transition:
+				background-color 150ms ease,
+				border-color 150ms ease,
+				color 150ms ease;
+		}
+	}
+</style>
