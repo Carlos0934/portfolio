@@ -1,62 +1,88 @@
-# Astro Starter Kit: Blog
+# Carlos Olivo Portfolio
 
-```sh
-pnpm create astro@latest -- --template blog
-```
+Personal engineering portfolio for `carlos-olivo.dev`, built with Astro and deployed as a static site on Cloudflare Workers.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The site presents senior software engineering work across backend systems, SaaS platforms, travel-tech integrations, AI-assisted workflows, and operational automation.
 
-Features:
+## Live Site
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+- Production: <https://carlos-olivo.dev>
+- Spanish homepage: <https://carlos-olivo.dev/es/>
+- CV: <https://carlos-olivo.dev/cv/>
+- Spanish CV: <https://carlos-olivo.dev/es/cv/>
 
-## 🚀 Project Structure
+## Features
 
-Inside of your Astro project, you'll see the following folders and files:
+- English and Spanish homepage routes
+- English and Spanish CV pages with downloadable PDF
+- Case studies with external proof-of-work links
+- SEO metadata, canonical URLs, and hreflang alternates
+- JSON-LD structured data for the profile, website, CV, and case studies
+- `robots.txt`, sitemap, and `llms.txt` for search and LLM-friendly discovery
+- Custom logo and favicon assets
+- Cloudflare Workers static asset deployment with Wrangler
+
+## Tech Stack
+
+- Astro
+- TypeScript
+- Tailwind CSS v4
+- MDX/content collections
+- Cloudflare Wrangler
+
+## Project Structure
 
 ```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+  components/        Shared UI components
+  content/           Case studies, experience, contact, and homepage content
+  layouts/           Base page layout
+  lib/               Navigation and structured data helpers
+  pages/             Static routes, including /es and /cv
+  sections/          Homepage sections
+public/
+  fonts/             Local fonts
+  favicon.*          Site icons
+  llms.txt           LLM discovery file
+  robots.txt         Crawler policy
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Local Development
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```sh
+pnpm install
+pnpm dev
+```
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+The local dev server runs at <http://localhost:4321>.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Build
 
-## 🧞 Commands
+```sh
+pnpm build
+```
 
-All commands are run from the root of the project, from a terminal:
+The production output is generated in `dist/`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## Deploy
 
-## 👀 Want to learn more?
+```sh
+pnpm deploy
+```
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+This runs the Astro build and deploys the static assets using Wrangler. The Cloudflare configuration is in `wrangler.jsonc`.
 
-## Credit
+## SEO And LLM Files
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+- `public/robots.txt` allows standard search crawlers and common AI/LLM crawlers.
+- `public/llms.txt` summarizes the site, routes, capabilities, contact links, and case studies.
+- `@astrojs/sitemap` generates the sitemap during `pnpm build`.
+- Structured data lives in `src/lib/structuredData.ts`.
+
+## CV Routes
+
+The CV is route-based instead of selector-based:
+
+- `/cv/` renders the English CV.
+- `/es/cv/` renders the Spanish CV.
+- Both routes include hreflang alternates and a PDF download button.

@@ -6,27 +6,48 @@
 	--font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 	--font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-	/* Core Colors */
-	--color-background: #101214;
-	--color-foreground: #E5E7EB;
-	--color-surface: #1A1E26;
-	--color-surface-alt: #1C1F25;
-	--color-surface-elevated: #202634;
+	/* Core Colors — Operator Core base #1F2228 */
+	--color-background: #1F2228;
+	--color-foreground: #ffffff;
+
+	/* Surface layers per DESIGN.md */
+	--color-surface: #1F2228;
+	--color-surface-dim: rgba(255, 255, 255, 0.03);
+	--color-surface-bright: rgba(255, 255, 255, 0.08);
+	--color-surface-container-lowest: #1F2228;
+	--color-surface-container-low: rgba(255, 255, 255, 0.03);
+	--color-surface-container: rgba(255, 255, 255, 0.05);
+	--color-surface-container-high: rgba(255, 255, 255, 0.08);
+	--color-surface-container-highest: rgba(255, 255, 255, 0.10);
+	--color-surface-variant: rgba(255, 255, 255, 0.10);
+
+	/* Backward-compatible aliases */
+	--color-surface-alt: rgba(255, 255, 255, 0.03);
+	--color-surface-elevated: rgba(255, 255, 255, 0.06);
+	--color-surface-hover: rgba(255, 255, 255, 0.08);
 
 	/* Borders */
-	--color-border: #2A3140;
-	--color-border-strong: #384256;
+	--color-border: rgba(255, 255, 255, 0.10);
+	--color-border-strong: rgba(255, 255, 255, 0.20);
+	--color-outline: rgba(255, 255, 255, 0.20);
+	--color-outline-variant: rgba(255, 255, 255, 0.10);
+	--color-focus-ring: #365C8D;
 
 	/* Text */
-	--color-text-primary: #E5E7EB;
-	--color-text-secondary: #A1A8B9;
-	--color-text-muted: #7E8798;
+	--color-text-primary: #ffffff;
+	--color-text-secondary: rgba(255, 255, 255, 0.70);
+	--color-text-muted: rgba(255, 255, 255, 0.50);
 
 	/* Accent */
 	--color-primary: #365C8D;
 	--color-primary-hover: #426A9E;
 	--color-primary-active: #2C4D78;
+	--color-primary-container: rgba(54, 92, 141, 0.20);
+	--color-on-primary-container: #ffffff;
 	--color-signal: #20899F;
+	--color-secondary: #20899F;
+	--color-secondary-container: rgba(32, 137, 159, 0.18);
+	--color-on-secondary-container: #ffffff;
 
 	/* Semantic States */
 	--color-success: #2F8F72;
@@ -34,12 +55,18 @@
 	--color-danger: #B25461;
 	--color-info: #4C83C3;
 
-	/* Radius */
-	--radius-sm: 8px;
-	--radius-md: 12px;
-	--radius-lg: 16px;
+	/* Radius — Sharp and Controlled per DESIGN.md */
+	--radius-sm: 0px;
+	--radius-DEFAULT: 2px;
+	--radius-md: 4px;
+	--radius-lg: 8px;
+	--radius-xl: 12px;
+	--radius-full: 9999px;
+	--radius-interactive: 8px;
+	--radius-container: 8px;
 
-	/* Spacing Scale */
+	/* Spacing Scale — 8px base */
+	--spacing-xs: 4px;
 	--spacing-1: 4px;
 	--spacing-2: 8px;
 	--spacing-3: 12px;
@@ -48,6 +75,8 @@
 	--spacing-8: 32px;
 	--spacing-12: 48px;
 	--spacing-16: 64px;
+	--spacing-gutter: 24px;
+	--spacing-margin: 24px;
 }
 
 /* Font Face Declarations */
@@ -63,6 +92,14 @@
 	font-family: "Inter";
 	src: url("/fonts/inter-bold.woff2") format("woff2");
 	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "JetBrains Mono";
+	src: url("/fonts/jetbrains-mono-light.woff2") format("woff2");
+	font-weight: 300;
 	font-style: normal;
 	font-display: swap;
 }
@@ -85,6 +122,12 @@ html {
 @media (max-width: 1279px) {
 	html {
 		scroll-padding-top: 8rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
 	}
 }
 
@@ -119,12 +162,12 @@ body {
 	top: 0;
 	z-index: 9999;
 	padding: var(--spacing-4);
-	background: var(--color-surface-elevated);
+	background: var(--color-surface-container);
 	color: var(--color-text-primary);
 	border: 2px solid var(--color-primary);
 	border-radius: var(--radius-sm);
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: 400;
 	display: block;
 }
 
@@ -173,7 +216,7 @@ button:focus-visible {
 
 .text-readable strong {
 	color: var(--color-text-primary);
-	font-weight: 600;
+	font-weight: 400;
 }
 
 /* ============================================================
@@ -414,30 +457,17 @@ button:focus-visible {
    HOVER EFFECTS — Subtle, Premium Interactions
    ============================================================ */
 
-/* Hover Lift — Subtle elevation on hover */
-.fx-hover-lift {
-	transition:
-		transform var(--fx-duration-normal) var(--fx-easing-out),
-		box-shadow var(--fx-duration-normal) var(--fx-easing-out);
+/* Hover Dim — Opacity transition on hover */
+.fx-hover-dim {
+	transition: opacity 0.2s ease;
 }
 
-.fx-hover-lift:hover {
-	transform: translateY(-2px);
-	box-shadow:
-		0 4px 12px -2px rgba(0, 0, 0, 0.2),
-		0 2px 4px -1px rgba(0, 0, 0, 0.1);
+.fx-hover-dim:hover {
+	opacity: 0.5;
 }
 
-.fx-hover-lift:focus-visible {
-	transform: translateY(-2px);
-	box-shadow:
-		0 4px 12px -2px rgba(0, 0, 0, 0.2),
-		0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-.fx-hover-lift:active {
-	transform: translateY(0);
-	box-shadow: none;
+.fx-hover-dim:focus-visible {
+	opacity: 0.5;
 }
 
 /* Hover Border — Border color transition on hover */
@@ -455,18 +485,19 @@ button:focus-visible {
 	border-color: var(--color-primary);
 }
 
-/* Hover Glow — Subtle primary glow effect */
-.fx-hover-glow {
+/* Hover Border Dim — Border brightens on hover */
+.fx-hover-border-dim {
 	transition:
-		box-shadow var(--fx-duration-normal) var(--fx-easing-out);
+		border-color var(--fx-duration-fast) var(--fx-easing-in-out),
+		background-color var(--fx-duration-fast) var(--fx-easing-in-out);
 }
 
-.fx-hover-glow:hover {
-	box-shadow: 0 0 20px -4px rgba(54, 92, 141, 0.4);
+.fx-hover-border-dim:hover {
+	border-color: var(--color-border-strong);
 }
 
-.fx-hover-glow:focus-visible {
-	box-shadow: 0 0 20px -4px rgba(54, 92, 141, 0.4);
+.fx-hover-border-dim:focus-visible {
+	border-color: var(--color-border-strong);
 }
 
 /* Hover Accent — Background shift to primary accent */
@@ -477,60 +508,26 @@ button:focus-visible {
 }
 
 .fx-hover-accent:hover {
-	background-color: var(--color-surface-elevated);
+	background-color: var(--color-surface-container-high);
 	border-color: var(--color-primary);
 }
 
 .fx-hover-accent:focus-visible {
-	background-color: var(--color-surface-elevated);
+	background-color: var(--color-surface-container-high);
 	border-color: var(--color-primary);
-}
-
-/* Combined: Lift + Glow (for cards) */
-.fx-hover-card {
-	transition:
-		transform var(--fx-duration-normal) var(--fx-easing-out),
-		box-shadow var(--fx-duration-normal) var(--fx-easing-out),
-		border-color var(--fx-duration-fast) var(--fx-easing-in-out);
-}
-
-.fx-hover-card:hover {
-	transform: translateY(-3px);
-	box-shadow:
-		0 8px 24px -8px rgba(0, 0, 0, 0.3),
-		0 0 16px -4px rgba(54, 92, 141, 0.15);
-	border-color: var(--color-border-strong);
-}
-
-.fx-hover-card:focus-visible {
-	transform: translateY(-3px);
-	box-shadow:
-		0 8px 24px -8px rgba(0, 0, 0, 0.3),
-		0 0 16px -4px rgba(54, 92, 141, 0.15);
-	border-color: var(--color-border-strong);
 }
 
 /* Reduced Motion — Simplify hover effects */
 @media (prefers-reduced-motion: reduce) {
-	.fx-hover-lift,
+	.fx-hover-dim,
 	.fx-hover-border,
-	.fx-hover-glow,
-	.fx-hover-accent,
-	.fx-hover-card {
+	.fx-hover-border-dim,
+	.fx-hover-accent {
 		transition: none;
 	}
 
-	.fx-hover-lift:hover {
-		transform: none;
-	}
-
-	.fx-hover-card:hover {
-		transform: none;
-	}
-
-	.fx-hover-glow:hover,
-	.fx-hover-card:hover {
-		box-shadow: none;
+	.fx-hover-dim:hover {
+		opacity: 1;
 	}
 }
 

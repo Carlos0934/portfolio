@@ -1,0 +1,125 @@
+---
+interface Props {
+	locale?: 'auto' | 'en' | 'es';
+}
+
+const { locale = 'auto' } = Astro.props;
+---
+
+<script define:vars={{ forcedLocale: locale }}>
+	type Locale = 'en' | 'es';
+
+	const translations: Record<Locale, Record<string, string>> = {
+		en: {},
+		es: {
+			'nav.copy': 'Copiar',
+			'nav.value-strip': 'Entregables',
+			'nav.case-studies': 'Casos de estudio',
+			'nav.experience': 'Experiencia',
+			'nav.technical-focus': 'Técnico',
+			'nav.contact': 'Contacto',
+			'hero.eyebrow': 'EE. UU. y República Dominicana · Abierto a remoto o híbrido',
+			'hero.tagline': 'Construyo sistemas backend para productos que necesitan escalar, integrarse y seguir funcionando.',
+			'hero.description': 'Mi trabajo reciente se ha enfocado en APIs, infraestructura y confiabilidad para productos SaaS y travel-tech. Trabajo cerca del producto cuando la arquitectura, las integraciones y la claridad operativa importan, ayudando a los equipos a entregar con confianza y mantener sistemas sostenibles mientras crecen.',
+			'hero.signal.0.label': 'Trabajo de plataforma',
+			'hero.signal.1.label': 'Integraciones complejas',
+			'hero.signal.1.value': 'Travel-tech',
+			'hero.signal.2.label': 'Foco de entrega',
+			'hero.signal.2.value': 'Confiabilidad',
+
+			'value.label': 'Lo que entrego',
+			'value.0.title': 'Infraestructura de producto',
+			'value.0.description': 'Bases backend para productos multi-tenant, flujos operativos y actividad de usuarios de alto volumen.',
+			'value.1.title': 'Automatización de workflows',
+			'value.1.description': 'Sistemas que eliminan pasos manuales, conectan servicios y mantienen procesos de negocio funcionando con confiabilidad.',
+			'value.2.title': 'Integraciones externas',
+			'value.2.description': 'Conexiones con proveedores y plataformas que normalizan datos, manejan casos borde y sostienen operaciones confiables.',
+			'value.3.title': 'Mejoras de confiabilidad',
+			'value.3.description': 'Trabajo de rendimiento, despliegue y monitoreo que reduce esfuerzo operativo y mantiene estable producción.',
+
+			'cases.eyebrow': 'Prueba de trabajo',
+			'cases.title': 'Casos de estudio seleccionados',
+			'cases.intro': 'Proyectos backend y de plataforma donde la confiabilidad de integraciones, la arquitectura orientada a eventos y la eficiencia operativa fueron objetivos principales.',
+			'case.socrates-curriculum-grounded-exam-generation.summary': 'Construí una plataforma de exámenes basada en currículo para docentes dominicanos que convierte secuencias oficiales del MINERD en exámenes DOCX editables, reduciendo preparación de 40 a 10 minutos y de 90 a 15 minutos para usuarios con menor habilidad digital.',
+			'case.hotel-connectivity-quote-performance.title': 'Conectividad hotelera y rendimiento de cotización',
+			'case.hotel-connectivity-quote-performance.summary': 'Construí integraciones con proveedores hoteleros y rutas de datos optimizadas que mejoraron sincronización, respuesta de cotizaciones y consistencia de APIs en sistemas de inventario travel-tech.',
+			'case.multi-tenant-saas-platform-apis.title': 'APIs para plataformas SaaS multi-tenant',
+			'case.multi-tenant-saas-platform-apis.summary': 'Construí backends para productos SaaS multi-tenant que conectan aseguradoras, proveedores de servicio, agentes y operaciones internas.',
+			'case.real-time-streaming-api.title': 'API de datos en tiempo real',
+			'case.real-time-streaming-api.summary': 'Creé una API en tiempo real y un scraper controlado por navegador que monitorea 128 mesas y emite resultados deduplicados por WebSockets.',
+			'case.cta': 'Ver proyecto ->',
+
+			'experience.eyebrow': 'Trayectoria',
+			'experience.title': 'Experiencia',
+			'experience.pricetravel-holding.role': 'Backend Developer — Conectividad hotelera y sistemas de cotización',
+			'experience.pricetravel-holding.location': 'Remoto (US)',
+			'experience.pricetravel-holding.body': 'Construí y mantuve integraciones con proveedores hoteleros como SiteMinder, TravelClick, Omnibees, Gin RateFox y TravelGate HotelX, habilitando sincronización de tarifas y disponibilidad en tiempo real. Optimicé conexiones existentes con Hotelbeds, DerbySoft, SynXis y Expedia Rapid API para mejorar confiabilidad. Desarrollé vistas materializadas respaldadas por DAX para tasas de cambio y promociones, reduciendo carga de consulta y latencia de recuperación de moneda.',
+			'experience.listoapp.role': 'Backend Developer — Plataformas SaaS e infraestructura cloud',
+			'experience.listoapp.location': 'Remoto (US)',
+			'experience.listoapp.body': 'Reduje el cold start de AWS Lambda en 50% mediante bundling previo al despliegue. Construí sistemas de notificación orientados a eventos con SNS y EventBridge. Entregué APIs GraphQL para plataformas SaaS multi-tenant como Sektor.app y Centuria.app usando NestJS, TypeScript y MongoDB. Creé una API en tiempo real en Go para RoulettesView.com monitoreando 128 mesas por WebSockets. Automaticé despliegues con CI/CD en GitHub Actions.',
+			'experience.drimo.role': 'Software Developer — Desarrollo web y móvil',
+			'experience.drimo.location': 'Remoto',
+			'experience.drimo.body': 'Construí aplicaciones web y móviles cross-platform con React. Mantuve y optimicé APIs serverless en AWS para mejorar confiabilidad y eficiencia de costos. Desarrollé funcionalidades para un ecosistema de microservicios con NestJS y GraphQL. Migré el blog y sitio web de la compañía a Next.js mediante scraping automatizado, mejorando velocidad de carga y SEO.',
+
+			'technical.eyebrow': 'Áreas de capacidad',
+			'technical.title': 'Foco técnico',
+			'technical.description': 'Ingeniería backend, entrega de plataforma e integraciones, organizadas por área de capacidad.',
+			'technical.cloud-infrastructure.eyebrow': 'Entrega cloud',
+			'technical.cloud-infrastructure.title': 'Infraestructura cloud',
+			'technical.cloud-infrastructure.summary': 'Construcción y operación de plataformas SaaS sobre AWS con automatización, ajuste de rendimiento y disciplina de entrega.',
+			'technical.cloud-infrastructure.signal': 'Backends sobre AWS optimizados para velocidad de despliegue, confiabilidad y cargas de menor latencia.',
+			'technical.cloud-infrastructure.item.0.label': 'Cloud e infraestructura',
+			'technical.cloud-infrastructure.item.1.label': 'Optimización de plataforma',
+			'technical.cloud-infrastructure.item.1.value': 'Reducción de cold starts en Lambda, despliegues automatizados y background workers para cargas de producción',
+			'technical.ai-automation.eyebrow': 'Sistemas full-stack',
+			'technical.ai-automation.title': 'Entrega full-stack',
+			'technical.ai-automation.summary': 'Entrega de sistemas de producto y plataforma entre backend, frontend y capas de servicio con fuerte énfasis en mantenibilidad.',
+			'technical.ai-automation.signal': 'Trabajo de producto y plataforma en JavaScript/TypeScript, .NET y Go con límites de servicio mantenibles.',
+			'technical.ai-automation.item.0.label': 'Lenguajes y runtime',
+			'technical.ai-automation.item.1.label': 'Frameworks y servicios',
+			'technical.system-integrations.eyebrow': 'Conectividad con proveedores',
+			'technical.system-integrations.title': 'Conectividad y APIs',
+			'technical.system-integrations.summary': 'Diseño de sistemas intensivos en integraciones que conectan proveedores travel-tech, motores de cotización y productos SaaS multi-tenant.',
+			'technical.system-integrations.signal': 'Capas de integración construidas para proveedores hoteleros, flujos de cotización y coordinación de servicios orientada a eventos.',
+			'technical.system-integrations.item.0.label': 'Integraciones con proveedores',
+			'technical.system-integrations.item.0.value': 'SiteMinder, TravelClick, Omnibees, Gin RateFox, TravelGate HotelX y otras APIs travel-tech',
+			'technical.system-integrations.item.1.label': 'Datos y caching',
+			'technical.signalLabel': 'Señal principal',
+
+			'contact.eyebrow': 'Siguiente paso',
+			'contact.title': 'Construyamos algo que llegue a producción.',
+			'contact.description': 'Basado en EE. UU., trabajando con equipos y productos en República Dominicana. Abierto a roles backend, plataforma e integraciones complejas, remoto o híbrido. Si necesitas un ingeniero que mejora sistemas y entrega con confiabilidad, conversemos.',
+			'contact.direct': 'Contacto directo',
+			'contact.location': 'Ubicación',
+			'contact.profiles': 'Perfiles',
+			'footer.rights': 'Todos los derechos reservados.',
+		},
+	};
+
+	function pickLocale(): Locale {
+		if (forcedLocale === 'es' || forcedLocale === 'en') return forcedLocale;
+		const params = new URLSearchParams(window.location.search);
+		const explicit = params.get('lang');
+		if (explicit === 'es' || explicit === 'en') return explicit;
+		return navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
+	}
+
+	function applyLocale(locale: Locale) {
+		const dictionary = translations[locale];
+		document.documentElement.lang = locale;
+		document.documentElement.dataset.locale = locale;
+
+		document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((element) => {
+			const key = element.dataset.i18n;
+			if (!key) return;
+			const value = dictionary[key];
+			if (value) element.textContent = value;
+		});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', () => applyLocale(pickLocale()), { once: true });
+	} else {
+		applyLocale(pickLocale());
+	}
+</script>

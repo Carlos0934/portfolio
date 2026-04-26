@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "carlos-olivo-dev",
+  "compatibility_date": "2026-04-25",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    {
+      "pattern": "carlos-olivo.dev/*",
+      "zone_name": "carlos-olivo.dev"
+    },
+    {
+      "pattern": "www.carlos-olivo.dev/*",
+      "zone_name": "carlos-olivo.dev"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,5 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+interface Props {
+	locale?: 'en' | 'es';
+}
+const { locale = 'en' } = Astro.props;
+const isSpanish = locale === 'es';
 
 type FocusItem = {
 	label: string;
@@ -17,10 +22,20 @@ type FocusCardGroup = {
 };
 
 const techEntries = await getCollection('technicalFocus');
+const techEntriesWithContent = await Promise.all(
+	techEntries.map(async (entry) => {
+		const { Content } = await render(entry);
+		return { ...entry, Content };
+	})
+);
 
 const sectionTitle = 'Technical Focus';
 const sectionDescription =
 	'Backend engineering, platform delivery, and integration work — organized by capability area.';
+const localizedSectionTitle = isSpanish ? 'Foco técnico' : sectionTitle;
+const localizedSectionDescription = isSpanish
+	? 'Ingeniería backend, entrega de plataforma e integraciones, organizadas por área de capacidad.'
+	: sectionDescription;
 
 const sectionOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
 
@@ -39,6 +54,38 @@ const focusMeta: Record<(typeof sectionOrder)[number], FocusMeta> = {
 		eyebrow: 'Provider Connectivity',
 		signal: 'Integration layers built for hotel providers, quoting flows, and event-driven service coordination.',
 		tags: ['Travel Tech', 'GraphQL', 'Event-Driven'],
+	},
+};
+const spanishFocusMeta: Record<(typeof sectionOrder)[number], Partial<FocusMeta> & { title: string; summary: string; items: FocusItem[] }> = {
+	'cloud-infrastructure': {
+		eyebrow: 'Entrega cloud',
+		title: 'Infraestructura cloud',
+		summary: 'Construcción y operación de plataformas SaaS sobre AWS con automatización, ajuste de rendimiento y disciplina de entrega.',
+		signal: 'Backends sobre AWS optimizados para velocidad de despliegue, confiabilidad y cargas de menor latencia.',
+		items: [
+			{ label: 'Cloud e infraestructura', value: 'AWS (Lambda, SNS, EventBridge, DAX, S3), Docker, GitHub Actions' },
+			{ label: 'Optimización de plataforma', value: 'Reducción de cold starts en Lambda, despliegues automatizados y background workers para cargas de producción' },
+		],
+	},
+	'ai-automation': {
+		eyebrow: 'Sistemas full-stack',
+		title: 'Entrega full-stack',
+		summary: 'Entrega de sistemas de producto y plataforma entre backend, frontend y capas de servicio con fuerte énfasis en mantenibilidad.',
+		signal: 'Trabajo de producto y plataforma en JavaScript/TypeScript, .NET y Go con límites de servicio mantenibles.',
+		items: [
+			{ label: 'Lenguajes y runtime', value: 'TypeScript, JavaScript, C#, Go, SQL, Node.js' },
+			{ label: 'Frameworks y servicios', value: 'NestJS, React, Next.js, .NET 8, GraphQL, Serverless Framework' },
+		],
+	},
+	'system-integrations': {
+		eyebrow: 'Conectividad con proveedores',
+		title: 'Conectividad y APIs',
+		summary: 'Diseño de sistemas intensivos en integraciones que conectan proveedores travel-tech, motores de cotización y productos SaaS multi-tenant.',
+		signal: 'Capas de integración construidas para proveedores hoteleros, flujos de cotización y coordinación de servicios orientada a eventos.',
+		items: [
+			{ label: 'Integraciones con proveedores', value: 'SiteMinder, TravelClick, Omnibees, Gin RateFox, TravelGate HotelX y otras APIs travel-tech' },
+			{ label: 'Datos y caching', value: 'PostgreSQL, MongoDB, Redis, DAX, DynamoDB' },
+		],
 	},
 };
 
@@ -79,31 +126,33 @@ const dossiers = sectionOrder
 		if (!entry) return null;
 
 		const { summary, items } = parseFocusBody(entry.body ?? '');
+		const spanish = spanishFocusMeta[category];
 		const revealDirection = index % 2 === 0 ? 'right' : 'left';
 		return {
 			index: String(index + 1).padStart(2, '0'),
 			revealDirection,
 			category,
-			title: entry.data.title,
-			summary,
-			cardGroups: buildCardGroups(items),
+			title: isSpanish ? spanish.title : entry.data.title,
+			summary: isSpanish ? spanish.summary : summary,
+			cardGroups: buildCardGroups(isSpanish ? spanish.items : items),
 			...focusMeta[category],
+			...(isSpanish ? spanish : {}),
 		};
 	})
 	.filter((item): item is NonNullable<typeof item> => item !== null);
 ---
 
-<section id="technical-focus" class="border-b border-border py-16 section-reveal md:py-20">
+<section id="technical-focus" class="border-b border-border py-16 section-reveal md:py-20 bg-background">
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
 		<div class="fx-reveal mb-10 max-w-3xl md:mb-14">
-			<p class="focus-section-kicker mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
-				Capability areas
+			<p class="focus-section-kicker mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-i18n="technical.eyebrow">
+				{isSpanish ? 'Áreas de capacidad' : 'Capability areas'}
 			</p>
-			<h2 class="text-2xl font-bold tracking-tight text-text-primary md:text-4xl">
-				{sectionTitle}
+			<h2 class="text-2xl font-normal tracking-tight text-text-primary md:text-4xl" data-i18n="technical.title">
+				{localizedSectionTitle}
 			</h2>
-			<p class="mt-3 text-base leading-relaxed text-text-secondary md:text-lg">
-				{sectionDescription}
+			<p class="mt-3 text-base leading-relaxed text-text-secondary md:text-lg" data-i18n="technical.description">
+				{localizedSectionDescription}
 			</p>
 		</div>
 
@@ -116,9 +165,9 @@ const dossiers = sectionOrder
 					<div class="focus-dossier__summary">
 						<div class="focus-dossier__index" aria-hidden="true">{focus.index}</div>
 						<div class="min-w-0">
-							<p class="focus-dossier__eyebrow">{focus.eyebrow}</p>
-							<h3 class="focus-dossier__title">{focus.title}</h3>
-							<p class="focus-dossier__description">{focus.summary}</p>
+							<p class="focus-dossier__eyebrow" data-i18n={`technical.${focus.category}.eyebrow`}>{focus.eyebrow}</p>
+							<h3 class="focus-dossier__title" data-i18n={`technical.${focus.category}.title`}>{focus.title}</h3>
+							<p class="focus-dossier__description" data-i18n={`technical.${focus.category}.summary`}>{focus.summary}</p>
 
 							<ul class="focus-dossier__tags" role="list">
 								{focus.tags.map((tag) => (
@@ -130,18 +179,18 @@ const dossiers = sectionOrder
 
 					<div class="focus-dossier__detail">
 						<div class="focus-dossier__signal-block">
-							<p class="focus-dossier__label">Primary signal</p>
-							<p class="focus-dossier__signal">{focus.signal}</p>
+							<p class="focus-dossier__label" data-i18n="technical.signalLabel">{isSpanish ? 'Señal principal' : 'Primary signal'}</p>
+							<p class="focus-dossier__signal" data-i18n={`technical.${focus.category}.signal`}>{focus.signal}</p>
 						</div>
 
 						<div class="focus-dossier__items">
-							{focus.cardGroups.map((group) => (
+							{focus.cardGroups.map((group, groupIndex) => (
 								<section class="focus-dossier__detail-card">
 									<dl class="focus-dossier__item-stack">
 										{group.items.map((item) => (
 											<div class="focus-dossier__item-row">
-												<dt>{item.label}</dt>
-												<dd>{item.value}</dd>
+												<dt data-i18n={`technical.${focus.category}.item.${groupIndex}.label`}>{item.label}</dt>
+												<dd data-i18n={`technical.${focus.category}.item.${groupIndex}.value`}>{item.value}</dd>
 											</div>
 										))}
 									</dl>
@@ -160,6 +209,10 @@ const dossiers = sectionOrder
 		const section = document.getElementById('technical-focus');
 		if (!section) return;
 
+		// Guard against double-initialization
+		if (section.dataset.revealInitialized === 'true') return;
+		section.dataset.revealInitialized = 'true';
+
 		const dossiers = Array.from(section.querySelectorAll('.focus-dossier')) as HTMLElement[];
 		if (!dossiers.length) return;
 
@@ -168,6 +221,8 @@ const dossiers = sectionOrder
 			dossiers.forEach((dossier) => dossier.classList.add('is-visible'));
 			return;
 		}
+
+		section.classList.add('js-reveal-active');
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -185,7 +240,7 @@ const dossiers = sectionOrder
 
 		dossiers.forEach((dossier, index) => {
 			const rect = dossier.getBoundingClientRect();
-			const alreadyVisible = rect.top < window.innerHeight * 0.88;
+			const alreadyVisible = rect.top < window.innerHeight * 0.92;
 
 			if (alreadyVisible) {
 				dossier.classList.add('is-visible');
@@ -211,66 +266,29 @@ const dossiers = sectionOrder
 		display: grid;
 		gap: 1.5rem;
 		padding: 1.35rem;
-		perspective: 1600px;
-		transform-style: preserve-3d;
-		border: 1px solid rgb(42 49 64 / 0.9);
-		border-radius: 1rem;
-		background:
-			linear-gradient(180deg, rgb(28 31 37 / 0.84), rgb(24 28 34 / 0.96)),
-			var(--color-surface);
-		box-shadow:
-			0 1px 0 rgb(255 255 255 / 0.03) inset,
-			0 18px 40px rgb(0 0 0 / 0.14);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-container-low);
 		transition:
 			opacity 760ms cubic-bezier(0.16, 1, 0.3, 1),
-			transform 880ms cubic-bezier(0.16, 1, 0.3, 1),
-			box-shadow 460ms cubic-bezier(0.16, 1, 0.3, 1),
-			filter 760ms cubic-bezier(0.16, 1, 0.3, 1);
+			transform 880ms cubic-bezier(0.16, 1, 0.3, 1);
 		will-change: transform, opacity;
-		filter: saturate(0.88) brightness(0.9);
 	}
 
-	.focus-dossier[data-reveal-direction='left'] {
+	.js-reveal-active .focus-dossier[data-reveal-direction='left'],
+	.js-reveal-active .focus-dossier[data-reveal-direction='right'] {
 		opacity: 0;
-		transform:
-			perspective(1600px)
-			translate3d(-96px, 34px, -120px)
-			rotateY(14deg)
-			rotateX(5deg)
-			scale(0.94);
+		transform: translateY(24px);
 	}
 
-	.focus-dossier[data-reveal-direction='right'] {
-		opacity: 0;
-		transform:
-			perspective(1600px)
-			translate3d(96px, 34px, -120px)
-			rotateY(-14deg)
-			rotateX(5deg)
-			scale(0.94);
-	}
-
-	.focus-dossier.is-visible {
+	.js-reveal-active .focus-dossier.is-visible {
 		opacity: 1;
-		transform:
-			perspective(1600px)
-			translate3d(0, 0, 0)
-			rotateY(0deg)
-			rotateX(0deg)
-			scale(1);
-		filter: saturate(1) brightness(1);
+		transform: translateY(0);
 	}
 
 	.focus-dossier.is-visible:hover {
-		transform:
-			perspective(1600px)
-			translate3d(0, -6px, 0)
-			rotateY(0deg)
-			rotateX(0deg)
-			scale(1.01);
-		box-shadow:
-			0 1px 0 rgb(255 255 255 / 0.04) inset,
-			0 24px 48px rgb(0 0 0 / 0.2);
+		background: var(--color-surface-container);
+		border-color: var(--color-border-strong);
 	}
 
 	.focus-dossier__summary {
@@ -287,12 +305,14 @@ const dossiers = sectionOrder
 		min-width: 3rem;
 		height: 3rem;
 		padding: 0 0.75rem;
-		border: 1px solid rgb(56 66 86 / 0.8);
-		border-radius: 999px;
-		background: rgb(16 18 20 / 0.42);
+		border: 1px solid var(--color-outline);
+		border-radius: var(--radius-sm);
+		background: transparent;
 		font-family: var(--font-mono);
-		font-size: 0.8rem;
+		font-size: 0.75rem;
+		font-weight: 400;
 		letter-spacing: 0.16em;
+		text-transform: uppercase;
 		color: var(--color-text-secondary);
 	}
 
@@ -309,7 +329,7 @@ const dossiers = sectionOrder
 	.focus-dossier__title {
 		margin: 0.45rem 0 0;
 		font-size: 1.55rem;
-		font-weight: 700;
+		font-weight: 400;
 		letter-spacing: -0.03em;
 		color: var(--color-text-primary);
 	}
@@ -334,13 +354,15 @@ const dossiers = sectionOrder
 	.focus-dossier__tag {
 		display: inline-flex;
 		align-items: center;
-		padding: 0.45rem 0.7rem;
-		border: 1px solid rgb(56 66 86 / 0.72);
-		border-radius: 999px;
-		background: rgb(16 18 20 / 0.3);
+		padding: 0.25rem 0.5rem;
+		border: 1px solid var(--color-outline);
+		border-radius: var(--radius-sm);
+		background: transparent;
 		font-family: var(--font-mono);
-		font-size: 0.72rem;
+		font-size: 0.75rem;
+		font-weight: 400;
 		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		color: var(--color-text-secondary);
 	}
 
@@ -348,7 +370,7 @@ const dossiers = sectionOrder
 		display: grid;
 		gap: 1rem;
 		padding-top: 1rem;
-		border-top: 1px solid rgb(56 66 86 / 0.4);
+		border-top: 1px solid var(--color-border);
 	}
 
 	.focus-dossier__signal-block {
@@ -374,9 +396,9 @@ const dossiers = sectionOrder
 		display: grid;
 		min-height: 7.5rem;
 		padding: 0.8rem 0.9rem;
-		border: 1px solid rgb(56 66 86 / 0.36);
-		border-radius: 0.85rem;
-		background: rgb(16 18 20 / 0.2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-container-lowest);
 	}
 
 	.focus-dossier__item-stack {
@@ -392,21 +414,22 @@ const dossiers = sectionOrder
 
 	.focus-dossier__item-row + .focus-dossier__item-row {
 		padding-top: 0.7rem;
-		border-top: 1px solid rgb(56 66 86 / 0.2);
+		border-top: 1px solid var(--color-border);
 	}
 
 	.focus-dossier__item-row dt {
 		font-family: var(--font-mono);
-		font-size: 0.76rem;
-		font-weight: 500;
+		font-size: 0.75rem;
+		font-weight: 400;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--color-primary);
+		color: var(--color-text-muted);
 	}
 
 	.focus-dossier__item-row dd {
 		margin: 0;
-		font-size: 0.86rem;
+		font-family: var(--font-sans);
+		font-size: 0.875rem;
 		line-height: 1.5;
 		color: var(--color-text-secondary);
 	}
@@ -422,7 +445,7 @@ const dossiers = sectionOrder
 			padding-top: 0;
 			padding-left: 2rem;
 			border-top: 0;
-			border-left: 1px solid rgb(56 66 86 / 0.42);
+			border-left: 1px solid var(--color-border);
 		}
 
 		.focus-dossier__items {
@@ -431,7 +454,11 @@ const dossiers = sectionOrder
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.focus-dossier {
+		.focus-dossier,
+		.focus-dossier[data-reveal-direction='left'],
+		.focus-dossier[data-reveal-direction='right'],
+		.js-reveal-active .focus-dossier[data-reveal-direction='left'],
+		.js-reveal-active .focus-dossier[data-reveal-direction='right'] {
 			opacity: 1;
 			transform: none;
 			transition: none;

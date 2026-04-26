@@ -1,5 +1,27 @@
 ---
 import { getCollection, render } from 'astro:content';
+interface Props {
+	locale?: 'en' | 'es';
+}
+const { locale = 'en' } = Astro.props;
+const isSpanish = locale === 'es';
+const experienceTranslations: Record<string, { role: string; location: string; body: string }> = {
+	'pricetravel-holding': {
+		role: 'Backend Developer — Conectividad hotelera y sistemas de cotización',
+		location: 'Remoto (US)',
+		body: 'Construí y mantuve integraciones con proveedores hoteleros como SiteMinder, TravelClick, Omnibees, Gin RateFox y TravelGate HotelX, habilitando sincronización de tarifas y disponibilidad en tiempo real. Optimicé conexiones existentes con Hotelbeds, DerbySoft, SynXis y Expedia Rapid API para mejorar confiabilidad. Desarrollé vistas materializadas respaldadas por DAX para tasas de cambio y promociones, reduciendo carga de consulta y latencia de recuperación de moneda.',
+	},
+	listoapp: {
+		role: 'Backend Developer — Plataformas SaaS e infraestructura cloud',
+		location: 'Remoto (US)',
+		body: 'Reduje el cold start de AWS Lambda en 50% mediante bundling previo al despliegue. Construí sistemas de notificación orientados a eventos con SNS y EventBridge. Entregué APIs GraphQL para plataformas SaaS multi-tenant como Sektor.app y Centuria.app usando NestJS, TypeScript y MongoDB. Creé una API en tiempo real en Go para RoulettesView.com monitoreando 128 mesas por WebSockets. Automaticé despliegues con CI/CD en GitHub Actions.',
+	},
+	drimo: {
+		role: 'Software Developer — Desarrollo web y móvil',
+		location: 'Remoto',
+		body: 'Construí aplicaciones web y móviles cross-platform con React. Mantuve y optimicé APIs serverless en AWS para mejorar confiabilidad y eficiencia de costos. Desarrollé funcionalidades para un ecosistema de microservicios con NestJS y GraphQL. Migré el blog y sitio web de la compañía a Next.js mediante scraping automatizado, mejorando velocidad de carga y SEO.',
+	},
+};
 
 const experienceEntries = await getCollection('experience');
 const experiencesWithContent = await Promise.all(
@@ -12,13 +34,13 @@ const experiencesWithContent = await Promise.all(
 const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="experience" class="experience-section border-b border-border bg-surface-alt py-12 section-reveal md:py-16">
+<section id="experience" class="experience-section border-b border-border bg-surface-container-low py-12 section-reveal md:py-16">
 	<div class="mx-auto max-w-4xl px-4">
-		<p class="mb-2 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
-			Career path
+		<p class="mb-2 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-i18n="experience.eyebrow">
+			{isSpanish ? 'Trayectoria' : 'Career path'}
 		</p>
-		<h2 class="mb-6 text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
-			Experience
+		<h2 class="mb-6 text-2xl font-normal tracking-tight text-text-primary md:text-3xl" data-i18n="experience.title">
+			{isSpanish ? 'Experiencia' : 'Experience'}
 		</h2>
 
 		<div class="experience-list space-y-6" data-experience-list>
@@ -30,8 +52,8 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 					</div>
 
 					<div class="experience-entry__header mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-						<h3 class="experience-entry__title text-lg font-semibold text-text-primary">
-							{item.data.role}
+						<h3 class="experience-entry__title text-lg font-normal text-text-primary" data-i18n={`experience.${item.id}.role`}>
+							{isSpanish ? experienceTranslations[item.id]?.role ?? item.data.role : item.data.role}
 						</h3>
 						<span class="experience-entry__company text-text-muted">
 							@ {item.data.company}
@@ -40,11 +62,11 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 
 					<div class="experience-entry__meta mb-3 font-mono text-sm text-text-muted">
 						{item.data.dateRange}
-						{item.data.location && <span> · {item.data.location}</span>}
+						{item.data.location && <span> · <span data-i18n={`experience.${item.id}.location`}>{isSpanish ? experienceTranslations[item.id]?.location ?? item.data.location : item.data.location}</span></span>}
 					</div>
 
-					<div class="experience-entry__body text-readable">
-						<item.Content />
+					<div class="experience-entry__body text-readable" data-i18n={`experience.${item.id}.body`}>
+						{isSpanish ? <p>{experienceTranslations[item.id]?.body}</p> : <item.Content />}
 					</div>
 				</article>
 			))}
@@ -60,10 +82,33 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		return 0.3;
 	}
 
+	function isAlreadyVisible(element: HTMLElement) {
+		const rect = element.getBoundingClientRect();
+		return rect.top < window.innerHeight * 0.92;
+	}
+
+	function updateExperienceMarkers() {
+		const section = document.getElementById('experience');
+		const list = section?.querySelector('[data-experience-list]');
+		if (!section || !list) return;
+
+		const items = Array.from(list.querySelectorAll('.experience-entry')) as HTMLElement[];
+		items.forEach((item) => {
+			const marker = item.querySelector('.experience-marker') as HTMLElement | null;
+			if (!marker) return;
+			const travel = Math.max(marker.offsetHeight - 8, 0);
+			item.style.setProperty('--experience-marker-travel', `${travel}px`);
+		});
+	}
+
 	function initExperienceAppear() {
 		const section = document.getElementById('experience');
 		const list = section?.querySelector('[data-experience-list]');
 		if (!section || !list) return;
+
+		// Guard against double-initialization (e.g. astro:after-swap)
+		if (section.dataset.revealInitialized === 'true') return;
+		section.dataset.revealInitialized = 'true';
 
 		const items = Array.from(list.querySelectorAll('.experience-entry')) as HTMLElement[];
 		if (!items.length) return;
@@ -78,6 +123,15 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 
 		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+			section.classList.add('is-visible');
+			items.forEach((item) => item.classList.add('is-visible'));
+			return;
+		}
+
+		section.classList.add('js-reveal-active');
+
+		// If section is already in viewport, reveal immediately
+		if (isAlreadyVisible(section)) {
 			section.classList.add('is-visible');
 			items.forEach((item) => item.classList.add('is-visible'));
 			return;
@@ -110,17 +164,22 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 	}
 
 	document.addEventListener('astro:after-swap', initExperienceAppear);
-	window.addEventListener('resize', initExperienceAppear);
+	window.addEventListener('resize', updateExperienceMarkers);
 </script>
 
 <style>
 	.experience-entry {
-		opacity: 0;
-		transform: translate3d(0, 16px, 0);
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
 		transition:
 			opacity 420ms var(--fx-easing-out),
 			transform 500ms var(--fx-easing-out),
 			border-color 220ms var(--fx-easing-out);
+	}
+
+	.js-reveal-active .experience-entry {
+		opacity: 0;
+		transform: translate3d(0, 16px, 0);
 	}
 
 	.experience-marker {
@@ -145,7 +204,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		content: '';
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(180deg, rgb(54 92 141 / 0.95), rgb(56 66 86 / 0.68));
+		background: var(--color-border);
 		transform-origin: bottom center;
 		transform: scaleY(0);
 		opacity: 0;
@@ -162,27 +221,35 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		z-index: 1;
 		width: 8px;
 		height: 8px;
-		border-radius: 999px;
-		background: var(--color-primary);
+		border-radius: 50%;
+		background: var(--color-text-muted);
+		border: 1px solid var(--color-border-strong);
 		opacity: 0;
 		transform: translateX(-50%) translateY(0) scale(0.45);
 		transition:
 			opacity 320ms var(--fx-easing-out),
-			transform 900ms var(--fx-easing-out),
-			box-shadow 420ms var(--fx-easing-out);
+			transform 900ms var(--fx-easing-out);
 		transition-delay: var(--experience-delay, 0ms);
-		box-shadow: 0 0 0 0 rgb(54 92 141 / 0);
 	}
 
 	.experience-entry__title,
 	.experience-entry__company,
 	.experience-entry__meta,
 	.experience-entry__body {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+
+	.js-reveal-active .experience-entry__title,
+	.js-reveal-active .experience-entry__company,
+	.js-reveal-active .experience-entry__meta,
+	.js-reveal-active .experience-entry__body {
 		opacity: 0;
 		transform: translate3d(0, 12px, 0);
 	}
 
-	.experience-entry.is-visible {
+	.experience-entry.is-visible,
+	.js-reveal-active .experience-entry.is-visible {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
 		transition-delay: var(--experience-delay, 0ms);
@@ -196,13 +263,17 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 	.experience-entry.is-visible .experience-dot {
 		opacity: 1;
 		transform: translateX(-50%) translateY(calc(-1 * var(--experience-marker-travel, 40px))) scale(1);
-		box-shadow: 0 0 0 6px rgb(54 92 141 / 0.12);
+
 	}
 
 	.experience-entry.is-visible .experience-entry__title,
 	.experience-entry.is-visible .experience-entry__company,
 	.experience-entry.is-visible .experience-entry__meta,
-	.experience-entry.is-visible .experience-entry__body {
+	.experience-entry.is-visible .experience-entry__body,
+	.js-reveal-active .experience-entry.is-visible .experience-entry__title,
+	.js-reveal-active .experience-entry.is-visible .experience-entry__company,
+	.js-reveal-active .experience-entry.is-visible .experience-entry__meta,
+	.js-reveal-active .experience-entry.is-visible .experience-entry__body {
 		opacity: 1;
 		transform: translate3d(0, 0, 0);
 		transition-property: opacity, transform;
@@ -225,12 +296,17 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 
 	@media (prefers-reduced-motion: reduce) {
 		.experience-entry,
+		.js-reveal-active .experience-entry,
 		.experience-line::before,
 		.experience-dot,
 		.experience-entry__title,
 		.experience-entry__company,
 		.experience-entry__meta,
-		.experience-entry__body {
+		.experience-entry__body,
+		.js-reveal-active .experience-entry__title,
+		.js-reveal-active .experience-entry__company,
+		.js-reveal-active .experience-entry__meta,
+		.js-reveal-active .experience-entry__body {
 			opacity: 1;
 			transform: none;
 			transition: none;

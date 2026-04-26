@@ -4,30 +4,52 @@ import { getCollection } from 'astro:content';
 const caseEntries = await getCollection('caseStudies');
 const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
 const cardClass = 'case-card flex flex-col rounded-lg border border-border bg-surface-container p-5 md:p-6 transition-colors hover:border-border-strong';
+interface Props {
+	locale?: 'en' | 'es';
+}
+const { locale = 'en' } = Astro.props;
+const isSpanish = locale === 'es';
+const caseTranslations: Record<string, { title?: string; summary: string }> = {
+	'socrates-curriculum-grounded-exam-generation': {
+		summary: 'Construí una plataforma de exámenes basada en currículo para docentes dominicanos que convierte secuencias oficiales del MINERD en exámenes DOCX editables, reduciendo preparación de 40 a 10 minutos y de 90 a 15 minutos para usuarios con menor habilidad digital.',
+	},
+	'hotel-connectivity-quote-performance': {
+		title: 'Conectividad hotelera y rendimiento de cotización',
+		summary: 'Construí integraciones con proveedores hoteleros y rutas de datos optimizadas que mejoraron sincronización, respuesta de cotizaciones y consistencia de APIs en sistemas de inventario travel-tech.',
+	},
+	'multi-tenant-saas-platform-apis': {
+		title: 'APIs para plataformas SaaS multi-tenant',
+		summary: 'Construí backends para productos SaaS multi-tenant que conectan aseguradoras, proveedores de servicio, agentes y operaciones internas.',
+	},
+	'real-time-streaming-api': {
+		title: 'API de datos en tiempo real',
+		summary: 'Creé una API en tiempo real y un scraper controlado por navegador que monitorea 128 mesas y emite resultados deduplicados por WebSockets.',
+	},
+};
 ---
 
 <section id="case-studies" class="case-studies border-b border-border py-14 md:py-20 bg-background">
 	<div class="mx-auto max-w-6xl px-4">
 		<div class="mb-8 md:mb-12">
-			<p class="case-studies__eyebrow mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted">
-				Proof of work
+			<p class="case-studies__eyebrow mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-i18n="cases.eyebrow">
+				{isSpanish ? 'Prueba de trabajo' : 'Proof of work'}
 			</p>
-			<h2 class="case-studies__title text-2xl font-normal tracking-tight text-text-primary md:text-3xl">
-				Selected Case Studies
+			<h2 class="case-studies__title text-2xl font-normal tracking-tight text-text-primary md:text-3xl" data-i18n="cases.title">
+				{isSpanish ? 'Casos de estudio seleccionados' : 'Selected Case Studies'}
 			</h2>
-			<p class="case-studies__intro mt-3 max-w-2xl text-base text-text-secondary md:text-lg">
-				Backend and platform projects where integration reliability, event-driven architecture, and operational efficiency were the primary objectives.
+			<p class="case-studies__intro mt-3 max-w-2xl text-base text-text-secondary md:text-lg" data-i18n="cases.intro">
+				{isSpanish ? 'Proyectos backend y de plataforma donde la confiabilidad de integraciones, la arquitectura orientada a eventos y la eficiencia operativa fueron objetivos principales.' : 'Backend and platform projects where integration reliability, event-driven architecture, and operational efficiency were the primary objectives.'}
 			</p>
 		</div>
 		<div class="grid gap-6 lg:grid-cols-2">
 			{cases.map((item) => (
 				item.data.url ? (
 					<a class={`${cardClass} case-card--linked hover:bg-surface-container-high focus-visible:bg-surface-container-high`} href={item.data.url} target="_blank" rel="noreferrer">
-						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl">
-							{item.data.title}
+						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl" data-i18n={`case.${item.data.slug}.title`}>
+							{isSpanish ? caseTranslations[item.data.slug]?.title ?? item.data.title : item.data.title}
 						</h3>
-						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
-							{item.data.summary}
+						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base" data-i18n={`case.${item.data.slug}.summary`}>
+							{isSpanish ? caseTranslations[item.data.slug]?.summary ?? item.data.summary : item.data.summary}
 						</p>
 						{item.data.tags && item.data.tags.length > 0 && (
 							<div class="mb-5 flex flex-wrap gap-2">
@@ -38,17 +60,17 @@ const cardClass = 'case-card flex flex-col rounded-lg border border-border bg-su
 								))}
 							</div>
 						)}
-						<span class="mt-auto font-mono text-xs uppercase tracking-[0.14em] text-text-muted transition-colors">
-							View project -&gt;
+						<span class="mt-auto font-mono text-xs uppercase tracking-[0.14em] text-text-muted transition-colors" data-i18n="case.cta">
+							{isSpanish ? 'Ver proyecto ->' : 'View project ->'}
 						</span>
 					</a>
 				) : (
 					<article class={cardClass}>
-						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl">
-							{item.data.title}
+						<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl" data-i18n={`case.${item.data.slug}.title`}>
+							{isSpanish ? caseTranslations[item.data.slug]?.title ?? item.data.title : item.data.title}
 						</h3>
-						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base">
-							{item.data.summary}
+						<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base" data-i18n={`case.${item.data.slug}.summary`}>
+							{isSpanish ? caseTranslations[item.data.slug]?.summary ?? item.data.summary : item.data.summary}
 						</p>
 						{item.data.tags && item.data.tags.length > 0 && (
 							<div class="flex flex-wrap gap-2">

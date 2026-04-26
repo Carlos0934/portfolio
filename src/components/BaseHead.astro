@@ -7,12 +7,23 @@ interface Props {
 	title?: string;
 	description?: string;
 	image?: ImageMetadata;
+	canonicalPath?: string;
+	alternateLocales?: Array<{ lang: string; href: string }>;
+	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const {title = SITE_TITLE, description = SITE_DESCRIPTION, image} = Astro.props;
+const {
+	title = SITE_TITLE,
+	description = SITE_DESCRIPTION,
+	image,
+	canonicalPath,
+	alternateLocales = [],
+	structuredData,
+} = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
 const fullTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
+const jsonLd = structuredData ? JSON.stringify(structuredData).replace(/</g, '\\u003c') : null;
 ---
 
 <!-- Global Metadata -->
@@ -25,10 +36,14 @@ const fullTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
 <!-- Font Preloads -->
 <link rel="preload" href="/fonts/inter-regular.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/inter-bold.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/jetbrains-mono-light.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/jetbrains-mono-regular.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+{alternateLocales.map((alternate) => (
+	<link rel="alternate" hreflang={alternate.lang} href={new URL(alternate.href, Astro.site)} />
+))}
 
 <!-- Primary Meta Tags -->
 <title>{fullTitle}</title>
@@ -50,3 +65,4 @@ const fullTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`;
 <meta property="twitter:title" content={fullTitle} />
 <meta property="twitter:description" content={description} />
 {image && <meta property="twitter:image" content={new URL(image.src, Astro.url)} />}
+{jsonLd && <script type="application/ld+json" set:html={jsonLd} />}

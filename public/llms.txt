@@ -1,0 +1,69 @@
+# Carlos Olivo
+
+> Senior Software Engineer focused on backend systems, platform engineering, SaaS architecture, travel-tech integrations, workflow automation, and operational reliability.
+
+This site is the professional portfolio of Carlos Olivo. It is designed for hiring managers, founders, engineering leaders, recruiters, and AI agents evaluating engineering work.
+
+## Core URLs
+
+- Homepage: https://carlos-olivo.dev/
+- Spanish homepage: https://carlos-olivo.dev/es/
+- CV page: https://carlos-olivo.dev/cv/
+- Spanish CV page: https://carlos-olivo.dev/es/cv/
+- Downloadable CV: https://carlos-olivo.dev/Carlos-Olivo-CV.pdf
+- Sitemap: https://carlos-olivo.dev/sitemap-index.xml
+- GitHub: https://github.com/Carlos0934
+- LinkedIn: https://www.linkedin.com/in/carlos-engel-olivo-carmona-a1184917b/
+
+## Positioning
+
+Carlos builds backend and platform systems for products that need to scale, integrate, and keep working. Recent work includes SaaS platforms, hotel provider connectivity, travel quoting systems, cloud infrastructure, event-driven workflows, and AI-enabled workflow automation.
+
+## Primary Case Studies
+
+### Sócrates
+
+Curriculum-grounded exam generation for Dominican teachers. The platform transforms official MINERD teaching sequences into editable, print-ready DOCX exams using document retrieval, OCR, structured extraction, and grounded AI generation.
+
+Key signals:
+
+- Real user workflow for Dominican teachers
+- Official curriculum grounding through MINERD teaching sequences
+- Document retrieval, OCR, AI extraction, structured extraction
+- Editable DOCX output
+- Exam preparation reduced from about 40 minutes to 10 minutes for advanced Word users
+- Exam preparation reduced from about 90 minutes to 15 minutes for lower digital-skill users after learning the software
+
+Project URL: https://socrates.xavely.com
+
+### Hotel Connectivity & Quote Performance
+
+Travel-tech backend work for hotel provider integrations and quote performance. Work included provider integrations, rate and availability synchronization, exchange-rate paths, promotions paths, and quote-service performance improvements.
+
+Project URL: https://pricetravel.com
+
+### Multi-Tenant SaaS Platform APIs
+
+Backend platform work for SaaS products connecting insurers, service providers, agents, and internal operations. Work included API design, multi-tenant product foundations, storage integrations, notifications, and workflow infrastructure.
+
+Project URL: https://sektor.app/
+
+### Real-Time Streaming API
+
+Real-time data backend tracking 128 roulette tables through browser automation and emitting deduplicated updates over WebSockets.
+
+## Capabilities
+
+- Product infrastructure
+- Workflow automation
+- External integrations
+- Reliability improvements
+- Backend APIs
+- Event-driven systems
+- Cloud delivery
+- Data normalization
+- Document intelligence
+
+## Contact
+
+Email: hello@carlos-olivo.dev

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CvContent from '../../components/CvContent.astro';
+import { spanishCvStructuredData } from '../../lib/structuredData';
+---
+
+<BaseLayout
+	title="CV"
+	description="CV legible de Carlos Olivo en español con PDF descargable."
+	lang="es"
+	canonicalPath="/es/cv/"
+	alternateLocales={[
+		{ lang: 'en', href: '/cv/' },
+		{ lang: 'es', href: '/es/cv/' },
+		{ lang: 'x-default', href: '/cv/' },
+	]}
+	structuredData={spanishCvStructuredData}
+>
+	<CvContent locale="es" />
+</BaseLayout>

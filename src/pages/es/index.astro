@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../sections/Hero.astro';
+import ValueStrip from '../../sections/ValueStrip.astro';
+import CaseStudies from '../../sections/CaseStudies.astro';
+import Experience from '../../sections/Experience.astro';
+import TechnicalFocus from '../../sections/TechnicalFocus.astro';
+import Contact from '../../sections/Contact.astro';
+import HomeLanguage from '../../components/HomeLanguage.astro';
+import { spanishHomeStructuredData } from '../../lib/structuredData';
+
+const description =
+	'Ingeniero senior de software enfocado en sistemas backend, plataformas SaaS, integraciones travel-tech, automatización y confiabilidad operativa.';
+---
+
+<BaseLayout
+	title="Carlos Olivo"
+	description={description}
+	lang="es"
+	canonicalPath="/es/"
+	alternateLocales={[
+		{ lang: 'en', href: '/' },
+		{ lang: 'es', href: '/es/' },
+		{ lang: 'x-default', href: '/' },
+	]}
+	structuredData={spanishHomeStructuredData}
+>
+	<Hero locale="es" />
+	<ValueStrip locale="es" />
+	<CaseStudies locale="es" />
+	<Experience locale="es" />
+	<TechnicalFocus locale="es" />
+	<Contact locale="es" />
+	<HomeLanguage locale="es" />
+</BaseLayout>

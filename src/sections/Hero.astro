@@ -7,22 +7,41 @@ const heroEntries = await getCollection('hero');
 const hero = heroEntries[0];
 const { Content } = await render(hero);
 const { title, tagline, description, eyebrow, proofSignals } = hero.data;
+interface Props {
+	locale?: 'en' | 'es';
+}
+const { locale = 'en' } = Astro.props;
+const isSpanish = locale === 'es';
+const heroText = {
+	eyebrow: isSpanish ? 'EE. UU. y República Dominicana · Abierto a remoto o híbrido' : eyebrow,
+	tagline: isSpanish ? 'Construyo sistemas backend para productos que necesitan escalar, integrarse y seguir funcionando.' : tagline,
+	description: isSpanish
+		? 'Mi trabajo reciente se ha enfocado en APIs, infraestructura y confiabilidad para productos SaaS y travel-tech. Trabajo cerca del producto cuando la arquitectura, las integraciones y la claridad operativa importan, ayudando a los equipos a entregar con confianza y mantener sistemas sostenibles mientras crecen.'
+		: description,
+	proofSignals: isSpanish
+		? [
+				{ value: 'SaaS', label: 'Trabajo de plataforma' },
+				{ value: 'Travel-tech', label: 'Integraciones complejas' },
+				{ value: 'Confiabilidad', label: 'Foco de entrega' },
+			]
+		: proofSignals,
+};
 ---
 
-<section id="hero" class="border-b border-border py-6 sm:py-8 md:py-14 lg:py-16 section-reveal">
+<section id="hero" class="border-b border-border py-6 sm:py-8 md:py-14 lg:py-16 section-reveal bg-background">
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
 		<div class="grid gap-5 sm:gap-6 md:gap-8 lg:grid-cols-5 lg:gap-12">
 			<!-- Left Column: Content Stack -->
 			<div class="lg:col-span-3 flex flex-col">
 				<!-- Eyebrow / Availability status -->
-				{eyebrow && (
+				{heroText.eyebrow && (
 					<div class="fx-entrance fx-entrance-delay-1 mb-1.5 flex items-center gap-2 md:mb-2">
 						<span class="relative flex h-2 w-2">
 							<span class="absolute inline-flex h-full w-full animate-pulse rounded-full bg-signal opacity-75"></span>
 							<span class="relative inline-flex h-2 w-2 rounded-full bg-signal"></span>
 						</span>
-						<span class="eyebrow-status font-mono text-sm uppercase tracking-wider text-text-secondary">
-							{eyebrow}
+						<span class="eyebrow-status font-mono text-sm uppercase tracking-wider text-text-secondary" data-i18n="hero.eyebrow">
+							{heroText.eyebrow}
 							<span class="eyebrow-status__cursor" aria-hidden="true"></span>
 						</span>
 					</div>
@@ -31,19 +50,17 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 				<!-- Mobile Intro Row -->
 				<div class="fx-entrance fx-entrance-delay-2 mb-2 flex items-center gap-3 md:hidden">
 					<div class="min-w-0 flex-1">
-						<h1 class="mb-1.5 text-[1.9rem] leading-[0.96] font-bold tracking-tight text-text-primary sm:text-[2.1rem]">
+						<h1 class="mb-1.5 text-[1.9rem] leading-[0.96] font-mono font-light tracking-tight text-text-primary sm:text-[2.1rem]">
 							{title}
 						</h1>
-						{tagline && (
-							<p class="max-w-[22ch] text-sm font-medium leading-snug text-text-primary sm:text-[0.95rem]">
-								{tagline}
+						{heroText.tagline && (
+							<p class="max-w-[22ch] text-sm font-sans font-normal leading-snug text-text-secondary sm:text-[0.95rem]" data-i18n="hero.tagline">
+								{heroText.tagline}
 							</p>
 						)}
 					</div>
 
 					<div class="hero-portrait-panel hero-portrait-panel--compact shrink-0" aria-hidden="true">
-						<span class="hero-portrait-panel__cut hero-portrait-panel__cut--top"></span>
-						<span class="hero-portrait-panel__cut hero-portrait-panel__cut--bottom"></span>
 						<div class="hero-portrait-panel__frame">
 							<Image
 								src={profileImage}
@@ -59,21 +76,21 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 				</div>
 
 				<!-- Title -->
-				<h1 class="fx-entrance fx-entrance-delay-2 mb-1.5 hidden text-4xl font-bold tracking-tight text-text-primary md:block md:text-[2.8rem] lg:text-5xl">
+				<h1 class="fx-entrance fx-entrance-delay-2 mb-1.5 hidden text-4xl font-mono font-light tracking-tight text-text-primary md:block md:text-[2.8rem] lg:text-5xl">
 					{title}
 				</h1>
 
 				<!-- Tagline -->
-				{tagline && (
-					<p class="fx-entrance fx-entrance-delay-3 mb-3 hidden text-lg font-medium leading-snug text-text-primary md:mb-4 md:block md:text-xl lg:text-2xl lg:leading-snug">
-						{tagline}
+				{heroText.tagline && (
+					<p class="fx-entrance fx-entrance-delay-3 mb-3 hidden text-lg font-sans font-normal leading-snug text-text-secondary md:mb-4 md:block md:text-xl lg:text-2xl lg:leading-snug" data-i18n="hero.tagline">
+						{heroText.tagline}
 					</p>
 				)}
 
 				<!-- Description -->
-				{description && (
-					<p class="fx-entrance fx-entrance-delay-4 mb-3 max-w-prose text-[0.95rem] leading-relaxed text-text-secondary sm:text-base md:mb-4 md:text-lg">
-						{description}
+				{heroText.description && (
+					<p class="fx-entrance fx-entrance-delay-4 mb-3 max-w-prose text-[0.95rem] leading-relaxed text-text-secondary sm:text-base md:mb-4 md:text-lg" data-i18n="hero.description">
+						{heroText.description}
 					</p>
 				)}
 
@@ -83,14 +100,14 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 				</div>
 
 				<!-- Proof Signals -->
-				{proofSignals && proofSignals.length > 0 && (
-					<div class="fx-entrance fx-entrance-delay-5 mb-4 grid grid-cols-3 gap-3 border-l-2 border-border-strong pl-3 md:mb-6 md:flex md:flex-wrap md:gap-6 md:pl-4">
-						{proofSignals.map((signal) => (
-							<div class="flex min-w-0 flex-col gap-0.5 fx-hover-lift">
-								<span class="font-mono text-xl font-bold tracking-tight text-text-primary md:text-2xl">
+				{heroText.proofSignals && heroText.proofSignals.length > 0 && (
+					<div class="fx-entrance fx-entrance-delay-5 mb-4 flex flex-wrap gap-3 md:mb-6">
+						{heroText.proofSignals.map((signal, index) => (
+							<div class="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border bg-surface-container-low px-2.5 py-1.5">
+								<span class="font-mono text-xl font-light tracking-tight text-text-primary md:text-2xl" data-i18n={`hero.signal.${index}.value`}>
 									{signal.value}
 								</span>
-								<span class="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-text-secondary md:text-sm md:tracking-wider">
+								<span class="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-text-secondary md:text-sm md:tracking-wider" data-i18n={`hero.signal.${index}.label`}>
 									{signal.label}
 								</span>
 							</div>
@@ -102,23 +119,19 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 
 			<!-- Right Column: Visual Area -->
 			<div class="fx-reveal-scale hidden -mt-1 md:flex lg:col-span-2 items-start justify-center lg:mt-0 lg:items-center lg:justify-end lg:pl-8">
-				<div class="relative overflow-hidden">
+				<div class="relative">
 					<!-- Profile Photo Area -->
-					<div class="relative z-10 flex items-center justify-center">
-						<div class="hero-portrait-panel hero-portrait-panel--desktop">
-							<span class="hero-portrait-panel__cut hero-portrait-panel__cut--top"></span>
-							<span class="hero-portrait-panel__cut hero-portrait-panel__cut--bottom"></span>
-							<div class="hero-portrait-panel__frame">
-								<Image
-									src={profileImage}
-									alt={title}
-									class="hero-portrait-panel__image"
-									width={420}
-									height={540}
-									loading="eager"
-									decoding="async"
-								/>
-							</div>
+					<div class="hero-portrait-panel hero-portrait-panel--desktop">
+						<div class="hero-portrait-panel__frame">
+							<Image
+								src={profileImage}
+								alt={title}
+								class="hero-portrait-panel__image"
+								width={420}
+								height={540}
+								loading="eager"
+								decoding="async"
+							/>
 						</div>
 					</div>
 				</div>
@@ -133,75 +146,22 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.75rem;
-		border-radius: 1.8rem 2.35rem 1.3rem 2.5rem;
-		background: linear-gradient(180deg, rgb(32 37 48 / 0.92), rgb(19 22 28 / 0.98));
-		border: 1px solid rgb(56 66 86 / 0.7);
-		box-shadow:
-			0 1px 0 rgb(255 255 255 / 0.04) inset,
-			0 22px 54px rgb(0 0 0 / 0.28);
-		isolation: isolate;
+		padding: 0.5rem;
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-container-low);
+		border: 1px solid var(--color-border);
 		overflow: hidden;
-		clip-path: polygon(0 10%, 14% 0, 100% 0, 100% 76%, 90% 100%, 18% 100%, 0 88%);
 	}
 
 	.hero-portrait-panel--compact {
 		width: 5.1rem;
 		aspect-ratio: 0.68;
-		padding: 0.3rem;
-		border-radius: 1.15rem 1.6rem 0.95rem 1.75rem;
+		padding: 0.25rem;
 	}
 
 	.hero-portrait-panel--desktop {
 		width: min(22rem, 30vw);
 		aspect-ratio: 0.78;
-	}
-
-	.hero-portrait-panel::before {
-		content: '';
-		position: absolute;
-		inset: 0.5rem;
-		border-radius: inherit;
-		background: linear-gradient(145deg, rgb(255 255 255 / 0.05), transparent 34%, transparent 66%, rgb(32 137 159 / 0.06));
-		filter: blur(16px);
-		z-index: -2;
-	}
-
-	.hero-portrait-panel::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		background:
-			linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 18%),
-			radial-gradient(circle at 20% 18%, rgb(255 255 255 / 0.08), transparent 22%),
-			linear-gradient(135deg, transparent 0 64%, rgb(32 137 159 / 0.08) 64% 66%, transparent 66% 100%);
-		z-index: -1;
-	}
-
-	.hero-portrait-panel__cut {
-		position: absolute;
-		background: var(--color-background);
-		pointer-events: none;
-		z-index: 3;
-	}
-
-	.hero-portrait-panel__cut--top {
-		top: -0.1rem;
-		left: -0.1rem;
-		width: 1.9rem;
-		height: 1.55rem;
-		clip-path: polygon(0 0, 100% 0, 0 100%);
-		opacity: 0.92;
-	}
-
-	.hero-portrait-panel__cut--bottom {
-		right: -0.1rem;
-		bottom: -0.1rem;
-		width: 2.35rem;
-		height: 2rem;
-		clip-path: polygon(100% 0, 100% 100%, 0 100%);
-		opacity: 0.96;
 	}
 
 	.hero-portrait-panel__frame {
@@ -210,37 +170,9 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 		height: 100%;
 		min-height: 100%;
 		overflow: hidden;
-		border-radius: 1.25rem 1.7rem 1rem 1.9rem;
-		background: rgb(15 18 24 / 0.9);
-		border: 1px solid rgb(126 135 152 / 0.14);
-		box-shadow:
-			0 0 0 1px rgb(126 135 152 / 0.08),
-			0 16px 32px rgb(0 0 0 / 0.18);
-		clip-path: polygon(0 10%, 13% 0, 100% 0, 100% 76%, 90% 100%, 18% 100%, 0 88%);
-	}
-
-	.hero-portrait-panel__frame::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background:
-			linear-gradient(180deg, rgb(16 18 20 / 0.08), transparent 18%, transparent 78%, rgb(16 18 20 / 0.24)),
-			radial-gradient(circle at 0% 0%, rgb(16 18 20 / 0.2), transparent 24%),
-			radial-gradient(circle at 100% 100%, rgb(16 18 20 / 0.22), transparent 28%);
-		pointer-events: none;
-		z-index: 2;
-	}
-
-	.hero-portrait-panel__frame::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		box-shadow:
-			inset 0 0 0 1px rgb(255 255 255 / 0.04),
-			inset 0 0 28px rgb(16 18 20 / 0.14),
-			inset 0 0 72px rgb(16 18 20 / 0.24);
-		pointer-events: none;
-		z-index: 3;
+		border-radius: var(--radius-md);
+		background: var(--color-surface-container-low);
+		border: 1px solid var(--color-border);
 	}
 
 	.hero-portrait-panel__image {
@@ -248,33 +180,17 @@ const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 		width: 100%;
 		object-fit: cover;
 		object-position: center 22%;
-		transform: scale(1.035);
-		filter: saturate(0.94) contrast(1.03);
 	}
 
 	@media (min-width: 48rem) {
 		.hero-portrait-panel {
-			padding: 0.85rem;
+			padding: 0.6rem;
 		}
 
 		.hero-portrait-panel--compact {
 			width: 7.5rem;
 			aspect-ratio: 0.72;
-			padding: 0.45rem;
-		}
-
-		.hero-portrait-panel__frame {
-			border-radius: 1.45rem 1.95rem 1.15rem 2.1rem;
-		}
-
-		.hero-portrait-panel__cut--top {
-			width: 3.1rem;
-			height: 2.6rem;
-		}
-
-		.hero-portrait-panel__cut--bottom {
-			width: 3.7rem;
-			height: 3.2rem;
+			padding: 0.3rem;
 		}
 	}
 </style>

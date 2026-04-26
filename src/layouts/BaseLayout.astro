@@ -7,27 +7,37 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 interface Props {
 	title?: string;
 	description?: string;
+	lang?: string;
+	canonicalPath?: string;
+	alternateLocales?: Array<{ lang: string; href: string }>;
+	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description } = Astro.props;
+const { title, description, lang = 'en', canonicalPath, alternateLocales = [], structuredData } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			canonicalPath={canonicalPath}
+			alternateLocales={alternateLocales}
+			structuredData={structuredData}
+		/>
 	</head>
 	<body class="bg-background text-text-primary antialiased">
 		<!-- Skip Navigation Link -->
 		<a href="#main-content" class="skip-nav">Skip to main content</a>
 		
 		<!-- Mobile Header with Logo -->
-		<Header />
+		<Header lang={lang} />
 		
 		<main id="main-content" tabindex="-1" class="min-h-screen">
 			<slot />
 		</main>
 		
-		<Footer />
+		<Footer lang={lang} />
 	</body>
 </html>

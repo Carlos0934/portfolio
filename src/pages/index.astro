@@ -6,13 +6,24 @@ import CaseStudies from '../sections/CaseStudies.astro';
 import Experience from '../sections/Experience.astro';
 import TechnicalFocus from '../sections/TechnicalFocus.astro';
 import Contact from '../sections/Contact.astro';
+import HomeLanguage from '../components/HomeLanguage.astro';
+import { homeStructuredData } from '../lib/structuredData';
 ---
 
-<BaseLayout>
+<BaseLayout
+	canonicalPath="/"
+	alternateLocales={[
+		{ lang: 'en', href: '/' },
+		{ lang: 'es', href: '/es/' },
+		{ lang: 'x-default', href: '/' },
+	]}
+	structuredData={homeStructuredData}
+>
 	<Hero />
 	<ValueStrip />
 	<CaseStudies />
 	<Experience />
 	<TechnicalFocus />
 	<Contact />
+	<HomeLanguage locale="auto" />
 </BaseLayout>

@@ -4,18 +4,34 @@ import { NAV_ITEMS } from '../lib/nav';
 import { SITE_TITLE, LINKEDIN_URL, GITHUB_URL } from '../consts';
 import LogoMark from './LogoMark.astro';
 
+interface Props {
+	lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
 const mobileNavItems = NAV_ITEMS.slice(1);
 const contactEntries = await getCollection('contact');
 const contact = contactEntries[0];
 const { linkedinUrl, githubUrl, email } = contact?.data ?? {};
 const linkedInHref = linkedinUrl || LINKEDIN_URL;
 const githubHref = githubUrl || GITHUB_URL;
-const cvPageHref = '/cv';
-const isHomePage = Astro.url.pathname === '/';
+const isSpanish = lang === 'es';
+const homeHref = isSpanish ? '/es/' : '/';
+const cvPageHref = isSpanish ? '/es/cv/' : '/cv/';
+const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const isHomePage = currentPath === homeHref;
 const externalLinks = [
 	{ label: 'LinkedIn', href: linkedInHref },
 	{ label: 'GitHub', href: githubHref },
 ];
+const navLabels: Record<string, string> = {
+	'value-strip': 'Entregables',
+	'case-studies': 'Casos de estudio',
+	experience: 'Experiencia',
+	'technical-focus': 'Técnico',
+	contact: 'Contacto',
+};
+const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href}`);
 ---
 
 <header class="site-header" data-scrolled="false">
@@ -25,14 +41,14 @@ const externalLinks = [
 				{email ? (
 					<>
 						<a href={`mailto:${email}`} class="top-contact-email">{email}</a>
-						<button type="button" class="top-contact-chip top-contact-chip--ghost" data-copy-email data-email={email}>
-							Copy
+						<button type="button" class="top-contact-chip top-contact-chip--ghost" data-copy-email data-email={email} data-i18n="nav.copy">
+							{isSpanish ? 'Copiar' : 'Copy'}
 						</button>
 					</>
 				) : (
-					<a href="#contact" class="top-contact-chip top-contact-chip--ghost">Contact</a>
+					<a href="#contact" class="top-contact-chip top-contact-chip--ghost" data-i18n="nav.contact">{isSpanish ? 'Contacto' : 'Contact'}</a>
 				)}
-				{Astro.url.pathname !== cvPageHref && (
+				{currentPath !== cvPageHref && (
 					<a
 						href={cvPageHref}
 						class="top-contact-chip top-contact-chip--primary"
@@ -56,7 +72,7 @@ const externalLinks = [
 	</div>
 
 	<nav class="header-nav" aria-label="Main navigation">
-		<a href={isHomePage ? '#hero' : '/#hero'} class="logo-link">
+		<a href={isHomePage ? '#hero' : `${homeHref}#hero`} class="logo-link">
 			<LogoMark size="sm" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
@@ -87,8 +103,8 @@ const externalLinks = [
 				<ul class="drawer-list" role="list">
 					{mobileNavItems.map((item) => (
 						<li>
-							<a href={isHomePage ? item.href : `/${item.href}`} class="drawer-link" data-nav-link>
-								{item.label}
+							<a href={getSectionHref(item.href)} class="drawer-link" data-nav-link data-i18n={`nav.${item.id}`}>
+								{isSpanish ? navLabels[item.id] ?? item.label : item.label}
 							</a>
 						</li>
 					))}
