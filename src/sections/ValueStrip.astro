@@ -21,105 +21,22 @@ const localizedValues = locale === 'es'
 	: values;
 ---
 
-<section id="value-strip" class="value-strip border-b border-border bg-surface-container-low py-10 md:py-14">
+<section id="value-strip" class="value-strip border-b border-border bg-surface-container-low py-10 md:py-14" data-reveal>
 	<div class="mx-auto max-w-6xl px-4">
-		<p class="value-strip__label mb-6 font-mono text-xs uppercase tracking-[0.22em] text-text-muted md:mb-8" data-i18n="value.label">
+		<p class="value-strip__label mb-6 font-mono text-xs uppercase tracking-[0.22em] text-text-muted md:mb-8" data-reveal-item data-i18n="value.label">
 			{sectionLabel}
 		</p>
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+		<ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4" role="list">
 			{localizedValues.map((item, index) => (
-				<div class="value-card flex flex-col gap-2 rounded-lg border border-border bg-surface-container-lowest px-4 py-5 transition-colors hover:border-border-strong hover:bg-surface-container">
+				<li class="value-card flex flex-col gap-2 rounded-lg border border-border bg-surface-container-lowest px-4 py-5 transition-colors hover:border-border-strong hover:bg-surface-container" data-reveal-item style={`--reveal-delay: ${(index + 1) * 70}ms;`}>
 					<span class="text-base font-normal tracking-tight text-text-primary md:text-lg" data-i18n={`value.${index}.title`}>
 						{item.label}
 					</span>
 					<span class="text-sm leading-relaxed text-text-secondary" data-i18n={`value.${index}.description`}>
 						{item.description}
 					</span>
-				</div>
+				</li>
 			))}
-		</div>
+		</ul>
 	</div>
 </section>
-
-<script>
-	const initValueStripReveal = () => {
-		const section = document.querySelector<HTMLElement>('.value-strip');
-		if (!section || section.dataset.revealInitialized === 'true') return;
-
-		section.dataset.revealInitialized = 'true';
-
-		const revealItems = section.querySelectorAll<HTMLElement>('.value-strip__label, .value-card');
-		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-			revealItems.forEach((item) => item.classList.add('is-visible'));
-			return;
-		}
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) return;
-
-					section.classList.add('is-visible');
-					observer.disconnect();
-				});
-			},
-			{ rootMargin: '0px 0px -12% 0px', threshold: 0.2 }
-		);
-
-		observer.observe(section);
-	};
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initValueStripReveal, { once: true });
-	} else {
-		initValueStripReveal();
-	}
-</script>
-
-<style>
-	.value-strip__label,
-	.value-card {
-		opacity: 0;
-		transform: translateY(1.1rem);
-		transition:
-			opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
-			transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-			background-color 150ms ease,
-			border-color 150ms ease;
-	}
-
-	.value-strip.is-visible .value-strip__label,
-	.value-strip.is-visible .value-card,
-	.value-strip__label.is-visible,
-	.value-card.is-visible {
-		opacity: 1;
-		transform: translateY(0);
-	}
-
-	.value-strip.is-visible .value-card:nth-child(1) {
-		transition-delay: 70ms;
-	}
-
-	.value-strip.is-visible .value-card:nth-child(2) {
-		transition-delay: 140ms;
-	}
-
-	.value-strip.is-visible .value-card:nth-child(3) {
-		transition-delay: 210ms;
-	}
-
-	.value-strip.is-visible .value-card:nth-child(4) {
-		transition-delay: 280ms;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.value-strip__label,
-		.value-card {
-			opacity: 1;
-			transform: none;
-			transition: background-color 150ms ease, border-color 150ms ease;
-		}
-	}
-</style>

@@ -10,22 +10,24 @@ const impacts = impactEntries.sort((a, b) => a.data.order - b.data.order);
 		<h2 class="fx-reveal mb-8 text-2xl font-normal tracking-tight text-text-primary md:text-3xl">
 			Selected Impact
 		</h2>
-		<div class="grid gap-6 md:grid-cols-3 fx-stagger-group">
+		<ul class="grid gap-6 md:grid-cols-3 fx-stagger-group" role="list">
 			{impacts.map((item) => (
-				<article class="fx-reveal-up fx-hover-card rounded-md border border-border bg-surface-elevated p-6">
-					<div class="mb-3 font-mono text-3xl font-light tracking-tight text-signal">
-						{item.data.metric}
-					</div>
-					<h3 class="mb-2 text-lg font-normal text-text-primary">
-						{item.data.title}
-					</h3>
-					{item.data.description && (
-						<p class="text-sm text-text-muted">
-							{item.data.description}
-						</p>
-					)}
-				</article>
+				<li>
+					<article class="fx-reveal-up fx-hover-card rounded-md border border-border bg-surface-elevated p-6">
+						<div class="mb-3 font-mono text-3xl font-light tracking-tight text-signal">
+							{item.data.metric}
+						</div>
+						<h3 class="mb-2 text-lg font-normal text-text-primary">
+							{item.data.title}
+						</h3>
+						{item.data.description && (
+							<p class="text-sm text-text-muted">
+								{item.data.description}
+							</p>
+						)}
+					</article>
+				</li>
 			))}
-		</div>
+		</ul>
 	</div>
 </section>

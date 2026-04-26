@@ -231,6 +231,8 @@ button:focus-visible {
 	--fx-duration-slow: 400ms;
 	--fx-easing-out: cubic-bezier(0.16, 1, 0.3, 1);
 	--fx-easing-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+	--fx-reveal-duration: 440ms;
+	--fx-reveal-distance: 1.1rem;
 
 	/* Distances */
 	--fx-distance-sm: 0.5rem;
@@ -239,6 +241,45 @@ button:focus-visible {
 
 	/* Stagger Delays */
 	--fx-stagger-step: 85ms;
+}
+
+/* Standard observed reveal pattern for section-local staggered content. */
+[data-reveal-item] {
+	opacity: 1;
+	transform: translateY(0);
+	transition:
+		opacity var(--fx-reveal-duration) var(--fx-easing-out),
+		transform var(--fx-reveal-duration) var(--fx-easing-out),
+		background-color var(--fx-duration-fast) ease,
+		border-color var(--fx-duration-fast) ease,
+		color var(--fx-duration-fast) ease;
+	transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-reveal-active [data-reveal-item] {
+	opacity: 0;
+	transform: translateY(var(--fx-reveal-distance));
+}
+
+.js-reveal-active.is-visible [data-reveal-item],
+.js-reveal-active [data-reveal-item].is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-reveal-item],
+	.js-reveal-active [data-reveal-item],
+	.js-reveal-active.is-visible [data-reveal-item],
+	.js-reveal-active [data-reveal-item].is-visible {
+		opacity: 1 !important;
+		transform: none !important;
+		transition:
+			background-color var(--fx-duration-fast) ease,
+			border-color var(--fx-duration-fast) ease,
+			color var(--fx-duration-fast) ease;
+		transition-delay: 0s !important;
+	}
 }
 
 /* ============================================================
@@ -459,7 +500,7 @@ button:focus-visible {
 
 /* Hover Dim — Opacity transition on hover */
 .fx-hover-dim {
-	transition: opacity 0.2s ease;
+	transition: opacity var(--fx-duration-fast) var(--fx-easing-in-out);
 }
 
 .fx-hover-dim:hover {

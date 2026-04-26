@@ -48,13 +48,13 @@ const heroText = {
 				)}
 
 				<!-- Mobile Intro Row -->
-				<div class="fx-entrance fx-entrance-delay-2 mb-2 flex items-center gap-3 md:hidden">
+				<div class="fx-entrance fx-entrance-delay-2 mb-3 flex items-start gap-3 md:hidden">
 					<div class="min-w-0 flex-1">
-						<h1 class="mb-1.5 text-[1.9rem] leading-[0.96] font-mono font-light tracking-tight text-text-primary sm:text-[2.1rem]">
+						<h1 class="mb-2 text-[clamp(2.25rem,11vw,3.1rem)] leading-[0.98] font-mono font-light tracking-tight text-text-primary">
 							{title}
 						</h1>
 						{heroText.tagline && (
-							<p class="max-w-[22ch] text-sm font-sans font-normal leading-snug text-text-secondary sm:text-[0.95rem]" data-i18n="hero.tagline">
+							<p class="max-w-[28rem] text-[1.05rem] font-sans font-normal leading-snug text-text-secondary" data-i18n="hero.tagline">
 								{heroText.tagline}
 							</p>
 						)}
@@ -101,18 +101,18 @@ const heroText = {
 
 				<!-- Proof Signals -->
 				{heroText.proofSignals && heroText.proofSignals.length > 0 && (
-					<div class="fx-entrance fx-entrance-delay-5 mb-4 flex flex-wrap gap-3 md:mb-6">
+					<ul class="fx-entrance fx-entrance-delay-5 mb-4 flex flex-wrap gap-3 md:mb-6" role="list">
 						{heroText.proofSignals.map((signal, index) => (
-							<div class="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border bg-surface-container-low px-2.5 py-1.5">
+							<li class="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border bg-surface-container-low px-2.5 py-1.5">
 								<span class="font-mono text-xl font-light tracking-tight text-text-primary md:text-2xl" data-i18n={`hero.signal.${index}.value`}>
 									{signal.value}
 								</span>
 								<span class="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-text-secondary md:text-sm md:tracking-wider" data-i18n={`hero.signal.${index}.label`}>
 									{signal.label}
 								</span>
-							</div>
+							</li>
 						))}
-					</div>
+					</ul>
 				)}
 
 			</div>
@@ -154,7 +154,7 @@ const heroText = {
 	}
 
 	.hero-portrait-panel--compact {
-		width: 5.1rem;
+		width: 4.6rem;
 		aspect-ratio: 0.68;
 		padding: 0.25rem;
 	}
@@ -180,6 +180,21 @@ const heroText = {
 		width: 100%;
 		object-fit: cover;
 		object-position: center 22%;
+	}
+
+	@media (max-width: 27.5rem) {
+		.hero-portrait-panel--compact {
+			display: none;
+		}
+
+		.eyebrow-status {
+			max-width: 28ch;
+			line-height: 1.55;
+		}
+
+		.eyebrow-status__cursor {
+			display: none;
+		}
 	}
 
 	@media (min-width: 48rem) {
