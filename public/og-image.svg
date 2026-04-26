@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1F2228"/>
+  <rect x="56" y="56" width="1088" height="518" rx="24" fill="white" fill-opacity="0.035" stroke="white" stroke-opacity="0.14"/>
+  <path d="M947 56V574" stroke="white" stroke-opacity="0.08"/>
+  <path d="M56 458H1144" stroke="white" stroke-opacity="0.08"/>
+  <g transform="translate(88 88)">
+    <path d="M136 28H76C40.654 28 12 56.654 12 92V96C12 131.346 40.654 160 76 160H136" stroke="#FFFFFF" stroke-width="21" stroke-linecap="square" stroke-linejoin="round"/>
+    <circle cx="112" cy="94" r="34" stroke="#8FAED6" stroke-width="21"/>
+    <path d="M143 94H178" stroke="#FFFFFF" stroke-width="21" stroke-linecap="square"/>
+  </g>
+  <text x="88" y="302" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="700" letter-spacing="-1">Carlos Olivo</text>
+  <text x="92" y="365" fill="#D9E6F7" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="500">Senior Software Engineer</text>
+  <text x="92" y="430" fill="#FFFFFF" fill-opacity="0.72" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="400">Backend systems · SaaS architecture · Travel-tech integrations</text>
+  <text x="92" y="506" fill="#79C2D1" font-family="JetBrains Mono, monospace" font-size="24" font-weight="500" letter-spacing="2.5">CARLOS-OLIVO.DEV</text>
+  <g transform="translate(985 432)">
+    <rect width="98" height="98" rx="18" fill="#365C8D"/>
+    <path d="M68 28H43C28.641 28 17 39.641 17 54V56C17 70.359 28.641 82 43 82H68" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square" stroke-linejoin="round"/>
+    <circle cx="58" cy="55" r="16" stroke="#FFFFFF" stroke-width="10"/>
+    <path d="M74 55H88" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square"/>
+  </g>
+</svg>

@@ -8,9 +8,15 @@ import TechnicalFocus from '../sections/TechnicalFocus.astro';
 import Contact from '../sections/Contact.astro';
 import HomeLanguage from '../components/HomeLanguage.astro';
 import { homeStructuredData } from '../lib/structuredData';
+
+const description =
+	'Senior Software Engineer specializing in scalable backend systems, SaaS architecture, travel-tech integrations, cloud infrastructure, and AI workflow automation.';
 ---
 
 <BaseLayout
+	title="Senior Software Engineer"
+	description={description}
+	imageAlt="Carlos Olivo, Senior Software Engineer specializing in backend systems, SaaS architecture, travel-tech integrations, and AI workflow automation"
 	canonicalPath="/"
 	alternateLocales={[
 		{ lang: 'en', href: '/' },

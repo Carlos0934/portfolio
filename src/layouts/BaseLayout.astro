@@ -8,12 +8,13 @@ interface Props {
 	title?: string;
 	description?: string;
 	lang?: string;
+	imageAlt?: string;
 	canonicalPath?: string;
 	alternateLocales?: Array<{ lang: string; href: string }>;
 	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description, lang = 'en', canonicalPath, alternateLocales = [], structuredData } = Astro.props;
+const { title, description, lang = 'en', imageAlt, canonicalPath, alternateLocales = [], structuredData } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,6 +23,8 @@ const { title, description, lang = 'en', canonicalPath, alternateLocales = [], s
 		<BaseHead
 			title={title}
 			description={description}
+			lang={lang}
+			imageAlt={imageAlt}
 			canonicalPath={canonicalPath}
 			alternateLocales={alternateLocales}
 			structuredData={structuredData}

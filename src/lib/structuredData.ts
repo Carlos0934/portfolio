@@ -44,7 +44,7 @@ export const profilePageJsonLd = {
 	'@context': 'https://schema.org',
 	'@type': 'ProfilePage',
 	'@id': `${SITE_URL}/#profile`,
-	url: SITE_URL,
+	url: `${SITE_URL}/`,
 	name: `${SITE_TITLE} - Senior Software Engineer`,
 	description: SITE_DESCRIPTION,
 	inLanguage: 'en',
@@ -59,7 +59,7 @@ export const spanishProfilePageJsonLd = {
 	url: `${SITE_URL}/es/`,
 	name: `${SITE_TITLE} - Senior Software Engineer`,
 	description:
-		'Ingeniero senior de software enfocado en sistemas backend, plataformas SaaS, integraciones travel-tech, automatización y confiabilidad operativa.',
+		'Ingeniero senior de software especializado en sistemas backend escalables, arquitectura SaaS, integraciones travel-tech, infraestructura cloud y automatización con IA.',
 	inLanguage: 'es',
 };
 
@@ -69,7 +69,8 @@ export const cvPageJsonLd = {
 	'@id': `${SITE_URL}/cv/#profile`,
 	url: `${SITE_URL}/cv/`,
 	name: `${SITE_TITLE} CV`,
-	description: 'Readable English CV for Carlos Olivo with a downloadable PDF.',
+	description:
+		'Carlos Olivo CV: senior software engineer with experience in backend systems, SaaS platforms, travel-tech integrations, cloud infrastructure, and AI automation.',
 	inLanguage: 'en',
 	mainEntity: {
 		'@id': `${SITE_URL}/#person`,
@@ -80,7 +81,8 @@ export const spanishCvPageJsonLd = {
 	...cvPageJsonLd,
 	'@id': `${SITE_URL}/es/cv/#profile`,
 	url: `${SITE_URL}/es/cv/`,
-	description: 'CV legible de Carlos Olivo en español con PDF descargable.',
+	description:
+		'CV de Carlos Olivo en español: ingeniero senior de software con experiencia en backend, SaaS, integraciones travel-tech, cloud y automatización con IA.',
 	inLanguage: 'es',
 	mainEntity: {
 		'@id': `${SITE_URL}/#person`,
