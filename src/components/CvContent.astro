@@ -35,8 +35,8 @@ const experiences = [
 		role: 'Backend Developer — SaaS Platforms & Cloud Infrastructure',
 		roleEs: 'Backend Developer — Plataformas SaaS e infraestructura cloud',
 		company: 'ListoApp (Chile)',
-		date: 'Feb 2024 – Present · Remote (US)',
-		dateEs: 'Feb 2024 – Presente · Remoto (US)',
+		date: 'Feb 2024 – 2026 · Remote (US)',
+		dateEs: 'Feb 2024 – 2026 · Remoto (US)',
 		items: [
 			'Reduced AWS Lambda cold start duration by 50% and package size by 500% through a pre-deployment bundling process.',
 			'Implemented event-driven architectures using AWS SNS and EventBridge for a scalable notification system.',
@@ -204,13 +204,14 @@ const stackGroups = [
 	.cv-job h4 {
 		margin: 0;
 		font-family: var(--font-display);
-		font-weight: 400;
+		font-weight: 600;
 		color: var(--color-text-primary);
-		letter-spacing: -0.01em;
+		letter-spacing: -0.02em;
 	}
 
 	.cv-hero h1 {
 		margin-top: 0.35rem;
+		letter-spacing: -0.035em;
 		font-size: clamp(2.4rem, 5vw, 4.4rem);
 		line-height: 1;
 	}
@@ -256,9 +257,15 @@ const stackGroups = [
 	}
 
 	.cv-button--primary {
-		color: var(--color-on-primary);
-		background: var(--color-primary);
-		border-color: var(--color-primary);
+		color: var(--color-on-button);
+		background: var(--color-button);
+		border-color: var(--color-button);
+	}
+
+	.cv-button--primary:hover,
+	.cv-button--primary:focus-visible {
+		color: var(--color-on-button);
+		background: var(--color-button-hover);
 	}
 
 	.cv-card {
@@ -391,7 +398,7 @@ const stackGroups = [
 	}
 
 	.cv-job li::marker {
-		color: var(--color-secondary);
+		color: var(--color-primary);
 	}
 
 	.cv-stack-grid {
@@ -445,6 +452,169 @@ const stackGroups = [
 
 		.cv-stack-grid {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Print: a compact one-page resume. src/assets/resume.pdf is generated from this view. */
+	@media print {
+		@page {
+			size: Letter;
+			margin: 0.45in 0.5in;
+		}
+
+		:global(.site-header),
+		:global(footer),
+		:global(.skip-nav),
+		.cv-kicker,
+		.cv-actions,
+		.cv-heading-row h2,
+		.cv-section-title span {
+			display: none !important;
+		}
+
+		:global(html),
+		:global(body),
+		.cv-page {
+			background: #fff !important;
+			color: #0f172a;
+		}
+
+		.cv-page {
+			padding: 0;
+			font-size: 8.6pt;
+			line-height: 1.4;
+		}
+
+		.cv-shell {
+			width: 100%;
+		}
+
+		.cv-hero {
+			display: block;
+			padding: 0;
+			border: 0;
+		}
+
+		.cv-hero h1 {
+			margin: 0;
+			font-size: 22pt;
+			color: #1f3470;
+		}
+
+		.cv-role {
+			margin: 2pt 0 0;
+			font-size: 9.5pt;
+			color: #1f3470;
+		}
+
+		.cv-card {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			border-radius: 0;
+			background: none;
+			box-shadow: none;
+		}
+
+		.cv-heading-row {
+			display: block;
+			margin: 4pt 0 0;
+			padding: 0;
+			border: 0;
+		}
+
+		.cv-meta {
+			margin: 0;
+			text-align: left;
+			font-size: 8.4pt;
+		}
+
+		.cv-meta a {
+			color: #1f3470;
+		}
+
+		.cv-summary {
+			margin: 7pt 0 0;
+			padding-bottom: 7pt;
+			border-bottom: 1px solid #cbd5e1;
+			font-size: 8.6pt;
+		}
+
+		.cv-section-title {
+			margin: 9pt 0 4pt;
+			padding: 0;
+			border: 0;
+		}
+
+		.cv-section-title h3 {
+			font-size: 9.5pt;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+		}
+
+		.cv-experience-list {
+			gap: 6pt;
+		}
+
+		.cv-job {
+			padding: 0;
+			border: 0;
+			break-inside: avoid;
+		}
+
+		.cv-job-header h4 {
+			font-size: 9pt;
+		}
+
+		.cv-job-header p,
+		.cv-job-header span {
+			font-size: 8.2pt;
+		}
+
+		.cv-job-header span {
+			font-style: italic;
+			color: #1f3470;
+		}
+
+		.cv-job-header {
+			margin-bottom: 2pt;
+		}
+
+		.cv-job ul {
+			margin: 0;
+			padding-left: 12pt;
+			list-style: disc;
+		}
+
+		.cv-job li,
+		.cv-job li + li {
+			margin: 1pt 0 0;
+			font-size: 8.3pt;
+			line-height: 1.38;
+		}
+
+		.cv-compact {
+			margin: 0;
+			font-size: 8.4pt;
+		}
+
+		.cv-stack-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 4pt 16pt;
+		}
+
+		.cv-stack-grid div {
+			padding-top: 3pt;
+		}
+
+		.cv-stack-grid h4 {
+			margin-bottom: 1pt;
+			font-size: 8.6pt;
+		}
+
+		.cv-stack-grid p {
+			margin: 0;
+			font-size: 8.3pt;
 		}
 	}
 </style>

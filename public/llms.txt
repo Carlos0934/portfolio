@@ -1,8 +1,8 @@
 # Carlos Olivo
 
-> Senior Software Engineer building backend systems that save teams time and keep revenue-critical flows fast and reliable across travel-tech, SaaS, and education products.
+> Senior Software Engineer in Georgia, United States, who turns concrete problems into simple, effective products. Backend by trade, end to end when needed, and AI-assisted.
 
-This site is the professional portfolio of Carlos Olivo. It is written for hiring managers, engineering leaders, founders, recruiters, and AI agents evaluating engineering work. Carlos is open to remote or hybrid software engineering roles.
+This site is the professional portfolio of Carlos Olivo. It is written for hiring managers, engineering leaders, founders, recruiters, and AI agents evaluating engineering work. Carlos is open to backend, platform, and end-to-end product roles, remote or hybrid.
 
 ## Core URLs
 
@@ -15,22 +15,21 @@ This site is the professional portfolio of Carlos Olivo. It is written for hirin
 - GitHub: https://github.com/Carlos0934
 - LinkedIn: https://www.linkedin.com/in/carlos-engel-olivo-carmona-a1184917b/
 
-## Positioning
+## Journey
 
-Carlos works close to the business problem. He connects the systems a team depends on, removes manual work, and makes the flows that drive revenue faster and steadier. Recent work covers hotel connectivity and quoting at PriceTravel Holding, multi-tenant SaaS platforms at ListoApp, and Sócrates, an exam-generation tool for Dominican teachers.
-
-## Headline Results
-
-- −75% exam preparation time for teachers using Sócrates (about 40 to 10 minutes; about 90 to 15 minutes for lower digital-skill users)
-- 9 hotel provider integrations built or hardened (5 new, 4 existing) for a travel quoting engine
-- −50% AWS Lambda cold-start time through a pre-deployment bundling process
+- Age 14, Dominican Republic: taught himself to code by building a small platformer game. Self-taught through constant practice. The game led to a referral for his first job.
+- 2019, Softone (Santo Domingo): first professional role, building a desktop ERP the business relied on every day.
+- 2020, ITelle (Santo Domingo): first team lead role across varied client projects, including publishing mobile apps to the app stores and owning deployments.
+- 2022, remote: Drimo, then ListoApp (Chile), building mobile apps and multi-tenant platforms.
+- 2024, Georgia, United States: moved to the US and works remotely on hotel connectivity at PriceTravel Holding.
+- Now: looking for a team to connect with, where he can bring AI-powered ways of building software and ship products that solve concrete problems, end to end. Off the clock he vibe-codes games, explores generative AI, runs, and goes to the gym. Motto: never stop learning.
 
 ## Selected Work
 
 ### Sócrates: exam prep in minutes, not hours
 
 Problem: Dominican teachers spent 40–90 minutes turning official MINERD curriculum into a usable exam.
-Result: Sócrates generates an editable, curriculum-grounded DOCX exam in 10–15 minutes.
+Result: Sócrates generates an editable, curriculum-grounded DOCX exam in 10–15 minutes (about 75% less prep time).
 Stack: Document AI, OCR, structured extraction, DOCX generation.
 Project URL: https://socrates.xavely.com
 
@@ -51,25 +50,22 @@ Project URL: https://sektor.app/
 
 ### Live results from 128 sources, in real time
 
-Problem: A live-data product (RoulettesView.com) needed fast-changing results from 128 roulette tables delivered to users instantly and without duplicates.
+Problem: A live-data product needed fast-changing results from 128 roulette tables delivered to users instantly and without duplicates.
 Result: Carlos built a concurrent collection pipeline and a real-time API that streams one clean event per change.
 Stack: Go, WebSockets, Chrome-based scraping.
+Project URL: https://roulettesview.com
 
-## Experience
+## Experience and Improvements
 
-- PriceTravel Holding — Backend Developer, Hotel Connectivity & Quoting (Jun 2024 – Present, remote). Owns hotel provider connectivity and the data paths behind the quoting engine.
-- ListoApp (Chile) — Backend Developer, SaaS Platforms & Cloud (Feb 2024 – Present, remote). Backend and cloud delivery for SaaS products and client platforms, from API design to serverless performance and CI/CD.
-- Drimo — Software Developer (Jul 2022 – Jun 2023, remote). Website and blog migration to a faster, SEO-friendly stack; serverless APIs; web and mobile features.
-
-## How Carlos Helps
-
-- Connect the systems a business runs on: products, providers, and partners share data reliably, without manual re-entry or out-of-sync records.
-- Make critical flows fast and reliable: the flows that drive revenue respond faster, fail less, and ship through automated deployments.
-- Turn repetitive work into minutes: automation and AI remove manual steps, while people stay in charge of the decisions that matter.
+- PriceTravel Holding — Backend Developer, Hotel Connectivity & Quoting (Jun 2024 – Present, remote from the US). Built 5 new hotel provider integrations and hardened 4 existing ones; cached exchange rates and promotions in DAX so quotes stopped repeating database queries; improved currency conversion accuracy with the quoting team.
+- ListoApp (Chile) — Backend Developer, SaaS Platforms & Cloud (Feb 2024 – 2026, remote). Cut AWS Lambda cold-start time by 50% with pre-deployment bundling; event-driven notifications with SNS and EventBridge; real-time API streaming results from 128 sources; CI/CD with GitHub Actions.
+- Drimo — Software Developer (Jul 2022 – Jun 2023, remote). Migrated the website and blog to Next.js for faster loads and better SEO; made serverless APIs on AWS more reliable and cheaper to run.
+- ITelle — Team Lead (2020 – 2022, Santo Domingo). Led the team across varied client projects; published mobile apps to the app stores; owned deployments and production operation.
+- Softone — Software Developer (2019 – 2020, Santo Domingo). First professional role, building a desktop ERP.
 
 The full skills inventory is on the CV.
 
 ## Contact
 
 Email: hello@carlos-olivo.dev
-Location: United States · Dominican Republic. Open to remote or hybrid roles.
+Location: Georgia, United States. Open to remote or hybrid roles.

@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR_NAME, DEFAULT_OG_IMAGE, DEFAULT_THEME_COLOR } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR_NAME, DEFAULT_OG_IMAGE, DEFAULT_THEME_COLOR, DARK_THEME_COLOR } from '../consts';
 
 interface Props {
 	title?: string;
@@ -40,13 +40,26 @@ const jsonLd = structuredData ? JSON.stringify(structuredData).replace(/</g, '\\
 <link rel="icon" href="/favicon.ico" />
 <meta name="generator" content={Astro.generator} />
 <meta name="robots" content="index, follow" />
-<meta name="theme-color" content={DEFAULT_THEME_COLOR} />
-<meta name="color-scheme" content="light" />
+<meta name="theme-color" content={DEFAULT_THEME_COLOR} media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content={DARK_THEME_COLOR} media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
+
+<!-- Apply the saved or system theme before first paint to avoid a flash -->
+<script is:inline>
+	(() => {
+		let theme = null;
+		try {
+			theme = localStorage.getItem('theme');
+		} catch {}
+		if (theme !== 'light' && theme !== 'dark') {
+			theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		}
+		document.documentElement.dataset.theme = theme;
+	})();
+</script>
 
 <!-- Font Preloads -->
-<link rel="preload" href="/fonts/inter-regular.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/instrument-serif-400.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

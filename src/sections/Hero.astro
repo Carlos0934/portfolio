@@ -1,246 +1,190 @@
 ---
-import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import profileImage from '../assets/profile-portrait.png';
+import { AUTHOR_NAME } from '../consts';
+import { useTranslations, type Locale } from '../lib/i18n';
 
-const heroEntries = await getCollection('hero');
-const hero = heroEntries[0];
-const { title, tagline, description, eyebrow, proofSignals } = hero.data;
 interface Props {
-	locale?: 'en' | 'es';
+	locale?: Locale;
 }
+
 const { locale = 'en' } = Astro.props;
-const isSpanish = locale === 'es';
-const heroText = {
-	eyebrow: isSpanish ? 'Senior Software Engineer · Abierto a roles remotos o híbridos' : eyebrow,
-	tagline: isSpanish
-		? 'Construyo sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos.'
-		: tagline,
-	description: isSpanish
-		? 'Ingeniero de software senior en productos travel-tech, SaaS y educación. Trabajo cerca del problema de negocio: conectar los sistemas de los que depende un equipo, eliminar trabajo manual y hacer más rápidos y estables los flujos que generan ingresos.'
-		: description,
-	proofSignals: isSpanish
-		? [
-				{ value: '−75%', label: 'Menos tiempo de preparación de exámenes con Sócrates' },
-				{ value: '9', label: 'Integraciones con proveedores hoteleros construidas o reforzadas' },
-				{ value: '−50%', label: 'Tiempo de arranque en serverless' },
-			]
-		: proofSignals,
-	primaryCta: isSpanish ? 'Ver trabajo seleccionado' : 'See selected work',
-	secondaryCta: isSpanish ? 'Ver CV' : 'View CV',
-};
-const cvHref = isSpanish ? '/es/cv/' : '/cv/';
+const t = useTranslations(locale);
 ---
 
-<section id="hero" class="hero border-b border-border bg-background">
-	<div class="mx-auto max-w-6xl px-4 py-14 md:py-20 lg:px-8 lg:py-24">
-		<div class="hero-grid">
-			<div class="hero-copy min-w-0">
-				{heroText.eyebrow && (
-					<div class="fx-entrance fx-entrance-delay-1 mb-6 flex items-center gap-3">
-						<Image
-							src={profileImage}
-							alt=""
-							class="hero-avatar md:hidden"
-							width={96}
-							height={96}
-							loading="eager"
-							decoding="async"
-						/>
-						<p class="section-label" data-i18n="hero.eyebrow">{heroText.eyebrow}</p>
-					</div>
-				)}
+<section id="hero" class="hero">
+	<div class="bg-decor" aria-hidden="true">
+		<div class="bg-glow hero-glow hero-glow--right"></div>
+		<div class="bg-glow hero-glow hero-glow--left"></div>
+		<div class="bg-dots"></div>
+	</div>
 
-				<h1 class="fx-entrance fx-entrance-delay-2 hero-title">
-					{title}
-				</h1>
+	<div class="hero-grid mx-auto max-w-6xl px-4 lg:px-8">
+		<div class="hero-copy">
+			<p class="hero-eyebrow fx-entrance fx-entrance-delay-1">
+				<span data-i18n="hero.role">{t('hero.role', 'Senior Software Engineer')}</span>
+				<span class="hero-eyebrow__dot" aria-hidden="true"></span>
+				<span data-i18n="hero.location">{t('hero.location', 'Georgia, US')}</span>
+			</p>
 
-				{heroText.tagline && (
-					<p class="fx-entrance fx-entrance-delay-3 hero-tagline" data-i18n="hero.tagline">
-						{heroText.tagline}
-					</p>
-				)}
+			<h1 class="hero-title fx-entrance fx-entrance-delay-2">
+				<span class="hero-title__greeting" data-i18n="hero.greeting">{t('hero.greeting', "Hi, I'm Carlos.")}</span>
+				<span data-i18n="hero.headline">{t('hero.headline', 'I turn concrete problems into')}</span>{' '}
+				<em data-i18n="hero.headline.em">{t('hero.headline.em', 'simple, effective products.')}</em>
+			</h1>
 
-				{heroText.description && (
-					<p class="fx-entrance fx-entrance-delay-4 hero-description" data-i18n="hero.description">
-						{heroText.description}
-					</p>
-				)}
+			<p class="hero-lead fx-entrance fx-entrance-delay-3" data-i18n="hero.lead">
+				{t('hero.lead', 'Backend engineer by trade, comfortable across the stack. I like taking a real problem from idea to production, end to end, and using AI to get there faster.')}
+			</p>
 
-				<div class="fx-entrance fx-entrance-delay-4 mt-8 flex flex-wrap gap-3">
-					<a href="#case-studies" class="hero-button hero-button--primary" data-i18n="hero.cta.primary">
-						{heroText.primaryCta}
-					</a>
-					<a href={cvHref} class="hero-button hero-button--secondary" data-i18n="hero.cta.secondary">
-						{heroText.secondaryCta}
-					</a>
-				</div>
-			</div>
-
-			<div class="fx-entrance fx-entrance-delay-3 hidden md:block">
-				<div class="hero-portrait">
-					<Image
-						src={profileImage}
-						alt={title}
-						class="hero-portrait__image"
-						width={720}
-						height={900}
-						loading="eager"
-						decoding="async"
-					/>
-				</div>
+			<div class="hero-ctas fx-entrance fx-entrance-delay-4">
+				<a href="#journey" class="button-solid" data-i18n="hero.cta.primary">{t('hero.cta.primary', 'Follow my journey')}</a>
+				<a href="#contact" class="button-outline" data-i18n="hero.cta.secondary">{t('hero.cta.secondary', 'Get in touch')}</a>
 			</div>
 		</div>
 
-		{heroText.proofSignals && heroText.proofSignals.length > 0 && (
-			<ul class="fx-entrance fx-entrance-delay-5 hero-metrics" role="list">
-				{heroText.proofSignals.map((signal, index) => (
-					<li class="hero-metric">
-						<span class="hero-metric__value" data-i18n={`hero.signal.${index}.value`}>{signal.value}</span>
-						<span class="hero-metric__label" data-i18n={`hero.signal.${index}.label`}>{signal.label}</span>
-					</li>
-				))}
-			</ul>
-		)}
+		<div class="hero-portrait fx-entrance fx-entrance-delay-3">
+			<Image
+				src={profileImage}
+				alt={AUTHOR_NAME}
+				class="hero-portrait__image"
+				widths={[360, 540, 720]}
+				sizes="(min-width: 64rem) 23rem, (min-width: 48rem) 40vw, 80vw"
+				loading="eager"
+				fetchpriority="high"
+			/>
+		</div>
 	</div>
 </section>
 
 <style>
-	.hero-title {
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: clamp(3.25rem, 2rem + 6vw, 6.25rem);
-		font-weight: 400;
-		line-height: 0.95;
-		letter-spacing: -0.02em;
-		color: var(--color-text-primary);
+	.hero {
+		position: relative;
+		padding: 3rem 0 5rem;
 	}
 
-	.hero-tagline {
-		margin: 1.5rem 0 0;
-		max-width: 36rem;
-		font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+	.hero-glow--right {
+		width: 35rem;
+		height: 35rem;
+		right: -9rem;
+		top: -8rem;
+		background: var(--color-glow);
+	}
+
+	.hero-glow--left {
+		width: 26rem;
+		height: 26rem;
+		left: -11rem;
+		top: 18rem;
+		background: var(--color-glow-soft);
+	}
+
+	.hero-grid {
+		position: relative;
+		display: grid;
+		gap: 3rem;
+		align-items: center;
+	}
+
+	.hero-eyebrow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--color-text-secondary);
+	}
+
+	.hero-eyebrow__dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 9999px;
+		background: var(--color-text-muted);
+	}
+
+	.hero-title {
+		margin: 1.25rem 0 0;
+		font-size: clamp(2.6rem, 1.6rem + 3.6vw, 3.9rem);
 		font-weight: 600;
-		line-height: 1.35;
-		letter-spacing: -0.015em;
-		color: var(--color-text-primary);
+		line-height: 1.04;
+		letter-spacing: -0.04em;
 		text-wrap: balance;
 	}
 
-	.hero-description {
-		margin: 1rem 0 0;
-		max-width: 38rem;
-		font-size: 1.05rem;
+	.hero-title__greeting {
+		display: block;
+	}
+
+	.hero-title em {
+		font-style: normal;
+		color: var(--color-primary);
+	}
+
+	.hero-lead {
+		max-width: 34rem;
+		margin: 1.6rem 0 0;
+		font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
 		line-height: 1.7;
 		color: var(--color-text-secondary);
 		text-wrap: pretty;
 	}
 
-	.hero-avatar {
-		width: 3rem;
-		height: 3rem;
-		border-radius: var(--radius-full);
-		object-fit: cover;
-		object-position: center 30%;
+	.hero-ctas {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 2.25rem;
 	}
 
 	.hero-portrait {
-		width: 100%;
-		aspect-ratio: 4 / 5;
-		overflow: hidden;
-		border-radius: var(--radius-xl);
-		background: var(--color-surface-container-low);
+		position: relative;
+		width: min(100%, 23rem);
+	}
+
+	/* Offset hairline frame behind the photo */
+	.hero-portrait::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border: 1px solid var(--color-border-strong);
+		border-radius: 22px;
+		transform: translate(1.1rem, 1.1rem);
 	}
 
 	.hero-portrait__image {
+		position: relative;
+		display: block;
 		width: 100%;
-		height: 100%;
+		height: auto;
+		aspect-ratio: 4 / 5;
 		object-fit: cover;
+		border-radius: 22px;
+		box-shadow: var(--shadow-card);
 	}
 
-	.hero-button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 3rem;
-		padding: 0 1.5rem;
-		border: 1px solid transparent;
-		border-radius: var(--radius-interactive);
-		font-size: 0.95rem;
-		font-weight: 600;
-		text-decoration: none;
-		transition:
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease,
-			color var(--fx-duration-fast) ease;
-	}
+	@media (max-width: 47.99rem) {
+		.hero-ctas a {
+			flex: 1 1 12rem;
+		}
 
-	.hero-button--primary {
-		background: var(--color-primary);
-		color: var(--color-on-primary);
-	}
-
-	.hero-button--primary:hover,
-	.hero-button--primary:focus-visible {
-		background: var(--color-primary-hover);
-	}
-
-	.hero-button--secondary {
-		border-color: var(--color-border-strong);
-		color: var(--color-text-primary);
-	}
-
-	.hero-button--secondary:hover,
-	.hero-button--secondary:focus-visible {
-		border-color: var(--color-text-primary);
-	}
-
-	/* Hero and metrics share the same 3-column grid so the third metric lines up with the photo. */
-	.hero-grid {
-		display: grid;
-		gap: 2.5rem;
-		align-items: center;
-	}
-
-	.hero-metrics {
-		display: grid;
-		gap: 1.75rem;
-		margin: 3.5rem 0 0;
-		padding: 2rem 0 0;
-		border-top: 1px solid var(--color-border-strong);
-		list-style: none;
-	}
-
-	.hero-metric {
-		display: grid;
-		gap: 0.4rem;
-		align-content: start;
-	}
-
-	.hero-metric__value {
-		font-family: var(--font-display);
-		font-size: clamp(3rem, 2.4rem + 2.4vw, 4.25rem);
-		line-height: 1;
-		letter-spacing: -0.02em;
-		color: var(--color-primary);
-	}
-
-	.hero-metric__label {
-		max-width: 16rem;
-		font-size: 0.95rem;
-		line-height: 1.45;
-		color: var(--color-text-secondary);
+		.hero-portrait {
+			width: min(62%, 15rem);
+		}
 	}
 
 	@media (min-width: 48rem) {
-		.hero-grid,
-		.hero-metrics {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-			column-gap: 3rem;
+		.hero {
+			padding: 4rem 0 7rem;
 		}
 
-		.hero-copy {
-			grid-column: span 2;
+		.hero-grid {
+			grid-template-columns: 1.3fr 1fr;
+			gap: 4rem;
+		}
+
+		.hero-portrait {
+			justify-self: end;
 		}
 	}
 </style>

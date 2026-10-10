@@ -11,6 +11,7 @@ client: "RoulettesView.com"
 sector: "Real-time data"
 stack: "Go · WebSockets · Chrome-based scraping"
 order: 4
+url: "https://roulettesview.com"
 ---
 
 ## Context

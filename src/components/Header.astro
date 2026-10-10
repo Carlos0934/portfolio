@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import { NAV_ITEMS } from '../lib/nav';
-import { SITE_TITLE, LINKEDIN_URL, GITHUB_URL } from '../consts';
+import { SITE_TITLE } from '../consts';
+import { useTranslations } from '../lib/i18n';
 import LogoMark from './LogoMark.astro';
 
 interface Props {
@@ -9,116 +9,83 @@ interface Props {
 }
 
 const { lang = 'en' } = Astro.props;
-const mobileNavItems = NAV_ITEMS.slice(1);
-const contactEntries = await getCollection('contact');
-const contact = contactEntries[0];
-const { linkedinUrl, githubUrl, email } = contact?.data ?? {};
-const linkedInHref = linkedinUrl || LINKEDIN_URL;
-const githubHref = githubUrl || GITHUB_URL;
 const isSpanish = lang === 'es';
+const t = useTranslations(isSpanish ? 'es' : 'en');
 const homeHref = isSpanish ? '/es/' : '/';
 const cvPageHref = isSpanish ? '/es/cv/' : '/cv/';
 const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const isHomePage = currentPath === homeHref;
-const externalLinks = [
-	{ label: 'LinkedIn', href: linkedInHref },
-	{ label: 'GitHub', href: githubHref },
-];
-const navLabels: Record<string, string> = {
-	'case-studies': 'Casos de estudio',
-	experience: 'Experiencia',
-	'technical-focus': 'Cómo ayudo',
-	contact: 'Contacto',
-};
+const isCvPage = currentPath === cvPageHref;
+const languageHref = isCvPage ? (isSpanish ? '/cv/' : '/es/cv/') : isSpanish ? '/' : '/es/';
 const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href}`);
+const navItems = NAV_ITEMS.map((item) => ({ ...item, href: getSectionHref(item.href), text: t(`nav.${item.id}`, item.label) }));
 ---
 
 <header class="site-header" data-scrolled="false">
-	<div class="top-contact-bar">
-		<div class="top-contact-bar__inner">
-			<div class="top-contact-bar__actions">
-				{email ? (
-					<>
-						<a href={`mailto:${email}`} class="top-contact-email">{email}</a>
-						<button type="button" class="top-contact-chip top-contact-chip--ghost" data-copy-email data-email={email} data-i18n="nav.copy">
-							{isSpanish ? 'Copiar' : 'Copy'}
-						</button>
-					</>
-				) : (
-					<a href="#contact" class="top-contact-chip top-contact-chip--ghost" data-i18n="nav.contact">{isSpanish ? 'Contacto' : 'Contact'}</a>
-				)}
-				{currentPath !== cvPageHref && (
-					<a
-						href={cvPageHref}
-						class="top-contact-chip top-contact-chip--primary"
-					>
-						CV
-					</a>
-				)}
-			</div>
-
-			<ul class="top-contact-bar__links" aria-label="External links" role="list">
-				{externalLinks.map((link, index) => (
-					<li class="top-contact-bar__link-item">
-						{index > 0 && <span class="top-contact-bar__separator" aria-hidden="true">/</span>}
-						<a href={link.href} target="_blank" rel="noopener noreferrer" class="top-contact-link">
-							{link.label}
-						</a>
-					</li>
-				))}
-			</ul>
-		</div>
-	</div>
-
-	<nav class="header-nav" aria-label="Main navigation">
-		<a href={isHomePage ? '#hero' : `${homeHref}#hero`} class="logo-link">
+	<nav class="header-bar" aria-label="Main navigation">
+		<a href={isHomePage ? '#hero' : homeHref} class="logo-link">
 			<LogoMark size="sm" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
 
-		<button
-			class="menu-button"
-			id="menu-toggle"
-			type="button"
-			aria-expanded="false"
-			aria-controls="mobile-drawer"
-			aria-label="Open navigation menu"
-		>
-			<svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<line x1="3" y1="6" x2="21" y2="6"></line>
-				<line x1="3" y1="12" x2="21" y2="12"></line>
-				<line x1="3" y1="18" x2="21" y2="18"></line>
-			</svg>
-			<svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
-				<line x1="18" y1="6" x2="6" y2="18"></line>
-				<line x1="6" y1="6" x2="18" y2="18"></line>
-			</svg>
-		</button>
+		<ul class="header-links" role="list">
+			{navItems.map((item) => (
+				<li>
+					<a href={item.href} class="header-link" data-i18n={`nav.${item.id}`}>{item.text}</a>
+				</li>
+			))}
+		</ul>
+
+		<div class="header-actions">
+			{!isCvPage && <a href={cvPageHref} class="header-chip">CV</a>}
+			<a href={languageHref} class="header-chip header-chip--ghost" hreflang={isSpanish ? 'en' : 'es'} lang={isSpanish ? 'en' : 'es'}>
+				{isSpanish ? 'EN' : 'ES'}
+			</a>
+			<button type="button" class="icon-button" data-theme-toggle aria-label={isSpanish ? 'Cambiar tema' : 'Toggle color theme'}>
+				<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+				</svg>
+				<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+					<circle cx="12" cy="12" r="4" />
+					<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+				</svg>
+			</button>
+			<button
+				class="icon-button menu-button"
+				id="menu-toggle"
+				type="button"
+				aria-expanded="false"
+				aria-controls="mobile-drawer"
+				aria-label={isSpanish ? 'Abrir menú' : 'Open navigation menu'}
+			>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+					<path d="M4 7h16M4 12h16M4 17h16" />
+				</svg>
+			</button>
+		</div>
 	</nav>
 
-	<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu" inert aria-hidden="true">
-		<div class="drawer-content">
-			<div class="drawer-header">
-				<span class="drawer-title">{isSpanish ? 'Navegación' : 'Navigation'}</span>
-				<button type="button" class="drawer-close" data-drawer-close aria-label="Close navigation menu">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<line x1="18" y1="6" x2="6" y2="18"></line>
-						<line x1="6" y1="6" x2="18" y2="18"></line>
-					</svg>
-				</button>
-			</div>
-			<nav class="drawer-nav" aria-label="Navigation menu">
-				<ul class="drawer-list" role="list">
-					{mobileNavItems.map((item) => (
-						<li>
-							<a href={getSectionHref(item.href)} class="drawer-link" data-nav-link data-i18n={`nav.${item.id}`}>
-								{isSpanish ? navLabels[item.id] ?? item.label : item.label}
-							</a>
-						</li>
-					))}
-				</ul>
-			</nav>
+	<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label={isSpanish ? 'Menú' : 'Navigation menu'} inert aria-hidden="true">
+		<div class="drawer-header">
+			<span class="drawer-title">{isSpanish ? 'Navegación' : 'Navigation'}</span>
+			<button type="button" class="icon-button" data-drawer-close aria-label={isSpanish ? 'Cerrar menú' : 'Close navigation menu'}>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+					<path d="M18 6 6 18M6 6l12 12" />
+				</svg>
+			</button>
 		</div>
+		<ul class="drawer-list" role="list">
+			{navItems.map((item) => (
+				<li>
+					<a href={item.href} class="drawer-link" data-nav-link data-i18n={`nav.${item.id}`}>{item.text}</a>
+				</li>
+			))}
+			{!isCvPage && (
+				<li>
+					<a href={cvPageHref} class="drawer-link" data-nav-link>CV</a>
+				</li>
+			)}
+		</ul>
 	</div>
 
 	<div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
@@ -129,9 +96,8 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 		position: sticky;
 		top: 0;
 		z-index: 60;
-		isolation: isolate;
-		border-bottom: 1px solid var(--color-border);
-		background-color: rgba(245, 242, 236, 0.86);
+		border-bottom: 1px solid transparent;
+		background-color: color-mix(in srgb, var(--color-background) 82%, transparent);
 		backdrop-filter: blur(14px);
 		-webkit-backdrop-filter: blur(14px);
 		transition:
@@ -140,213 +106,136 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 	}
 
 	.site-header[data-scrolled="true"] {
-		border-bottom-color: var(--color-border-strong);
-		background-color: rgba(245, 242, 236, 0.96);
+		border-bottom-color: var(--color-border);
+		background-color: color-mix(in srgb, var(--color-background) 94%, transparent);
 	}
 
-	.top-contact-bar__inner,
-	.header-nav {
-		width: min(100%, 78rem);
+	.header-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		width: min(100%, 72rem);
+		height: 4.25rem;
 		margin: 0 auto;
 		padding-inline: 1rem;
-	}
-
-	.top-contact-bar {
-		padding: 0.85rem 0;
-		transition: padding var(--fx-duration-normal) var(--fx-easing-out);
-	}
-
-	.site-header[data-scrolled="true"] .top-contact-bar {
-		padding: 0.62rem 0;
-	}
-
-	.top-contact-bar__inner {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem 1.25rem;
-		flex-wrap: wrap;
-	}
-
-	.top-contact-bar__actions,
-	.top-contact-bar__links {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.top-contact-bar__links {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.top-contact-bar__link-item {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.top-contact-email,
-	.top-contact-link {
-		text-decoration: none;
-		font-family: var(--font-sans);
-		font-size: 0.78rem;
-		letter-spacing: 0.02em;
-		color: var(--color-text-secondary);
-		transition: color var(--fx-duration-fast) ease;
-	}
-
-	.top-contact-email:hover,
-	.top-contact-email:focus-visible,
-	.top-contact-link:hover,
-	.top-contact-link:focus-visible {
-		color: var(--color-text-primary);
-	}
-
-	.top-contact-chip {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 2.5rem;
-		padding: 0 1rem;
-		border: 1px solid var(--color-outline);
-		border-radius: var(--radius-interactive);
-		background: var(--color-surface-container-lowest);
-		color: var(--color-text-primary);
-		font-family: var(--font-sans);
-		font-size: 0.82rem;
-		font-weight: 600;
-		letter-spacing: 0.01em;
-		text-decoration: none;
-		cursor: pointer;
-		transition:
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease,
-			color var(--fx-duration-fast) ease,
-			transform var(--fx-duration-fast) ease;
-	}
-
-	.top-contact-chip:hover,
-	.top-contact-chip:focus-visible {
-		border-color: var(--color-primary);
-		color: var(--color-text-primary);
-		transform: translateY(-1px);
-	}
-
-	.top-contact-chip--ghost {
-		background: transparent;
-		color: var(--color-text-secondary);
-	}
-
-	.top-contact-chip--primary {
-		background: var(--color-primary);
-		border-color: var(--color-primary);
-		color: var(--color-on-primary);
-	}
-
-	.top-contact-chip--primary:hover,
-	.top-contact-chip--primary:focus-visible {
-		background: var(--color-primary-hover);
-		color: var(--color-on-primary);
-	}
-
-	.top-contact-bar__separator {
-		font-family: var(--font-sans);
-		font-size: 0.78rem;
-		color: var(--color-text-muted);
-	}
-
-	.header-nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-top: 0;
-		padding-bottom: 0.85rem;
-		border-top: 1px solid var(--color-border);
-		transition:
-			padding-bottom var(--fx-duration-normal) var(--fx-easing-out),
-			border-top-color var(--fx-duration-normal) var(--fx-easing-out);
-	}
-
-	.site-header[data-scrolled="true"] .header-nav {
-		padding-bottom: 0.62rem;
-		border-top-color: var(--color-border-strong);
 	}
 
 	.logo-link {
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-3);
-		text-decoration: none;
+		gap: 0.65rem;
 		color: var(--color-text-primary);
-		font-family: var(--font-sans);
-		font-size: 0.95rem;
-		font-weight: 600;
-		letter-spacing: -0.01em;
-		transition: color var(--fx-duration-fast) ease;
-	}
-
-	.logo-link:hover,
-	.logo-link:focus-visible {
-		color: var(--color-primary);
-	}
-
-	.logo-link :global(.logo-mark) {
-		transition: color var(--fx-duration-fast) ease;
+		font-size: 0.98rem;
+		font-weight: 500;
+		text-decoration: none;
 	}
 
 	.logo-text {
 		display: none;
 	}
 
-	.menu-button {
-		display: flex;
+	.header-links {
+		display: none;
 		align-items: center;
-		justify-content: center;
-		width: 2.5rem;
-		height: 2.5rem;
+		gap: 1.75rem;
+		margin: 0 0 0 auto;
 		padding: 0;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		background: var(--color-surface-container-low);
-		color: var(--color-text-secondary);
-		cursor: pointer;
-		transition:
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease,
-			color var(--fx-duration-fast) ease;
+		list-style: none;
 	}
 
-	.menu-button:hover {
-		border-color: var(--color-primary);
+	.header-link {
+		color: var(--color-text-secondary);
+		font-size: 0.92rem;
+		text-decoration: none;
+		transition: color var(--fx-duration-fast) ease;
+	}
+
+	.header-link:hover,
+	.header-link:focus-visible {
 		color: var(--color-text-primary);
 	}
 
-	.menu-button:focus-visible {
-		outline: 2px solid var(--color-primary);
-		outline-offset: 2px;
+	.header-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 	}
 
-	.menu-button[aria-expanded="true"] {
+	.header-chip {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.5rem;
+		height: 2.375rem;
+		padding: 0 0.85rem;
+		border-radius: 10px;
+		background: var(--color-button);
+		color: var(--color-on-button);
+		font-size: 0.85rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: background-color var(--fx-duration-fast) ease;
+	}
+
+	.header-chip:hover,
+	.header-chip:focus-visible {
+		background: var(--color-button-hover);
+	}
+
+	.header-chip--ghost {
+		border: 1px solid var(--color-border);
+		background: var(--color-surface-container-lowest);
+		color: var(--color-text-primary);
+	}
+
+	.header-chip--ghost:hover,
+	.header-chip--ghost:focus-visible {
 		border-color: var(--color-primary);
-		color: var(--color-primary);
+		background: var(--color-surface-container-lowest);
 	}
 
-	.menu-icon,
-	.close-icon {
-		width: 1.25rem;
-		height: 1.25rem;
+	.icon-button {
+		display: inline-grid;
+		place-items: center;
+		width: 2.375rem;
+		height: 2.375rem;
+		padding: 0;
+		border: 1px solid var(--color-border);
+		border-radius: 10px;
+		background: var(--color-surface-container-lowest);
+		color: var(--color-text-primary);
+		cursor: pointer;
+		transition: border-color var(--fx-duration-fast) ease;
+	}
+
+	.icon-button:hover,
+	.icon-button:focus-visible {
+		border-color: var(--color-primary);
+	}
+
+	.icon-button svg {
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	/* Show the icon of the theme you would switch to */
+	.icon-sun,
+	:global([data-theme="dark"]) .icon-moon {
+		display: none;
+	}
+
+	:global([data-theme="dark"]) .icon-sun {
+		display: block;
 	}
 
 	.mobile-drawer {
 		position: fixed;
 		top: 0;
 		right: 0;
-		width: min(24rem, 100vw);
-		max-width: 100vw;
-		height: 100vh;
+		width: min(22rem, 100vw);
+		height: 100dvh;
+		padding: 1.25rem;
 		background: var(--color-surface-container-lowest);
 		border-left: 1px solid var(--color-border);
 		transform: translateX(100%);
@@ -359,113 +248,52 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 		transform: translateX(0);
 	}
 
-	.drawer-content {
-		display: grid;
-		gap: var(--spacing-8);
-		padding: var(--spacing-6);
-	}
-
 	.drawer-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--spacing-4);
-		padding-bottom: var(--spacing-4);
+		padding-bottom: 1rem;
+		margin-bottom: 1rem;
 		border-bottom: 1px solid var(--color-border);
 	}
 
 	.drawer-title {
-		font-family: var(--font-sans);
 		font-size: 0.75rem;
-		font-weight: 600;
-		letter-spacing: 0.14em;
+		font-weight: 500;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--color-text-muted);
 	}
 
-	.drawer-close {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		background: var(--color-surface-container-low);
-		color: var(--color-text-secondary);
-		cursor: pointer;
-		transition:
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease,
-			color var(--fx-duration-fast) ease;
-	}
-
-	.drawer-close:hover,
-	.drawer-close:focus-visible {
-		border-color: var(--color-primary);
-		color: var(--color-text-primary);
-	}
-
-	.drawer-close svg {
-		width: 1.15rem;
-		height: 1.15rem;
-	}
-
 	.drawer-list {
-		list-style: none;
+		display: grid;
+		gap: 0.25rem;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-2);
+		list-style: none;
 	}
 
 	.drawer-link {
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-3);
-		min-height: 3.25rem;
-		padding: var(--spacing-3) var(--spacing-4);
-		border: 1px solid transparent;
-		text-decoration: none;
+		min-height: 3rem;
+		padding: 0 0.85rem;
+		border-radius: 10px;
 		color: var(--color-text-secondary);
-		font-family: var(--font-sans);
 		font-size: 1.05rem;
-		font-weight: 400;
-		letter-spacing: 0.02em;
-		border-radius: var(--radius-md);
-		transition:
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease,
-			color var(--fx-duration-fast) ease,
-			padding-left var(--fx-duration-fast) ease;
+		text-decoration: none;
 	}
 
-	.drawer-link:hover {
-		background: var(--color-surface-container-high);
-		border-color: var(--color-border-strong);
+	.drawer-link:hover,
+	.drawer-link:focus-visible {
+		background: var(--color-surface-container);
 		color: var(--color-text-primary);
 	}
 
-	.drawer-link:focus-visible {
-		outline: 2px solid var(--color-primary);
-		outline-offset: -2px;
-	}
-
-	.drawer-link.active {
-		background: var(--color-surface-container-high);
-		color: var(--color-primary);
-		border-color: var(--color-primary);
-	}
-
-
 	.drawer-backdrop {
 		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(21, 23, 28, 0.35);
+		inset: 0;
+		background: rgba(0, 0, 0, 0.35);
 		opacity: 0;
 		visibility: hidden;
 		transition:
@@ -479,81 +307,32 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 		visibility: visible;
 	}
 
+	@media (min-width: 64rem) {
+		.header-bar {
+			padding-inline: 2rem;
+		}
+	}
+
 	@media (min-width: 480px) {
 		.logo-text {
 			display: inline;
 		}
 	}
 
-	@media (max-width: 767px) {
-		.top-contact-bar {
-			padding: 0.65rem 0;
+	@media (min-width: 900px) {
+		.header-links {
+			display: flex;
 		}
 
-		.site-header[data-scrolled="true"] .top-contact-bar {
-			padding: 0.5rem 0;
-		}
-
-		.top-contact-bar__inner {
-			display: grid;
-			gap: 0.55rem;
-		}
-
-		.top-contact-bar__actions {
-			display: grid;
-			grid-template-columns: minmax(0, 1fr) auto auto;
-			width: 100%;
-			gap: 0.5rem;
-		}
-
-		.top-contact-email {
-			min-width: 0;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			font-size: 0.72rem;
-		}
-
-		.top-contact-chip {
-			min-height: 2.25rem;
-			padding-inline: 0.8rem;
-			font-size: 0.68rem;
-		}
-
-		.top-contact-bar__links {
-			width: 100%;
-			gap: 0.5rem;
-		}
-
-		.top-contact-link,
-		.top-contact-bar__separator {
-			font-size: 0.72rem;
-		}
-
-		.header-nav {
-			padding-bottom: 0.65rem;
-		}
-
-		.site-header[data-scrolled="true"] .header-nav {
-			padding-bottom: 0.5rem;
-		}
-	}
-
-	@media (min-width: 1280px) {
-		.header-nav {
+		.menu-button {
 			display: none;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
 		.site-header,
-		.top-contact-email,
-		.top-contact-link,
-		.top-contact-chip,
 		.mobile-drawer,
-		.drawer-backdrop,
-		.drawer-link,
-		.drawer-close {
+		.drawer-backdrop {
 			transition: none;
 		}
 	}
@@ -561,54 +340,26 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 
 <script>
 	class MobileDrawer {
-		drawer: HTMLElement | null;
-		backdrop: HTMLElement | null;
-		toggleBtn: HTMLButtonElement | null;
-		closeBtns: NodeListOf<HTMLButtonElement>;
-		drawerLinks: NodeListOf<HTMLAnchorElement>;
-		isOpen: boolean;
-		previousActiveElement: Element | null;
+		drawer = document.getElementById('mobile-drawer');
+		backdrop = document.getElementById('drawer-backdrop');
+		toggleBtn = document.getElementById('menu-toggle') as HTMLButtonElement | null;
+		isOpen = false;
+		previousActiveElement: Element | null = null;
 
 		constructor() {
-			this.drawer = document.getElementById('mobile-drawer');
-			this.backdrop = document.getElementById('drawer-backdrop');
-			this.toggleBtn = document.getElementById('menu-toggle') as HTMLButtonElement | null;
-			this.closeBtns = document.querySelectorAll('[data-drawer-close]');
-			this.drawerLinks = document.querySelectorAll('[data-nav-link]');
-			this.isOpen = false;
-			this.previousActiveElement = null;
-
 			if (!this.drawer || !this.toggleBtn || !this.backdrop) return;
 
-			this.init();
-		}
-
-		init() {
-			this.toggleBtn?.addEventListener('click', () => this.toggle());
-			this.backdrop?.addEventListener('click', () => this.close());
-			this.closeBtns.forEach((button) => {
-				button.addEventListener('click', () => this.close());
+			this.toggleBtn.addEventListener('click', () => (this.isOpen ? this.close() : this.open()));
+			this.backdrop.addEventListener('click', () => this.close());
+			document.querySelectorAll('[data-drawer-close], [data-nav-link]').forEach((element) => {
+				element.addEventListener('click', () => this.close());
 			});
-
-			this.drawerLinks.forEach((link) => {
-				link.addEventListener('click', () => this.close());
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && this.isOpen) this.close();
 			});
-
-			document.addEventListener('keydown', (e: KeyboardEvent) => {
-				if (e.key === 'Escape' && this.isOpen) {
-					this.close();
-				}
+			this.drawer.addEventListener('keydown', (event) => {
+				if (event.key === 'Tab' && this.isOpen) this.trapFocus(event);
 			});
-
-			this.drawer?.addEventListener('keydown', (e: KeyboardEvent) => {
-				if (e.key === 'Tab' && this.isOpen) {
-					this.trapFocus(e);
-				}
-			});
-		}
-
-		toggle() {
-			this.isOpen ? this.close() : this.open();
 		}
 
 		open() {
@@ -616,19 +367,14 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 
 			this.isOpen = true;
 			this.previousActiveElement = document.activeElement;
-
 			this.drawer.removeAttribute('inert');
 			this.drawer.removeAttribute('aria-hidden');
 			this.toggleBtn.setAttribute('aria-expanded', 'true');
-			this.toggleBtn.setAttribute('aria-label', 'Close navigation menu');
 			this.drawer.setAttribute('data-open', 'true');
 			this.backdrop.setAttribute('data-visible', 'true');
 			document.body.style.overflow = 'hidden';
 
-			window.setTimeout(() => {
-				const firstLink = this.drawer?.querySelector('a');
-				if (firstLink instanceof HTMLElement) firstLink.focus();
-			}, 100);
+			window.setTimeout(() => this.drawer?.querySelector<HTMLElement>('a')?.focus(), 100);
 		}
 
 		close() {
@@ -636,7 +382,6 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 
 			this.isOpen = false;
 			this.toggleBtn.setAttribute('aria-expanded', 'false');
-			this.toggleBtn.setAttribute('aria-label', 'Open navigation menu');
 			this.drawer.setAttribute('data-open', 'false');
 			this.backdrop.setAttribute('data-visible', 'false');
 			document.body.style.overflow = '';
@@ -646,137 +391,48 @@ const getSectionHref = (href: string) => (isHomePage ? href : `${homeHref}${href
 				this.drawer?.setAttribute('aria-hidden', 'true');
 			}, 250);
 
-			if (this.previousActiveElement instanceof HTMLElement) {
-				this.previousActiveElement.focus();
-			}
+			if (this.previousActiveElement instanceof HTMLElement) this.previousActiveElement.focus();
 		}
 
-		trapFocus(e: KeyboardEvent) {
-			if (!this.drawer) return;
+		trapFocus(event: KeyboardEvent) {
+			const focusable = this.drawer?.querySelectorAll<HTMLElement>('a, button');
+			if (!focusable?.length) return;
 
-			const focusableElements = this.drawer.querySelectorAll<HTMLElement>('a, button');
-			const firstElement = focusableElements[0];
-			const lastElement = focusableElements[focusableElements.length - 1];
-
-			if (!firstElement || !lastElement) return;
-
-			if (e.shiftKey) {
-				if (document.activeElement === firstElement) {
-					e.preventDefault();
-					lastElement.focus();
-				}
-			} else if (document.activeElement === lastElement) {
-				e.preventDefault();
-				firstElement.focus();
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			if (event.shiftKey && document.activeElement === first) {
+				event.preventDefault();
+				last.focus();
+			} else if (!event.shiftKey && document.activeElement === last) {
+				event.preventDefault();
+				first.focus();
 			}
 		}
 	}
 
-	class HeaderState {
-		header: HTMLElement | null;
-		hero: HTMLElement | null;
+	function initHeaderState() {
+		const header = document.querySelector('.site-header');
+		if (!header) return;
 
-		constructor() {
-			this.header = document.querySelector('.site-header');
-			this.hero = document.getElementById('hero');
-
-			if (!this.header) return;
-
-			const header = this.header;
-			const hero = this.hero;
-
-			if (!hero || !('IntersectionObserver' in window)) {
-				header.setAttribute('data-scrolled', 'true');
-				return;
-			}
-
-			const observer = new IntersectionObserver(
-				(entries) => {
-					const [entry] = entries;
-					const isNearTop = entry.isIntersecting && entry.intersectionRatio > 0.2;
-					header.setAttribute('data-scrolled', isNearTop ? 'false' : 'true');
-				},
-				{
-					threshold: [0, 0.2, 0.6],
-					rootMargin: '-72px 0px 0px 0px',
-				}
-			);
-
-			observer.observe(hero);
-		}
+		const update = () => header.setAttribute('data-scrolled', window.scrollY > 8 ? 'true' : 'false');
+		update();
+		window.addEventListener('scroll', update, { passive: true });
 	}
 
-	class EmailCopyButton {
-		button: HTMLButtonElement | null;
-
-		constructor() {
-			this.button = document.querySelector('[data-copy-email]');
-			if (!this.button) return;
-
-			const button = this.button as HTMLButtonElement;
-
-			button.addEventListener('click', async () => {
-				const email = button.dataset.email;
-				if (!email || !navigator.clipboard) return;
-
-				await navigator.clipboard.writeText(email);
-				const originalLabel = button.textContent;
-				button.textContent = 'Copied';
-				window.setTimeout(() => {
-					button.textContent = originalLabel;
-				}, 1400);
+	function initThemeToggle() {
+		document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+			button.addEventListener('click', () => {
+				const root = document.documentElement;
+				const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+				root.dataset.theme = next;
+				try {
+					localStorage.setItem('theme', next);
+				} catch {}
 			});
-		}
+		});
 	}
 
-	class ResumeDownloadLink {
-		link: HTMLAnchorElement | null;
-
-		constructor() {
-			this.link = document.querySelector('[data-resume-download]');
-			if (!this.link) return;
-
-			this.link.addEventListener('click', (event) => this.handleClick(event));
-		}
-
-		async handleClick(event: MouseEvent) {
-			const link = this.link;
-			if (!link) return;
-
-			const href = link.href;
-			if (!href) return;
-
-			const url = new URL(href, window.location.href);
-			if (url.origin !== window.location.origin) return;
-
-			event.preventDefault();
-
-			try {
-				const response = await fetch(url.toString());
-				if (!response.ok) {
-					window.location.href = url.toString();
-					return;
-				}
-
-				const blob = await response.blob();
-				const objectUrl = URL.createObjectURL(blob);
-				const downloadLink = document.createElement('a');
-				downloadLink.href = objectUrl;
-				downloadLink.download = link.download || 'Carlos-Olivo-CV.pdf';
-				document.body.append(downloadLink);
-				downloadLink.click();
-				downloadLink.remove();
-				window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
-			} catch {
-				window.location.href = url.toString();
-			}
-		}
-	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-		new HeaderState();
-		new MobileDrawer();
-		new EmailCopyButton();
-		new ResumeDownloadLink();
-	});
+	initHeaderState();
+	initThemeToggle();
+	new MobileDrawer();
 </script>

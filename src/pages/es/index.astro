@@ -1,22 +1,22 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../sections/Hero.astro';
+import Journey from '../../sections/Journey.astro';
 import CaseStudies from '../../sections/CaseStudies.astro';
 import Experience from '../../sections/Experience.astro';
-import TechnicalFocus from '../../sections/TechnicalFocus.astro';
 import Contact from '../../sections/Contact.astro';
 import HomeLanguage from '../../components/HomeLanguage.astro';
 import { spanishHomeStructuredData } from '../../lib/structuredData';
 
 const description =
-	'Ingeniero de software senior que construye sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos en productos travel-tech, SaaS y educación.';
+	'Ingeniero de software en Georgia, EE. UU., que convierte problemas concretos en productos simples y efectivos: backend de oficio, de punta a punta cuando hace falta y con IA como aliada.';
 ---
 
 <BaseLayout
 	title="Senior Software Engineer"
 	description={description}
 	lang="es"
-	imageAlt="Carlos Olivo, ingeniero senior de software especializado en backend, SaaS, travel-tech y automatización con IA"
+	imageAlt="Carlos Olivo, ingeniero de software senior: backend, producto de punta a punta y desarrollo con IA"
 	canonicalPath="/es/"
 	alternateLocales={[
 		{ lang: 'en', href: '/' },
@@ -26,9 +26,9 @@ const description =
 	structuredData={spanishHomeStructuredData}
 >
 	<Hero locale="es" />
+	<Journey locale="es" />
 	<CaseStudies locale="es" />
 	<Experience locale="es" />
-	<TechnicalFocus locale="es" />
 	<Contact locale="es" />
 	<HomeLanguage locale="es" />
 </BaseLayout>
