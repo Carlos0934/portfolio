@@ -64,20 +64,26 @@ const displayUrl = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 
 	.work-grid {
 		display: grid;
-		gap: 1.25rem;
+		gap: 1rem;
 		margin: 3rem 0 0;
 		padding: 0;
 		list-style: none;
 	}
 
+	/* Light, flat cards: information, not callouts */
 	.work-card {
 		display: flex;
 		flex-direction: column;
-		padding: 1.5rem;
+		padding: 1.25rem 1.35rem;
 		border: 1px solid var(--color-border);
-		border-radius: var(--radius-xl);
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--color-surface-container-lowest) 55%, transparent);
+		transition: border-color var(--fx-duration-fast) ease, background-color var(--fx-duration-fast) ease;
+	}
+
+	.work-card:hover {
+		border-color: var(--color-border-strong);
 		background: var(--color-surface-container-lowest);
-		box-shadow: var(--shadow-card);
 	}
 
 	.work-card__meta {
@@ -98,16 +104,16 @@ const displayUrl = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 	}
 
 	.work-card__title {
-		margin: 0.6rem 0 0;
-		font-size: 1.3rem;
+		margin: 0.5rem 0 0;
+		font-size: 1.12rem;
 		font-weight: 600;
 		line-height: 1.2;
 		letter-spacing: -0.02em;
 	}
 
 	.work-card__summary {
-		margin: 0.6rem 0 0;
-		font-size: 0.96rem;
+		margin: 0.4rem 0 0;
+		font-size: 0.94rem;
 		line-height: 1.65;
 		color: var(--color-text-secondary);
 	}
@@ -119,7 +125,7 @@ const displayUrl = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 		justify-content: space-between;
 		gap: 0.75rem;
 		margin-top: auto;
-		padding-top: 1.25rem;
+		padding-top: 1rem;
 	}
 
 	.work-card__stack {
@@ -164,7 +170,7 @@ const displayUrl = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 		}
 
 		.work-card {
-			padding: 1.75rem;
+			padding: 1.4rem 1.5rem;
 		}
 	}
 </style>

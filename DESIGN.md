@@ -59,7 +59,7 @@ A personal, natural presentation for engineering roles: who Carlos is first, the
 - **Each fact lives in one section.** The hero is about Carlos (no companies, no numbers). The journey tells the path without metrics. Selected Work holds the projects and their links. Experience holds roles, dates, and the improvements per company. Do not repeat numbers across sections.
 - **Improvements sit with the company.** Each role has a "What I improved" panel; numbers inside it are emphasized automatically.
 - **Blue is an accent, not a theme.** Navy `#1F3470` (from the shirt in the profile photo) marks the headline phrase, kickers, links, and timeline dots. In dark mode the page is neutral graphite; solid buttons turn off-white instead of blue.
-- **Depth without clutter.** Dot grids that fade out, soft glows, hairline borders, and light card shadows. No floating badges, colorful illustrations, or icon sets.
+- **Depth without clutter.** Dot grids that fade out, soft glows, hairline borders, and very subtle shadows (only the portrait). Cards should not look lifted. No floating badges, colorful illustrations, or icon sets.
 
 ## Themes
 
@@ -71,7 +71,7 @@ A personal, natural presentation for engineering roles: who Carlos is first, the
 
 - **Hero:** eyebrow (role · location), "Hi, I'm Carlos." plus the headline with the accent phrase, one lead paragraph, two buttons, and a portrait with an offset hairline frame.
 - **Journey:** six steps on the left and a sticky stage on the right (pinned under the header on mobile). Scroll drives the stage: a minimal platformer, a desktop ERP, a release pipeline, a dot map of the Americas (DR → Chile remote, DR → Georgia), and an "AI + products + team" orbit. The map dots are `public/images/americas-dots.svg`, generated from Natural Earth land data and colored with a CSS mask.
-- **Selected Work:** two-column cards with client · sector, title, summary, stack line, and the project link.
+- **Selected Work:** light, flat two-column cards (hairline border, no shadow, faint fill) with client · sector, title, a one-sentence summary, a short stack line, and the project link.
 - **Experience:** timeline with dates and location on the left, role and summary on the right, then the "What I improved" panel and a stack line.
 - **Contact:** email as the primary button, location row, and outlined LinkedIn/GitHub buttons with icons. No card around it.
 - **Motion:** entrance fade on the hero, reveal on scroll, and the scroll-driven journey. `prefers-reduced-motion` disables transitions, the orbit, and the pulses.

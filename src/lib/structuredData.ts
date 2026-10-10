@@ -30,8 +30,6 @@ export const personJsonLd = {
 	alumniOf: [
 		{ '@type': 'Organization', name: 'ListoApp' },
 		{ '@type': 'Organization', name: 'Drimo' },
-		{ '@type': 'Organization', name: 'ITelle' },
-		{ '@type': 'Organization', name: 'Softone' },
 	],
 	sameAs,
 };

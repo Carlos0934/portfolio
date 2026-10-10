@@ -1,7 +1,7 @@
 ---
 title: "Hotel quotes that stay in sync with live inventory"
 slug: "hotel-connectivity-quote-performance"
-summary: "Quoting depended on many hotel providers with different behaviors and latency. I built and hardened the provider connections and cached exchange rates and promotions, so the quoting engine gets fresh rates and availability while hitting the database less."
+summary: "Provider connections and caching that keep quotes fresh with less load on the database."
 tags:
   - Provider Integration
   - Quote Performance
@@ -9,7 +9,7 @@ tags:
   - Operational Efficiency
 client: "PriceTravel Holding"
 sector: "Travel-tech"
-stack: "AWS DAX · Background workers · Hotel provider APIs"
+stack: "AWS DAX · Provider APIs"
 order: 2
 url: "https://pricetravel.com"
 ---

@@ -18,8 +18,8 @@ This site is the professional portfolio of Carlos Olivo. It is written for hirin
 ## Journey
 
 - Age 14, Dominican Republic: taught himself to code by building a small platformer game. Self-taught through constant practice. The game led to a referral for his first job.
-- 2019, Softone (Santo Domingo): first professional role, building a desktop ERP the business relied on every day.
-- 2020, ITelle (Santo Domingo): first team lead role across varied client projects, including publishing mobile apps to the app stores and owning deployments.
+- 2019, Softone: first professional role, building a desktop ERP the business relied on every day.
+- 2020, ITelle: first team lead role across varied client projects, including publishing mobile apps to the app stores and owning deployments.
 - 2022, remote: Drimo, then ListoApp (Chile), building mobile apps and multi-tenant platforms.
 - 2024, Georgia, United States: moved to the US and works remotely on hotel connectivity at PriceTravel Holding.
 - Now: looking for a team to connect with, where he can bring AI-powered ways of building software and ship products that solve concrete problems, end to end. Off the clock he vibe-codes games, explores generative AI, runs, and goes to the gym. Motto: never stop learning.
@@ -60,8 +60,6 @@ Project URL: https://roulettesview.com
 - PriceTravel Holding — Backend Developer, Hotel Connectivity & Quoting (Jun 2024 – Present, remote from the US). Built 5 new hotel provider integrations and hardened 4 existing ones; cached exchange rates and promotions in DAX so quotes stopped repeating database queries; improved currency conversion accuracy with the quoting team.
 - ListoApp (Chile) — Backend Developer, SaaS Platforms & Cloud (Feb 2024 – 2026, remote). Cut AWS Lambda cold-start time by 50% with pre-deployment bundling; event-driven notifications with SNS and EventBridge; real-time API streaming results from 128 sources; CI/CD with GitHub Actions.
 - Drimo — Software Developer (Jul 2022 – Jun 2023, remote). Migrated the website and blog to Next.js for faster loads and better SEO; made serverless APIs on AWS more reliable and cheaper to run.
-- ITelle — Team Lead (2020 – 2022, Santo Domingo). Led the team across varied client projects; published mobile apps to the app stores; owned deployments and production operation.
-- Softone — Software Developer (2019 – 2020, Santo Domingo). First professional role, building a desktop ERP.
 
 The full skills inventory is on the CV.
 

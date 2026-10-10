@@ -1,7 +1,7 @@
 ---
 title: "Live results from 128 sources, in real time"
 slug: "real-time-streaming-api"
-summary: "A live-data product needed fast-changing results from 128 tables delivered to users instantly and without duplicates. I built a concurrent collection pipeline and a real-time API that streams one clean event per change."
+summary: "A concurrent collector and streaming API that sends one clean event per change."
 tags:
   - Real-Time Data
   - Event Streaming
@@ -9,7 +9,7 @@ tags:
   - Live Monitoring
 client: "RoulettesView.com"
 sector: "Real-time data"
-stack: "Go · WebSockets · Chrome-based scraping"
+stack: "Go · WebSockets"
 order: 4
 url: "https://roulettesview.com"
 ---

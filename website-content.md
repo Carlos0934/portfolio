@@ -17,7 +17,7 @@ Single-page homepage (English at `/`, Spanish at `/es/`) plus CV pages (`/cv/`, 
 | 1 | Hero | `#hero` | Who Carlos is. No companies, no numbers. |
 | 2 | Journey | `#journey` | The path from a first game to Georgia, and what he is looking for. No metrics. |
 | 3 | Selected Work | `#case-studies` | Four projects with their links. |
-| 4 | Experience | `#experience` | Roles, dates, and the improvements per company. |
+| 4 | Experience | `#experience` | Roles from Drimo onward, with dates and the improvements per company. Earlier roles (Softone, ITelle) appear only in the Journey. |
 | 5 | Contact | `#contact` | Email, location, LinkedIn, GitHub. |
 
 **Header:** Journey, Work, Experience, Contact, CV button, language switch (EN/ES), theme toggle.
@@ -46,6 +46,8 @@ Single-page homepage (English at `/`, Spanish at `/es/`) plus CV pages (`/cv/`, 
 
 ## Selected Work
 
+Cards are deliberately light: one-sentence summary, short stack line, link.
+
 | Project | Client · Sector | Link |
 |---------|-----------------|------|
 | Exam prep in minutes, not hours | Sócrates · EdTech · Dominican Republic | https://socrates.xavely.com |
@@ -62,8 +64,8 @@ Single-page homepage (English at `/`, Spanish at `/es/`) plus CV pages (`/cv/`, 
 | PriceTravel Holding | Backend Developer — Hotel Connectivity & Quoting | Jun 2024 – Present | Remote · US |
 | ListoApp | Backend Developer — SaaS Platforms & Cloud | Feb 2024 – 2026 | Remote · Chile |
 | Drimo | Software Developer | Jul 2022 – Jun 2023 | Remote |
-| ITelle | Team Lead | 2020 – 2022 | Santo Domingo, DR |
-| Softone | Software Developer | 2019 – 2020 | Santo Domingo, DR |
+
+Earlier roles (Softone, ITelle) are told in the Journey only. Do not show a city in the Dominican Republic anywhere on the site.
 
 Each role lists its improvements under "What I improved" (`highlights` in the content file).
 
