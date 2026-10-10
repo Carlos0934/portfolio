@@ -1,12 +1,15 @@
 ---
-title: "Sócrates"
+title: "Exam prep in minutes, not hours"
 slug: "socrates-curriculum-grounded-exam-generation"
-summary: "Built a curriculum-grounded exam platform for Dominican teachers that turns official MINERD sequences into editable DOCX exams, cutting preparation from 40 minutes to 10 minutes and from 90 minutes to 15 minutes for lower digital-skill users."
+summary: "Dominican teachers spent 40–90 minutes turning official MINERD curriculum into a usable exam. Sócrates generates an editable, curriculum-grounded DOCX exam in 10–15 minutes."
 tags:
   - Workflow Automation
   - Document Intelligence
   - Curriculum Grounding
   - Teacher Productivity
+client: "Sócrates"
+sector: "EdTech · Dominican Republic"
+stack: "Document AI · OCR · Structured extraction · DOCX generation"
 order: 1
 url: "https://socrates.xavely.com"
 ---

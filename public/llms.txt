@@ -1,8 +1,8 @@
 # Carlos Olivo
 
-> Senior Software Engineer focused on backend systems, platform engineering, SaaS architecture, travel-tech integrations, workflow automation, and operational reliability.
+> Senior Software Engineer building backend systems that save teams time and keep revenue-critical flows fast and reliable across travel-tech, SaaS, and education products.
 
-This site is the professional portfolio of Carlos Olivo. It is designed for hiring managers, founders, engineering leaders, recruiters, and AI agents evaluating engineering work.
+This site is the professional portfolio of Carlos Olivo. It is written for hiring managers, engineering leaders, founders, recruiters, and AI agents evaluating engineering work. Carlos is open to remote or hybrid software engineering roles.
 
 ## Core URLs
 
@@ -17,53 +17,59 @@ This site is the professional portfolio of Carlos Olivo. It is designed for hiri
 
 ## Positioning
 
-Carlos builds backend and platform systems for products that need to scale, integrate, and keep working. Recent work includes SaaS platforms, hotel provider connectivity, travel quoting systems, cloud infrastructure, event-driven workflows, and AI-enabled workflow automation.
+Carlos works close to the business problem. He connects the systems a team depends on, removes manual work, and makes the flows that drive revenue faster and steadier. Recent work covers hotel connectivity and quoting at PriceTravel Holding, multi-tenant SaaS platforms at ListoApp, and Sócrates, an exam-generation tool for Dominican teachers.
 
-## Primary Case Studies
+## Headline Results
 
-### Sócrates
+- −75% exam preparation time for teachers using Sócrates (about 40 to 10 minutes; about 90 to 15 minutes for lower digital-skill users)
+- 9 hotel provider integrations built or hardened (5 new, 4 existing) for a travel quoting engine
+- −50% AWS Lambda cold-start time through a pre-deployment bundling process
 
-Curriculum-grounded exam generation for Dominican teachers. The platform transforms official MINERD teaching sequences into editable, print-ready DOCX exams using document retrieval, OCR, structured extraction, and grounded AI generation.
+## Selected Work
 
-Key signals:
+### Sócrates: exam prep in minutes, not hours
 
-- Real user workflow for Dominican teachers
-- Official curriculum grounding through MINERD teaching sequences
-- Document retrieval, OCR, AI extraction, structured extraction
-- Editable DOCX output
-- Exam preparation reduced from about 40 minutes to 10 minutes for advanced Word users
-- Exam preparation reduced from about 90 minutes to 15 minutes for lower digital-skill users after learning the software
-
+Problem: Dominican teachers spent 40–90 minutes turning official MINERD curriculum into a usable exam.
+Result: Sócrates generates an editable, curriculum-grounded DOCX exam in 10–15 minutes.
+Stack: Document AI, OCR, structured extraction, DOCX generation.
 Project URL: https://socrates.xavely.com
 
-### Hotel Connectivity & Quote Performance
+### Hotel quotes that stay in sync with live inventory
 
-Travel-tech backend work for hotel provider integrations and quote performance. Work included provider integrations, rate and availability synchronization, exchange-rate paths, promotions paths, and quote-service performance improvements.
-
+Problem: Quoting depended on many hotel providers with different behaviors and latency.
+Result: Carlos built and hardened the provider connections and cached exchange rates and promotions. The quoting engine gets fresh rates and availability while hitting the database less.
+Providers: SiteMinder (SiteConnect), TravelClick, Omnibees, Gin RateFox, and TravelGate HotelX (built); Hotelbeds, DerbySoft, SynXis, and Expedia Rapid API (optimized).
+Stack: AWS DAX, background workers, hotel provider APIs.
 Project URL: https://pricetravel.com
 
-### Multi-Tenant SaaS Platform APIs
+### One platform for insurers, providers, and agents
 
-Backend platform work for SaaS products connecting insurers, service providers, agents, and internal operations. Work included API design, multi-tenant product foundations, storage integrations, notifications, and workflow infrastructure.
-
+Problem: Two growing SaaS products needed to serve several user roles on shared infrastructure.
+Result: Carlos built the backends behind Sektor.app and Centuria.app, with event-driven notifications that keep every party in the loop as work moves forward.
+Stack: TypeScript, NestJS, GraphQL, MongoDB, AWS SNS/EventBridge.
 Project URL: https://sektor.app/
 
-### Real-Time Streaming API
+### Live results from 128 sources, in real time
 
-Real-time data backend tracking 128 roulette tables through browser automation and emitting deduplicated updates over WebSockets.
+Problem: A live-data product (RoulettesView.com) needed fast-changing results from 128 roulette tables delivered to users instantly and without duplicates.
+Result: Carlos built a concurrent collection pipeline and a real-time API that streams one clean event per change.
+Stack: Go, WebSockets, Chrome-based scraping.
 
-## Capabilities
+## Experience
 
-- Product infrastructure
-- Workflow automation
-- External integrations
-- Reliability improvements
-- Backend APIs
-- Event-driven systems
-- Cloud delivery
-- Data normalization
-- Document intelligence
+- PriceTravel Holding — Backend Developer, Hotel Connectivity & Quoting (Jun 2024 – Present, remote). Owns hotel provider connectivity and the data paths behind the quoting engine.
+- ListoApp (Chile) — Backend Developer, SaaS Platforms & Cloud (Feb 2024 – Present, remote). Backend and cloud delivery for SaaS products and client platforms, from API design to serverless performance and CI/CD.
+- Drimo — Software Developer (Jul 2022 – Jun 2023, remote). Website and blog migration to a faster, SEO-friendly stack; serverless APIs; web and mobile features.
+
+## How Carlos Helps
+
+- Connect the systems a business runs on: products, providers, and partners share data reliably, without manual re-entry or out-of-sync records.
+- Make critical flows fast and reliable: the flows that drive revenue respond faster, fail less, and ship through automated deployments.
+- Turn repetitive work into minutes: automation and AI remove manual steps, while people stay in charge of the decisions that matter.
+
+The full skills inventory is on the CV.
 
 ## Contact
 
 Email: hello@carlos-olivo.dev
+Location: United States · Dominican Republic. Open to remote or hybrid roles.

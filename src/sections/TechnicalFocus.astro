@@ -1,395 +1,105 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 interface Props {
 	locale?: 'en' | 'es';
 }
 const { locale = 'en' } = Astro.props;
 const isSpanish = locale === 'es';
 
-type FocusItem = {
-	label: string;
-	value: string;
-};
+const sectionOrder = ['system-integrations', 'cloud-infrastructure', 'ai-automation'] as const;
+type Category = (typeof sectionOrder)[number];
 
-type FocusMeta = {
-	eyebrow: string;
-	signal: string;
-	tags: string[];
-};
-
-type FocusCardGroup = {
-	items: FocusItem[];
+const spanishAreas: Record<Category, { title: string; summary: string }> = {
+	'system-integrations': {
+		title: 'Conectar los sistemas de los que depende un negocio',
+		summary: 'Productos, proveedores y socios comparten datos de forma confiable, sin recaptura manual ni registros desincronizados.',
+	},
+	'cloud-infrastructure': {
+		title: 'Hacer rápidos y confiables los flujos críticos',
+		summary: 'Los flujos que generan ingresos responden más rápido, fallan menos y se despliegan de forma automatizada.',
+	},
+	'ai-automation': {
+		title: 'Convertir trabajo repetitivo en minutos',
+		summary: 'Automatización e IA que eliminan pasos manuales, mientras las personas siguen a cargo de las decisiones importantes.',
+	},
 };
 
 const techEntries = await getCollection('technicalFocus');
-const techEntriesWithContent = await Promise.all(
-	techEntries.map(async (entry) => {
-		const { Content } = await render(entry);
-		return { ...entry, Content };
-	})
-);
-
-const sectionTitle = 'Technical Focus';
-const sectionDescription =
-	'Backend engineering, platform delivery, and integration work — organized by capability area.';
-const localizedSectionTitle = isSpanish ? 'Foco técnico' : sectionTitle;
-const localizedSectionDescription = isSpanish
-	? 'Ingeniería backend, entrega de plataforma e integraciones, organizadas por área de capacidad.'
-	: sectionDescription;
-
-const sectionOrder = ['cloud-infrastructure', 'ai-automation', 'system-integrations'] as const;
-
-const focusMeta: Record<(typeof sectionOrder)[number], FocusMeta> = {
-	'cloud-infrastructure': {
-		eyebrow: 'Cloud Delivery',
-		signal: 'AWS-based backends tuned for deployment speed, reliability, and lower-latency workloads.',
-		tags: ['AWS', 'Serverless', 'GitHub Actions'],
-	},
-	'ai-automation': {
-		eyebrow: 'Full-Stack Systems',
-		signal: 'Product and platform work across JavaScript/TypeScript, .NET, and Go with maintainable service boundaries.',
-		tags: ['TypeScript', '.NET 8', 'Go'],
-	},
-	'system-integrations': {
-		eyebrow: 'Provider Connectivity',
-		signal: 'Integration layers built for hotel providers, quoting flows, and event-driven service coordination.',
-		tags: ['Travel Tech', 'GraphQL', 'Event-Driven'],
-	},
-};
-const spanishFocusMeta: Record<(typeof sectionOrder)[number], Partial<FocusMeta> & { title: string; summary: string; items: FocusItem[] }> = {
-	'cloud-infrastructure': {
-		eyebrow: 'Entrega cloud',
-		title: 'Infraestructura cloud',
-		summary: 'Construcción y operación de plataformas SaaS sobre AWS con automatización, ajuste de rendimiento y disciplina de entrega.',
-		signal: 'Backends sobre AWS optimizados para velocidad de despliegue, confiabilidad y cargas de menor latencia.',
-		items: [
-			{ label: 'Cloud e infraestructura', value: 'AWS (Lambda, SNS, EventBridge, DAX, S3), Docker, GitHub Actions' },
-			{ label: 'Optimización de plataforma', value: 'Reducción de cold starts en Lambda, despliegues automatizados y background workers para cargas de producción' },
-		],
-	},
-	'ai-automation': {
-		eyebrow: 'Sistemas full-stack',
-		title: 'Entrega full-stack',
-		summary: 'Entrega de sistemas de producto y plataforma entre backend, frontend y capas de servicio con fuerte énfasis en mantenibilidad.',
-		signal: 'Trabajo de producto y plataforma en JavaScript/TypeScript, .NET y Go con límites de servicio mantenibles.',
-		items: [
-			{ label: 'Lenguajes y runtime', value: 'TypeScript, JavaScript, C#, Go, SQL, Node.js' },
-			{ label: 'Frameworks y servicios', value: 'NestJS, React, Next.js, .NET 8, GraphQL, Serverless Framework' },
-		],
-	},
-	'system-integrations': {
-		eyebrow: 'Conectividad con proveedores',
-		title: 'Conectividad y APIs',
-		summary: 'Diseño de sistemas intensivos en integraciones que conectan proveedores travel-tech, motores de cotización y productos SaaS multi-tenant.',
-		signal: 'Capas de integración construidas para proveedores hoteleros, flujos de cotización y coordinación de servicios orientada a eventos.',
-		items: [
-			{ label: 'Integraciones con proveedores', value: 'SiteMinder, TravelClick, Omnibees, Gin RateFox, TravelGate HotelX y otras APIs travel-tech' },
-			{ label: 'Datos y caching', value: 'PostgreSQL, MongoDB, Redis, DAX, DynamoDB' },
-		],
-	},
-};
-
-function parseFocusBody(body: string): { summary: string; items: FocusItem[] } {
-	const lines = body
-		.split('\n')
-		.map((line) => line.trim())
-		.filter(Boolean);
-
-	const summary = lines.find((line) => !line.startsWith('-')) ?? '';
-	const items = lines
-		.filter((line) => line.startsWith('-'))
-		.map((line) => {
-			const strongMatch = line.match(/^-\s+\*\*(.+?)\*\*:\s*(.+)$/);
-			if (strongMatch) {
-				return {
-					label: strongMatch[1],
-					value: strongMatch[2],
-				};
-			}
-
-			return {
-				label: 'Note',
-				value: line.replace(/^-\s+/, ''),
-			};
-		});
-
-	return { summary, items };
-}
-
-function buildCardGroups(items: FocusItem[]): FocusCardGroup[] {
-	return items.slice(0, 2).map((item) => ({ items: [item] }));
-}
-
-const dossiers = sectionOrder
-	.map((category, index) => {
+const areas = sectionOrder
+	.map((category) => {
 		const entry = techEntries.find((item) => item.data.category === category);
 		if (!entry) return null;
-
-		const { summary, items } = parseFocusBody(entry.body ?? '');
-		const spanish = spanishFocusMeta[category];
-		return {
-			index: String(index + 1).padStart(2, '0'),
-			category,
-			title: isSpanish ? spanish.title : entry.data.title,
-			summary: isSpanish ? spanish.summary : summary,
-			cardGroups: buildCardGroups(isSpanish ? spanish.items : items),
-			...focusMeta[category],
-			...(isSpanish ? spanish : {}),
+		const english = {
+			title: entry.data.title,
+			summary: (entry.body ?? '').trim(),
 		};
+		return { category, ...(isSpanish ? spanishAreas[category] : english) };
 	})
 	.filter((item): item is NonNullable<typeof item> => item !== null);
 ---
 
-<section id="technical-focus" class="border-b border-border py-16 section-reveal md:py-20 bg-background" data-reveal="items">
+<section id="technical-focus" class="border-b border-border bg-background py-16 md:py-24" data-reveal="items">
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
-		<div class="fx-reveal mb-10 max-w-3xl md:mb-14">
-			<p class="focus-section-kicker mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-i18n="technical.eyebrow">
-				{isSpanish ? 'Áreas de capacidad' : 'Capability areas'}
+		<div class="mb-10 max-w-3xl md:mb-14" data-reveal-item>
+			<p class="section-label mb-4" data-i18n="technical.eyebrow">
+				{isSpanish ? 'Cómo ayudo' : 'How I help'}
 			</p>
-			<h2 class="text-2xl font-normal tracking-tight text-text-primary md:text-4xl" data-i18n="technical.title">
-				{localizedSectionTitle}
+			<h2 class="section-title" data-i18n="technical.title">
+				{isSpanish ? 'Tecnología al servicio del resultado.' : 'Technology in service of the outcome.'}
 			</h2>
-			<p class="mt-3 text-base leading-relaxed text-text-secondary md:text-lg" data-i18n="technical.description">
-				{localizedSectionDescription}
-			</p>
 		</div>
 
-		<div class="space-y-4 md:space-y-5">
-			{dossiers.map((focus) => (
-				<article
-					class="focus-dossier"
-					data-reveal-item
-					style={`--reveal-delay: ${Math.min(Number(focus.index) * 70, 180)}ms;`}
-				>
-					<div class="focus-dossier__summary">
-						<div class="focus-dossier__index" aria-hidden="true">{focus.index}</div>
-						<div class="min-w-0">
-							<p class="focus-dossier__eyebrow" data-i18n={`technical.${focus.category}.eyebrow`}>{focus.eyebrow}</p>
-							<h3 class="focus-dossier__title" data-i18n={`technical.${focus.category}.title`}>{focus.title}</h3>
-							<p class="focus-dossier__description" data-i18n={`technical.${focus.category}.summary`}>{focus.summary}</p>
-
-							<ul class="focus-dossier__tags" role="list">
-								{focus.tags.map((tag) => (
-									<li class="focus-dossier__tag">{tag}</li>
-								))}
-							</ul>
-						</div>
-					</div>
-
-					<div class="focus-dossier__detail">
-						<div class="focus-dossier__signal-block">
-							<p class="focus-dossier__label" data-i18n="technical.signalLabel">{isSpanish ? 'Señal principal' : 'Primary signal'}</p>
-							<p class="focus-dossier__signal" data-i18n={`technical.${focus.category}.signal`}>{focus.signal}</p>
-						</div>
-
-						<div class="focus-dossier__items">
-							{focus.cardGroups.map((group, groupIndex) => (
-								<div class="focus-dossier__detail-card">
-									<dl class="focus-dossier__item-stack">
-										{group.items.map((item) => (
-											<div class="focus-dossier__item-row">
-												<dt data-i18n={`technical.${focus.category}.item.${groupIndex}.label`}>{item.label}</dt>
-												<dd data-i18n={`technical.${focus.category}.item.${groupIndex}.value`}>{item.value}</dd>
-											</div>
-										))}
-									</dl>
-								</div>
-							))}
-						</div>
-					</div>
-				</article>
+		<ul class="help-grid" role="list">
+			{areas.map((area, index) => (
+				<li class="help-card" data-reveal-item style={`--reveal-delay: ${index * 70}ms;`}>
+					<h3 class="help-card__title" data-i18n={`technical.${area.category}.title`}>{area.title}</h3>
+					<p class="help-card__summary" data-i18n={`technical.${area.category}.summary`}>{area.summary}</p>
+				</li>
 			))}
-		</div>
+		</ul>
 	</div>
 </section>
 
 <style>
-	.focus-dossier {
+	.help-grid {
 		display: grid;
-		gap: 1.5rem;
-		padding: 1.35rem;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		background: var(--color-surface-container-low);
-		transition:
-			opacity var(--fx-reveal-duration) var(--fx-easing-out),
-			transform var(--fx-reveal-duration) var(--fx-easing-out),
-			background-color var(--fx-duration-fast) ease,
-			border-color var(--fx-duration-fast) ease;
-	}
-
-	.focus-dossier.is-visible:hover {
-		background: var(--color-surface-container);
-		border-color: var(--color-border-strong);
-	}
-
-	.focus-dossier__summary {
-		display: grid;
-		grid-template-columns: auto 1fr;
 		gap: 1rem;
-		align-items: start;
-	}
-
-	.focus-dossier__index {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-width: 3rem;
-		height: 3rem;
-		padding: 0 0.75rem;
-		border: 1px solid var(--color-outline);
-		border-radius: var(--radius-sm);
-		background: transparent;
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		font-weight: 400;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		color: var(--color-text-secondary);
-	}
-
-	.focus-dossier__eyebrow,
-	.focus-dossier__label {
 		margin: 0;
-		font-family: var(--font-mono);
-		font-size: 0.72rem;
-		text-transform: uppercase;
-		letter-spacing: 0.18em;
-		color: var(--color-text-muted);
-	}
-
-	.focus-dossier__title {
-		margin: 0.45rem 0 0;
-		font-size: 1.55rem;
-		font-weight: 400;
-		letter-spacing: -0.03em;
-		color: var(--color-text-primary);
-	}
-
-	.focus-dossier__description {
-		margin: 0.85rem 0 0;
-		max-width: 34rem;
-		font-size: 1rem;
-		line-height: 1.7;
-		color: var(--color-text-secondary);
-	}
-
-	.focus-dossier__tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin: 1rem 0 0;
 		padding: 0;
 		list-style: none;
 	}
 
-	.focus-dossier__tag {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.25rem 0.5rem;
-		border: 1px solid var(--color-outline);
-		border-radius: var(--radius-sm);
-		background: transparent;
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--color-text-secondary);
-	}
-
-	.focus-dossier__detail {
-		display: grid;
-		gap: 1rem;
-		padding-top: 1rem;
-		border-top: 1px solid var(--color-border);
-	}
-
-	.focus-dossier__signal-block {
-		display: grid;
-		gap: 0.35rem;
-	}
-
-	.focus-dossier__signal {
-		margin: 0;
-		max-width: 34rem;
-		font-size: 0.93rem;
-		line-height: 1.55;
-		color: var(--color-text-primary);
-	}
-
-	.focus-dossier__items {
-		display: grid;
-		gap: 0.8rem;
-		margin: 0;
-	}
-
-	.focus-dossier__detail-card {
-		display: grid;
-		min-height: 7.5rem;
-		padding: 0.8rem 0.9rem;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
+	.help-card {
+		display: flex;
+		flex-direction: column;
+		padding: 1.75rem;
+		border-radius: var(--radius-container);
 		background: var(--color-surface-container-lowest);
+		border: 1px solid var(--color-border);
 	}
 
-	.focus-dossier__item-stack {
-		display: grid;
-		gap: 0.7rem;
+	.help-card__title {
 		margin: 0;
-	}
-
-	.focus-dossier__item-row {
-		display: grid;
-		gap: 0.22rem;
-	}
-
-	.focus-dossier__item-row + .focus-dossier__item-row {
-		padding-top: 0.7rem;
-		border-top: 1px solid var(--color-border);
-	}
-
-	.focus-dossier__item-row dt {
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
+		font-family: var(--font-display);
+		font-size: 1.75rem;
 		font-weight: 400;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--color-text-muted);
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+		color: var(--color-text-primary);
+		text-wrap: balance;
 	}
 
-	.focus-dossier__item-row dd {
-		margin: 0;
-		font-family: var(--font-sans);
-		font-size: 0.875rem;
-		line-height: 1.5;
+	.help-card__summary {
+		margin: 0.85rem 0 0;
+		font-size: 1rem;
+		line-height: 1.65;
 		color: var(--color-text-secondary);
 	}
 
 	@media (min-width: 64rem) {
-		.focus-dossier {
-			grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
-			gap: 2rem;
-			padding: 1.7rem;
-		}
-
-		.focus-dossier__detail {
-			padding-top: 0;
-			padding-left: 2rem;
-			border-top: 0;
-			border-left: 1px solid var(--color-border);
-		}
-
-		.focus-dossier__items {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.focus-dossier {
-			transition:
-				background-color var(--fx-duration-fast) ease,
-				border-color var(--fx-duration-fast) ease;
+		.help-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 1.25rem;
 		}
 	}
 </style>

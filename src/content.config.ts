@@ -1,11 +1,12 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 /**
  * Hero Section — Primary headline and introduction
  */
 const hero = defineCollection({
-	loader: glob({ base: './src/content/hero', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/hero', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		tagline: z.string().optional(),
@@ -23,7 +24,7 @@ const hero = defineCollection({
  * Experience Section — Role history with company and dates
  */
 const experience = defineCollection({
-	loader: glob({ base: './src/content/experience', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/experience', pattern: '**/*.md' }),
 	schema: z.object({
 		role: z.string(),
 		company: z.string(),
@@ -37,7 +38,7 @@ const experience = defineCollection({
  * Selected Impact — Metrics and results
  */
 const selectedImpact = defineCollection({
-	loader: glob({ base: './src/content/selected-impact', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/selected-impact', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		metric: z.string(),
@@ -51,22 +52,25 @@ const selectedImpact = defineCollection({
  * Case Studies — Project summaries
  */
 const caseStudies = defineCollection({
-	loader: glob({ base: './src/content/case-studies', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/case-studies', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		slug: z.string(),
 		summary: z.string(),
 		tags: z.array(z.string()).optional(),
+		client: z.string().optional(),
+		sector: z.string().optional(),
+		stack: z.string().optional(),
 		order: z.number().optional(),
-		url: z.string().url().optional(),
+		url: z.url().optional(),
 	}),
 });
 
 /**
- * Technical Focus — Skills and tools (tabbed interface)
+ * Technical Focus — "How I help" outcome areas
  */
 const technicalFocus = defineCollection({
-	loader: glob({ base: './src/content/technical-focus', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/technical-focus', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		category: z.enum(['cloud-infrastructure', 'ai-automation', 'system-integrations']),
@@ -77,15 +81,15 @@ const technicalFocus = defineCollection({
  * Contact — LinkedIn and GitHub connection
  */
 const contact = defineCollection({
-	loader: glob({ base: './src/content/contact', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/contact', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string().default('Contact'),
 		location: z.string().optional(),
-		linkedinUrl: z.string().url(),
+		linkedinUrl: z.url(),
 		linkedinHandle: z.string().optional(),
-		githubUrl: z.string().url().optional(),
+		githubUrl: z.url().optional(),
 		githubHandle: z.string().optional(),
-		email: z.string().email().optional(),
+		email: z.email().optional(),
 	}),
 });
 

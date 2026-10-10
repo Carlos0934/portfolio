@@ -7,19 +7,19 @@ const { locale = 'en' } = Astro.props;
 const isSpanish = locale === 'es';
 const experienceTranslations: Record<string, { role: string; location: string; body: string }> = {
 	'pricetravel-holding': {
-		role: 'Backend Developer — Conectividad hotelera y sistemas de cotización',
+		role: 'Backend Developer — Conectividad hotelera y cotización',
 		location: 'Remoto (US)',
-		body: 'Construí y mantuve integraciones con proveedores hoteleros como SiteMinder, TravelClick, Omnibees, Gin RateFox y TravelGate HotelX, habilitando sincronización de tarifas y disponibilidad en tiempo real. Optimicé conexiones existentes con Hotelbeds, DerbySoft, SynXis y Expedia Rapid API para mejorar confiabilidad. Desarrollé vistas materializadas respaldadas por DAX para tasas de cambio y promociones, reduciendo carga de consulta y latencia de recuperación de moneda.',
+		body: 'Responsable de la conectividad con proveedores hoteleros y de las rutas de datos detrás del motor de cotización, trabajando con el equipo de cotización en precisión y tiempo de respuesta.',
 	},
 	listoapp: {
-		role: 'Backend Developer — Plataformas SaaS e infraestructura cloud',
+		role: 'Backend Developer — Plataformas SaaS y cloud',
 		location: 'Remoto (US)',
-		body: 'Reduje el cold start de AWS Lambda en 50% mediante bundling previo al despliegue. Construí sistemas de notificación orientados a eventos con SNS y EventBridge. Entregué APIs GraphQL para plataformas SaaS multi-tenant como Sektor.app y Centuria.app usando NestJS, TypeScript y MongoDB. Creé una API en tiempo real en Go para RoulettesView.com monitoreando 128 mesas por WebSockets. Automaticé despliegues con CI/CD en GitHub Actions.',
+		body: 'Entrega backend y cloud para los productos SaaS de la empresa y plataformas de clientes, desde el diseño de APIs hasta el rendimiento serverless y CI/CD.',
 	},
 	drimo: {
-		role: 'Software Developer — Desarrollo web y móvil',
+		role: 'Software Developer',
 		location: 'Remoto',
-		body: 'Construí aplicaciones web y móviles cross-platform con React. Mantuve y optimicé APIs serverless en AWS para mejorar confiabilidad y eficiencia de costos. Desarrollé funcionalidades para un ecosistema de microservicios con NestJS y GraphQL. Migré el blog y sitio web de la compañía a Next.js mediante scraping automatizado, mejorando velocidad de carga y SEO.',
+		body: 'Migré el sitio web y el blog de la empresa a un stack más rápido y amigable con SEO mediante una migración automatizada, y mantuve APIs serverless confiables y eficientes en costo mientras entregaba funcionalidades web y móviles.',
 	},
 };
 
@@ -34,16 +34,16 @@ const experiencesWithContent = await Promise.all(
 const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="experience" class="experience-section border-b border-border bg-surface-container-low py-12 section-reveal md:py-16">
-	<div class="mx-auto max-w-4xl px-4">
-		<p class="mb-2 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-i18n="experience.eyebrow">
+<section id="experience" class="experience-section border-b border-border bg-surface-container-low py-16 section-reveal md:py-24">
+	<div class="mx-auto max-w-6xl px-4 lg:px-8">
+		<p class="section-label mb-4" data-i18n="experience.eyebrow">
 			{isSpanish ? 'Trayectoria' : 'Career path'}
 		</p>
-		<h2 class="mb-6 text-2xl font-normal tracking-tight text-text-primary md:text-3xl" data-i18n="experience.title">
+		<h2 class="section-title mb-10" data-i18n="experience.title">
 			{isSpanish ? 'Experiencia' : 'Experience'}
 		</h2>
 
-		<div class="experience-list space-y-6" data-experience-list>
+		<div class="experience-list max-w-3xl space-y-10" data-experience-list>
 			{sortedExperiences.map((item, index) => (
 				<article class="experience-entry relative pl-6" style={`--experience-delay: ${index * 90}ms;`}>
 					<div class="experience-marker" aria-hidden="true">
@@ -52,7 +52,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 					</div>
 
 					<div class="experience-entry__header mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-						<h3 class="experience-entry__title text-lg font-normal text-text-primary" data-i18n={`experience.${item.id}.role`}>
+						<h3 class="experience-entry__title text-lg font-semibold tracking-tight text-text-primary" data-i18n={`experience.${item.id}.role`}>
 							{isSpanish ? experienceTranslations[item.id]?.role ?? item.data.role : item.data.role}
 						</h3>
 						<span class="experience-entry__company text-text-muted">
@@ -60,7 +60,7 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 						</span>
 					</div>
 
-					<div class="experience-entry__meta mb-3 font-mono text-sm text-text-muted">
+					<div class="experience-entry__meta mb-3 text-sm text-text-muted">
 						{item.data.dateRange}
 						{item.data.location && <span> · <span data-i18n={`experience.${item.id}.location`}>{isSpanish ? experienceTranslations[item.id]?.location ?? item.data.location : item.data.location}</span></span>}
 					</div>
@@ -222,8 +222,8 @@ const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b
 		width: 8px;
 		height: 8px;
 		border-radius: 50%;
-		background: var(--color-text-muted);
-		border: 1px solid var(--color-border-strong);
+		background: var(--color-primary);
+		border: 1px solid var(--color-primary);
 		opacity: 0;
 		transform: translateX(-50%) translateY(0) scale(0.45);
 		transition:

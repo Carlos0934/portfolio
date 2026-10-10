@@ -1,12 +1,15 @@
 ---
-title: "Real-Time Streaming API"
+title: "Live results from 128 sources, in real time"
 slug: "real-time-streaming-api"
-summary: "Created a Go-based real-time API and Chrome-powered scraper that tracked 128 roulette tables and emitted deduplicated live results over WebSockets."
+summary: "A live-data product needed fast-changing results from 128 tables delivered to users instantly and without duplicates. I built a concurrent collection pipeline and a real-time API that streams one clean event per change."
 tags:
   - Real-Time Data
   - Event Streaming
   - Data Normalization
   - Live Monitoring
+client: "RoulettesView.com"
+sector: "Real-time data"
+stack: "Go · WebSockets · Chrome-based scraping"
 order: 4
 ---
 

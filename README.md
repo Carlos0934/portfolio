@@ -27,7 +27,7 @@ The site presents senior software engineering work across backend systems, SaaS 
 - Astro
 - TypeScript
 - Tailwind CSS v4
-- MDX/content collections
+- Markdown content collections
 - Cloudflare Wrangler
 
 ## Project Structure

@@ -3,102 +3,168 @@ import { getCollection } from 'astro:content';
 
 const caseEntries = await getCollection('caseStudies');
 const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
-const cardClass = 'case-card flex h-full flex-col rounded-lg border border-border bg-surface-container p-5 md:p-6 transition-colors hover:border-border-strong';
 interface Props {
 	locale?: 'en' | 'es';
 }
 const { locale = 'en' } = Astro.props;
 const isSpanish = locale === 'es';
-const caseTranslations: Record<string, { title?: string; summary: string }> = {
+const caseTranslations: Record<string, { title: string; summary: string; sector: string }> = {
 	'socrates-curriculum-grounded-exam-generation': {
-		summary: 'Construí una plataforma de exámenes basada en currículo para docentes dominicanos que convierte secuencias oficiales del MINERD en exámenes DOCX editables, reduciendo preparación de 40 a 10 minutos y de 90 a 15 minutos para usuarios con menor habilidad digital.',
+		title: 'Exámenes en minutos, no en horas',
+		summary: 'Docentes dominicanos dedicaban de 40 a 90 minutos a convertir el currículo oficial del MINERD en un examen utilizable. Sócrates genera un examen DOCX editable y alineado al currículo en 10 a 15 minutos.',
+		sector: 'EdTech · República Dominicana',
 	},
 	'hotel-connectivity-quote-performance': {
-		title: 'Conectividad hotelera y rendimiento de cotización',
-		summary: 'Construí integraciones con proveedores hoteleros y rutas de datos optimizadas que mejoraron sincronización, respuesta de cotizaciones y consistencia de APIs en sistemas de inventario travel-tech.',
+		title: 'Cotizaciones hoteleras sincronizadas con el inventario en vivo',
+		summary: 'La cotización dependía de muchos proveedores hoteleros con comportamientos y latencias distintas. Construí y reforcé las conexiones con proveedores y cacheé tasas de cambio y promociones, para que el motor de cotización obtenga tarifas y disponibilidad actualizadas consultando menos la base de datos.',
+		sector: 'Travel-tech',
 	},
 	'multi-tenant-saas-platform-apis': {
-		title: 'APIs para plataformas SaaS multi-tenant',
-		summary: 'Construí backends para productos SaaS multi-tenant que conectan aseguradoras, proveedores de servicio, agentes y operaciones internas.',
+		title: 'Una plataforma para aseguradoras, proveedores y agentes',
+		summary: 'Dos productos SaaS en crecimiento necesitaban atender varios roles de usuario sobre infraestructura compartida. Construí los backends de Sektor.app y Centuria.app, con notificaciones orientadas a eventos que mantienen a cada parte informada mientras avanza el trabajo.',
+		sector: 'SaaS multi-tenant',
 	},
 	'real-time-streaming-api': {
-		title: 'API de datos en tiempo real',
-		summary: 'Creé una API en tiempo real y un scraper controlado por navegador que monitorea 128 mesas y emite resultados deduplicados por WebSockets.',
+		title: 'Resultados en vivo de 128 fuentes, en tiempo real',
+		summary: 'Un producto de datos en vivo necesitaba entregar al instante y sin duplicados resultados cambiantes de 128 mesas. Construí un pipeline de recolección concurrente y una API en tiempo real que emite un evento limpio por cada cambio.',
+		sector: 'Datos en tiempo real',
 	},
 };
+const t = (slug: string, key: 'title' | 'summary' | 'sector', fallback = '') =>
+	isSpanish ? caseTranslations[slug]?.[key] ?? fallback : fallback;
 ---
 
-<section id="case-studies" class="case-studies border-b border-border py-14 md:py-20 bg-background" data-reveal>
-	<div class="mx-auto max-w-6xl px-4">
-		<div class="mb-8 md:mb-12">
-			<p class="case-studies__eyebrow mb-3 font-mono text-xs uppercase tracking-[0.22em] text-text-muted" data-reveal-item data-i18n="cases.eyebrow">
-				{isSpanish ? 'Prueba de trabajo' : 'Proof of work'}
+<section id="case-studies" class="border-b border-border bg-background py-16 md:py-24" data-reveal>
+	<div class="mx-auto max-w-6xl px-4 lg:px-8">
+		<div class="mb-10 max-w-3xl md:mb-14">
+			<p class="section-label mb-4" data-reveal-item data-i18n="cases.eyebrow">
+				{isSpanish ? 'Trabajo seleccionado' : 'Selected work'}
 			</p>
-			<h2 class="case-studies__title text-2xl font-normal tracking-tight text-text-primary md:text-3xl" data-reveal-item style="--reveal-delay: 70ms;" data-i18n="cases.title">
-				{isSpanish ? 'Casos de estudio seleccionados' : 'Selected Case Studies'}
+			<h2 class="section-title" data-reveal-item style="--reveal-delay: 70ms;" data-i18n="cases.title">
+				{isSpanish ? 'Problemas reales, resultados medibles.' : 'Real problems, measurable results.'}
 			</h2>
-			<p class="case-studies__intro mt-3 max-w-2xl text-base text-text-secondary md:text-lg" data-reveal-item style="--reveal-delay: 140ms;" data-i18n="cases.intro">
-				{isSpanish ? 'Proyectos backend y de plataforma donde la confiabilidad de integraciones, la arquitectura orientada a eventos y la eficiencia operativa fueron objetivos principales.' : 'Backend and platform projects where integration reliability, event-driven architecture, and operational efficiency were the primary objectives.'}
-			</p>
 		</div>
-		<ul class="grid gap-6 lg:grid-cols-2" role="list">
+
+		<ol class="case-list" role="list">
 			{cases.map((item, index) => (
-				item.data.url ? (
-					<li data-reveal-item style={`--reveal-delay: ${160 + index * 80}ms;`}>
-						<a class={`${cardClass} case-card--linked hover:bg-surface-container-high focus-visible:bg-surface-container-high`} href={item.data.url} target="_blank" rel="noreferrer">
-							<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl" data-i18n={`case.${item.data.slug}.title`}>
-								{isSpanish ? caseTranslations[item.data.slug]?.title ?? item.data.title : item.data.title}
-							</h3>
-							<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base" data-i18n={`case.${item.data.slug}.summary`}>
-								{isSpanish ? caseTranslations[item.data.slug]?.summary ?? item.data.summary : item.data.summary}
-							</p>
-							{item.data.tags && item.data.tags.length > 0 && (
-								<ul class="mb-5 flex flex-wrap gap-2" role="list">
-									{item.data.tags.map((tag) => (
-										<li class="inline-flex items-center rounded-md bg-transparent px-2 py-1 font-mono text-xs font-normal uppercase tracking-[0.05em] text-text-muted border border-border-strong">
-											{tag}
-										</li>
-									))}
-								</ul>
-							)}
-							<span class="mt-auto font-mono text-xs uppercase tracking-[0.14em] text-text-muted transition-colors" data-i18n="case.cta">
-								{isSpanish ? 'Ver proyecto ->' : 'View project ->'}
+				<li class="case-row" data-reveal-item style={`--reveal-delay: ${120 + index * 70}ms;`}>
+					<div class="case-row__context">
+						{item.data.client && <span class="case-row__client">{item.data.client}</span>}
+						{item.data.sector && (
+							<span class="case-row__sector" data-i18n={`case.${item.data.slug}.sector`}>
+								{t(item.data.slug, 'sector', item.data.sector)}
 							</span>
-						</a>
-					</li>
-				) : (
-					<li data-reveal-item style={`--reveal-delay: ${160 + index * 80}ms;`}>
-						<article class={cardClass}>
-							<h3 class="mb-2 text-lg font-normal tracking-tight text-text-primary md:text-xl" data-i18n={`case.${item.data.slug}.title`}>
-								{isSpanish ? caseTranslations[item.data.slug]?.title ?? item.data.title : item.data.title}
-							</h3>
-							<p class="mb-4 flex-1 text-sm leading-relaxed text-text-secondary md:text-base" data-i18n={`case.${item.data.slug}.summary`}>
-								{isSpanish ? caseTranslations[item.data.slug]?.summary ?? item.data.summary : item.data.summary}
-							</p>
-							{item.data.tags && item.data.tags.length > 0 && (
-								<ul class="flex flex-wrap gap-2" role="list">
-									{item.data.tags.map((tag) => (
-										<li class="inline-flex items-center rounded-md bg-transparent px-2 py-1 font-mono text-xs font-normal uppercase tracking-[0.05em] text-text-muted border border-border-strong">
-											{tag}
-										</li>
-									))}
-								</ul>
+						)}
+					</div>
+					<div class="case-row__body">
+						<h3 class="case-row__title" data-i18n={`case.${item.data.slug}.title`}>
+							{t(item.data.slug, 'title', item.data.title)}
+						</h3>
+						<p class="case-row__summary" data-i18n={`case.${item.data.slug}.summary`}>
+							{t(item.data.slug, 'summary', item.data.summary)}
+						</p>
+						<div class="case-row__footer">
+							{item.data.stack && <span class="case-row__stack">{item.data.stack}</span>}
+							{item.data.url && (
+								<a class="case-row__link" href={item.data.url} target="_blank" rel="noreferrer" data-i18n="case.cta">
+									{isSpanish ? 'Ver proyecto →' : 'View project →'}
+								</a>
 							)}
-						</article>
-					</li>
-				)
+						</div>
+					</div>
+				</li>
 			))}
-		</ul>
+		</ol>
 	</div>
 </section>
 
 <style>
-	.case-card {
-		text-decoration: none;
+	.case-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-top: 1px solid var(--color-border-strong);
 	}
 
-	.case-card--linked:hover > span:last-child,
-	.case-card--linked:focus-visible > span:last-child {
+	.case-row {
+		display: grid;
+		gap: 1.25rem;
+		padding: 2rem 0;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.case-row__context {
+		display: grid;
+		gap: 0.35rem;
+		align-content: start;
+		padding-top: 0.35rem;
+	}
+
+	.case-row__client {
+		font-size: 0.95rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--color-primary);
+	}
+
+	.case-row__sector {
+		font-size: 0.85rem;
+		line-height: 1.4;
+		color: var(--color-text-muted);
+	}
+
+	.case-row__title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+		font-weight: 400;
+		line-height: 1.15;
+		letter-spacing: -0.01em;
 		color: var(--color-text-primary);
+		text-wrap: balance;
+	}
+
+	.case-row__summary {
+		margin: 0.75rem 0 0;
+		max-width: 44rem;
+		font-size: 1.02rem;
+		line-height: 1.7;
+		color: var(--color-text-secondary);
+		text-wrap: pretty;
+	}
+
+	.case-row__footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.75rem 1.5rem;
+		margin-top: 1.1rem;
+	}
+
+	.case-row__stack {
+		font-size: 0.85rem;
+		color: var(--color-text-muted);
+	}
+
+	.case-row__link {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--color-primary);
+		text-decoration: none;
+		text-underline-offset: 0.25em;
+	}
+
+	.case-row__link:hover,
+	.case-row__link:focus-visible {
+		text-decoration: underline;
+	}
+
+	@media (min-width: 48rem) {
+		.case-row {
+			grid-template-columns: 13rem minmax(0, 1fr);
+			gap: 2.5rem;
+			padding: 2.5rem 0;
+		}
 	}
 </style>

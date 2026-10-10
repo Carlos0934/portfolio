@@ -1,69 +1,71 @@
 @import "tailwindcss";
 
-/* Operator Core Design System — Dark-first palette */
+/* Editorial Light Design System — warm paper, ink type, one navy accent */
 @theme {
 	/* Typography */
 	--font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Instrument Serif", ui-serif, Georgia, serif;
 	--font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-	/* Core Colors — Operator Core base #1F2228 */
-	--color-background: #1F2228;
-	--color-foreground: #ffffff;
+	/* Core Colors — warm paper base */
+	--color-background: #F5F2EC;
+	--color-foreground: #15171C;
 
-	/* Surface layers per DESIGN.md */
-	--color-surface: #1F2228;
-	--color-surface-dim: rgba(255, 255, 255, 0.03);
-	--color-surface-bright: rgba(255, 255, 255, 0.08);
-	--color-surface-container-lowest: #1F2228;
-	--color-surface-container-low: rgba(255, 255, 255, 0.03);
-	--color-surface-container: rgba(255, 255, 255, 0.05);
-	--color-surface-container-high: rgba(255, 255, 255, 0.08);
-	--color-surface-container-highest: rgba(255, 255, 255, 0.10);
-	--color-surface-variant: rgba(255, 255, 255, 0.10);
+	/* Surface layers — ink tints over paper */
+	--color-surface: #F5F2EC;
+	--color-surface-dim: rgba(21, 23, 28, 0.03);
+	--color-surface-bright: #FBFAF7;
+	--color-surface-container-lowest: #FBFAF7;
+	--color-surface-container-low: #EFEBE3;
+	--color-surface-container: rgba(21, 23, 28, 0.05);
+	--color-surface-container-high: rgba(21, 23, 28, 0.08);
+	--color-surface-container-highest: rgba(21, 23, 28, 0.10);
+	--color-surface-variant: rgba(21, 23, 28, 0.10);
 
 	/* Backward-compatible aliases */
-	--color-surface-alt: rgba(255, 255, 255, 0.03);
-	--color-surface-elevated: rgba(255, 255, 255, 0.06);
-	--color-surface-hover: rgba(255, 255, 255, 0.08);
+	--color-surface-alt: #EFEBE3;
+	--color-surface-elevated: #FBFAF7;
+	--color-surface-hover: rgba(21, 23, 28, 0.06);
 
 	/* Borders */
-	--color-border: rgba(255, 255, 255, 0.10);
-	--color-border-strong: rgba(255, 255, 255, 0.20);
-	--color-outline: rgba(255, 255, 255, 0.20);
-	--color-outline-variant: rgba(255, 255, 255, 0.10);
-	--color-focus-ring: #365C8D;
+	--color-border: rgba(21, 23, 28, 0.10);
+	--color-border-strong: rgba(21, 23, 28, 0.20);
+	--color-outline: rgba(21, 23, 28, 0.20);
+	--color-outline-variant: rgba(21, 23, 28, 0.10);
+	--color-focus-ring: #1F3470;
 
 	/* Text */
-	--color-text-primary: #ffffff;
-	--color-text-secondary: rgba(255, 255, 255, 0.70);
-	--color-text-muted: rgba(255, 255, 255, 0.50);
+	--color-text-primary: #15171C;
+	--color-text-secondary: rgba(21, 23, 28, 0.74);
+	--color-text-muted: rgba(21, 23, 28, 0.60);
 
-	/* Accent */
-	--color-primary: #365C8D;
-	--color-primary-hover: #426A9E;
-	--color-primary-active: #2C4D78;
-	--color-primary-container: rgba(54, 92, 141, 0.20);
-	--color-on-primary-container: #ffffff;
-	--color-signal: #20899F;
-	--color-secondary: #20899F;
-	--color-secondary-container: rgba(32, 137, 159, 0.18);
-	--color-on-secondary-container: #ffffff;
+	/* Accent — a single navy blue */
+	--color-primary: #1F3470;
+	--color-primary-hover: #182A5C;
+	--color-primary-active: #12204A;
+	--color-primary-container: rgba(31, 52, 112, 0.10);
+	--color-on-primary: #ffffff;
+	--color-on-primary-container: #182A5C;
+	--color-signal: #1F3470;
+	--color-secondary: #1F3470;
+	--color-secondary-container: rgba(31, 52, 112, 0.10);
+	--color-on-secondary-container: #182A5C;
 
 	/* Semantic States */
-	--color-success: #2F8F72;
-	--color-warning: #B98733;
-	--color-danger: #B25461;
-	--color-info: #4C83C3;
+	--color-success: #2F7A5F;
+	--color-warning: #9A6B1F;
+	--color-danger: #A3404E;
+	--color-info: #2F6AA3;
 
-	/* Radius — Sharp and Controlled per DESIGN.md */
-	--radius-sm: 0px;
-	--radius-DEFAULT: 2px;
-	--radius-md: 4px;
-	--radius-lg: 8px;
-	--radius-xl: 12px;
+	/* Radius */
+	--radius-sm: 2px;
+	--radius-DEFAULT: 4px;
+	--radius-md: 6px;
+	--radius-lg: 10px;
+	--radius-xl: 16px;
 	--radius-full: 9999px;
-	--radius-interactive: 8px;
-	--radius-container: 8px;
+	--radius-interactive: 9999px;
+	--radius-container: 12px;
 
 	/* Spacing Scale — 8px base */
 	--spacing-xs: 4px;
@@ -90,9 +92,33 @@
 
 @font-face {
 	font-family: "Inter";
+	src: url("/fonts/inter-600.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Inter";
 	src: url("/fonts/inter-bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Instrument Serif";
+	src: url("/fonts/instrument-serif-400.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Instrument Serif";
+	src: url("/fonts/instrument-serif-400-italic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
 	font-display: swap;
 }
 
@@ -723,38 +749,44 @@ button:focus-visible {
 	color: var(--color-text-secondary);
 }
 
-/* Eyebrow Status */
-.eyebrow-status {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.25rem;
-}
-
-.eyebrow-status__cursor {
-	display: inline-block;
-	width: 0.15em;
-	height: 1.1em;
-	background-color: rgb(255 255 255 / 0.9);
-	opacity: 1;
-	animation: cursor-blink 1s steps(1, end) infinite;
-	margin-left: 0.25em;
-	vertical-align: middle;
-}
-
-@keyframes cursor-blink {
-	0%, 49% {
-		opacity: 1;
+/* Editorial type utilities — layered so Tailwind spacing utilities still apply */
+@layer components {
+	/* Section label — small uppercase kicker above headings */
+	.section-label {
+		margin: 0;
+		font-family: var(--font-sans);
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
 	}
-	50%, 100% {
-		opacity: 0;
+
+	/* Display headings — editorial serif */
+	.font-display {
+		font-family: var(--font-display);
+		font-weight: 400;
+		letter-spacing: -0.01em;
+	}
+
+	.section-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+		font-weight: 400;
+		line-height: 1.05;
+		letter-spacing: -0.015em;
+		color: var(--color-text-primary);
+		text-wrap: balance;
+	}
+
+	.section-title em {
+		font-style: italic;
+		color: var(--color-primary);
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.eyebrow-status__cursor {
-		animation: none;
-	}
-
 	.fx-entrance {
 		animation: none;
 		opacity: 1;
