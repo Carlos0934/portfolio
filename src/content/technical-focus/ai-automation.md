@@ -1,9 +1,6 @@
 ---
-title: "Full-Stack Delivery"
+title: "Turn repetitive work into minutes"
 category: "ai-automation"
 ---
 
-Shipping product and platform systems across backend, frontend, and service layers with a strong emphasis on maintainability.
-
-- **Languages & runtime**: TypeScript, JavaScript, C#, Go, SQL, Node.js
-- **Frameworks & services**: NestJS, React, Next.js, .NET 8, GraphQL, Serverless Framework
+Automation and AI that remove manual steps, while people stay in charge of the decisions that matter.

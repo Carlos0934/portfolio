@@ -1,9 +1,6 @@
 ---
-title: "Connectivity & APIs"
+title: "Connect the systems a business runs on"
 category: "system-integrations"
 ---
 
-Designing integration-heavy systems that connect travel providers, quoting engines, and multi-tenant SaaS products.
-
-- **Provider integrations**: SiteMinder, TravelClick, Omnibees, Gin RateFox, TravelGate HotelX, and other travel APIs
-- **Data & caching**: PostgreSQL, MongoDB, Redis, DAX, DynamoDB
+Products, providers, and partners share data reliably, without manual re-entry or out-of-sync records.

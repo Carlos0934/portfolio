@@ -59,7 +59,7 @@ export const spanishProfilePageJsonLd = {
 	url: `${SITE_URL}/es/`,
 	name: `${SITE_TITLE} - Senior Software Engineer`,
 	description:
-		'Ingeniero senior de software especializado en sistemas backend escalables, arquitectura SaaS, integraciones travel-tech, infraestructura cloud y automatización con IA.',
+		'Ingeniero de software senior que construye sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos en productos travel-tech, SaaS y educación.',
 	inLanguage: 'es',
 };
 
@@ -94,9 +94,9 @@ export const caseStudyJsonLd = [
 		'@context': 'https://schema.org',
 		'@type': 'CreativeWork',
 		'@id': `${SITE_URL}/#socrates-case-study`,
-		name: 'Sócrates',
+		name: 'Sócrates: exam prep in minutes, not hours',
 		description:
-			'Curriculum-grounded exam generation platform for Dominican teachers using official MINERD teaching sequences, document retrieval, OCR, structured extraction, grounded AI generation, and editable DOCX output.',
+			'Curriculum-grounded exam generation for Dominican teachers. Cuts exam preparation by about 75%, from 40–90 minutes to 10–15 minutes, producing editable DOCX exams grounded in official MINERD teaching sequences.',
 		creator: { '@id': `${SITE_URL}/#person` },
 		url: 'https://socrates.xavely.com',
 		keywords: ['Workflow automation', 'Document intelligence', 'Curriculum grounding', 'Teacher productivity'],
@@ -105,9 +105,9 @@ export const caseStudyJsonLd = [
 		'@context': 'https://schema.org',
 		'@type': 'CreativeWork',
 		'@id': `${SITE_URL}/#hotel-connectivity-case-study`,
-		name: 'Hotel Connectivity & Quote Performance',
+		name: 'Hotel quotes that stay in sync with live inventory',
 		description:
-			'Hotel provider integration and quote-performance work improving synchronization, data reliability, and operational efficiency for travel inventory systems.',
+			'Built and hardened 9 hotel provider integrations and cached exchange rates and promotions, keeping quotes in sync with live inventory while reducing database load.',
 		creator: { '@id': `${SITE_URL}/#person` },
 		url: 'https://pricetravel.com',
 		keywords: ['Provider integration', 'Quote performance', 'Data reliability', 'Operational efficiency'],
@@ -116,9 +116,9 @@ export const caseStudyJsonLd = [
 		'@context': 'https://schema.org',
 		'@type': 'CreativeWork',
 		'@id': `${SITE_URL}/#saas-platform-case-study`,
-		name: 'Multi-Tenant SaaS Platform APIs',
+		name: 'One platform for insurers, providers, and agents',
 		description:
-			'Backend platform work for multi-tenant SaaS products connecting insurers, service providers, agents, and internal operations.',
+			'Backends for two multi-tenant SaaS products, Sektor.app and Centuria.app, with event-driven notifications that keep insurers, service providers, and agents in the loop.',
 		creator: { '@id': `${SITE_URL}/#person` },
 		url: 'https://sektor.app/',
 		keywords: ['Multi-tenant SaaS', 'Platform APIs', 'Workflow systems', 'Product infrastructure'],

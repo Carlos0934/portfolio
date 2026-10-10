@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../sections/Hero.astro';
-import ValueStrip from '../sections/ValueStrip.astro';
 import CaseStudies from '../sections/CaseStudies.astro';
 import Experience from '../sections/Experience.astro';
 import TechnicalFocus from '../sections/TechnicalFocus.astro';
@@ -10,7 +9,7 @@ import HomeLanguage from '../components/HomeLanguage.astro';
 import { homeStructuredData } from '../lib/structuredData';
 
 const description =
-	'Senior Software Engineer specializing in scalable backend systems, SaaS architecture, travel-tech integrations, cloud infrastructure, and AI workflow automation.';
+	'Senior Software Engineer building backend systems that save teams time and keep revenue-critical flows fast and reliable across travel-tech, SaaS, and education products.';
 ---
 
 <BaseLayout
@@ -26,7 +25,6 @@ const description =
 	structuredData={homeStructuredData}
 >
 	<Hero />
-	<ValueStrip />
 	<CaseStudies />
 	<Experience />
 	<TechnicalFocus />

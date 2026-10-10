@@ -1,12 +1,15 @@
 ---
-title: "Multi-Tenant SaaS Platform APIs"
+title: "One platform for insurers, providers, and agents"
 slug: "multi-tenant-saas-platform-apis"
-summary: "Built GraphQL and REST backends for multi-tenant SaaS products connecting insurers, service providers, agents, and internal operations."
+summary: "Two growing SaaS products needed to serve several user roles on shared infrastructure. I built the backends behind Sektor.app and Centuria.app, with event-driven notifications that keep every party in the loop as work moves forward."
 tags:
   - Multi-Tenant SaaS
   - Platform APIs
   - Workflow Systems
   - Product Infrastructure
+client: "Sektor.app & Centuria.app"
+sector: "Multi-tenant SaaS"
+stack: "TypeScript · NestJS · GraphQL · MongoDB · AWS SNS/EventBridge"
 order: 3
 url: "https://sektor.app/"
 ---

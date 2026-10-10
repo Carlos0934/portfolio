@@ -108,8 +108,8 @@ const stackGroups = [
 				</div>
 				<p class="cv-meta">
 					{isSpanish ? 'Estados Unidos · Abierto a remoto o híbrido' : 'United States · Open to Remote or Hybrid'}<br />
-					<a href="mailto:hello@carlos-olivo.dev">hello@carlos-olivo.dev</a> ·
-					<a href={linkedInHref} target="_blank" rel="noreferrer">LinkedIn</a> ·
+					<a href="mailto:hello@carlos-olivo.dev">hello@carlos-olivo.dev</a>{' · '}
+					<a href={linkedInHref} target="_blank" rel="noreferrer">LinkedIn</a>{' · '}
 					<a href={githubHref} target="_blank" rel="noreferrer">GitHub</a>
 				</p>
 			</div>
@@ -168,9 +168,7 @@ const stackGroups = [
 
 <style>
 	.cv-page {
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 22rem),
-			var(--color-background);
+		background: var(--color-background);
 		padding: 4rem 1rem 5rem;
 	}
 
@@ -192,7 +190,8 @@ const stackGroups = [
 	.cv-kicker,
 	.cv-section-title span {
 		margin: 0;
-		font-family: var(--font-mono);
+		font-family: var(--font-sans);
+		font-weight: 600;
 		font-size: 0.72rem;
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
@@ -204,10 +203,10 @@ const stackGroups = [
 	.cv-section-title h3,
 	.cv-job h4 {
 		margin: 0;
-		font-family: var(--font-mono);
+		font-family: var(--font-display);
 		font-weight: 400;
 		color: var(--color-text-primary);
-		letter-spacing: 0;
+		letter-spacing: -0.01em;
 	}
 
 	.cv-hero h1 {
@@ -242,7 +241,8 @@ const stackGroups = [
 		color: var(--color-text-secondary);
 		background: transparent;
 		text-decoration: none;
-		font-family: var(--font-mono);
+		font-family: var(--font-sans);
+		font-weight: 600;
 		font-size: 0.74rem;
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
@@ -256,7 +256,7 @@ const stackGroups = [
 	}
 
 	.cv-button--primary {
-		color: var(--color-text-primary);
+		color: var(--color-on-primary);
 		background: var(--color-primary);
 		border-color: var(--color-primary);
 	}
@@ -293,8 +293,8 @@ const stackGroups = [
 		max-width: 30rem;
 		text-align: right;
 		color: var(--color-text-secondary);
-		font-family: var(--font-mono);
-		font-size: 0.78rem;
+		font-family: var(--font-sans);
+		font-size: 0.82rem;
 		line-height: 1.7;
 	}
 
@@ -328,9 +328,11 @@ const stackGroups = [
 	}
 
 	.cv-section-title h3 {
-		font-size: 0.94rem;
+		font-family: var(--font-sans);
+		font-size: 0.8rem;
+		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.12em;
 	}
 
 	.cv-experience-list {
@@ -354,6 +356,8 @@ const stackGroups = [
 	}
 
 	.cv-job h4 {
+		font-family: var(--font-sans);
+		font-weight: 600;
 		font-size: 1rem;
 		line-height: 1.4;
 	}
@@ -362,7 +366,8 @@ const stackGroups = [
 	.cv-job-header span {
 		margin: 0.2rem 0 0;
 		color: var(--color-text-secondary);
-		font-family: var(--font-mono);
+		font-family: var(--font-sans);
+		font-weight: 600;
 		font-size: 0.78rem;
 		line-height: 1.5;
 	}

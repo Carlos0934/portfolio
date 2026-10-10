@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../sections/Hero.astro';
-import ValueStrip from '../../sections/ValueStrip.astro';
 import CaseStudies from '../../sections/CaseStudies.astro';
 import Experience from '../../sections/Experience.astro';
 import TechnicalFocus from '../../sections/TechnicalFocus.astro';
@@ -10,7 +9,7 @@ import HomeLanguage from '../../components/HomeLanguage.astro';
 import { spanishHomeStructuredData } from '../../lib/structuredData';
 
 const description =
-	'Ingeniero senior de software especializado en sistemas backend escalables, arquitectura SaaS, integraciones travel-tech, infraestructura cloud y automatización con IA.';
+	'Ingeniero de software senior que construye sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos en productos travel-tech, SaaS y educación.';
 ---
 
 <BaseLayout
@@ -27,7 +26,6 @@ const description =
 	structuredData={spanishHomeStructuredData}
 >
 	<Hero locale="es" />
-	<ValueStrip locale="es" />
 	<CaseStudies locale="es" />
 	<Experience locale="es" />
 	<TechnicalFocus locale="es" />

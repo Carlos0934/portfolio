@@ -6,4 +6,4 @@ order: 3
 location: "Remote"
 ---
 
-Built cross-platform web and mobile applications with React. Maintained and optimized serverless APIs on AWS for reliability and cost efficiency. Developed features for a NestJS and GraphQL microservices ecosystem. Migrated the company's blog and website to Next.js via automated web scraping, improving load speed and SEO.
+Moved the company website and blog to a faster, SEO-friendly stack through an automated migration, and kept serverless APIs reliable and cost-efficient while shipping web and mobile features.
