@@ -3,24 +3,6 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 /**
- * Hero Section — Primary headline and introduction
- */
-const hero = defineCollection({
-	loader: glob({ base: './src/content/hero', pattern: '**/*.md' }),
-	schema: z.object({
-		title: z.string(),
-		tagline: z.string().optional(),
-		description: z.string().optional(),
-		eyebrow: z.string().optional(),
-		proofSignals: z.array(z.object({
-			label: z.string(),
-			value: z.string().optional(),
-		})).optional(),
-		resumeUrl: z.string().optional(),
-	}),
-});
-
-/**
  * Experience Section — Role history with company and dates
  */
 const experience = defineCollection({
@@ -31,20 +13,10 @@ const experience = defineCollection({
 		dateRange: z.string(),
 		order: z.number(),
 		location: z.string().optional(),
-	}),
-});
-
-/**
- * Selected Impact — Metrics and results
- */
-const selectedImpact = defineCollection({
-	loader: glob({ base: './src/content/selected-impact', pattern: '**/*.md' }),
-	schema: z.object({
-		title: z.string(),
-		metric: z.string(),
-		description: z.string().optional(),
-		order: z.number(),
-		icon: z.string().optional(),
+		current: z.boolean().optional(),
+		url: z.url().optional(),
+		stack: z.string().optional(),
+		highlights: z.array(z.string()).optional(),
 	}),
 });
 
@@ -67,17 +39,6 @@ const caseStudies = defineCollection({
 });
 
 /**
- * Technical Focus — "How I help" outcome areas
- */
-const technicalFocus = defineCollection({
-	loader: glob({ base: './src/content/technical-focus', pattern: '**/*.md' }),
-	schema: z.object({
-		title: z.string(),
-		category: z.enum(['cloud-infrastructure', 'ai-automation', 'system-integrations']),
-	}),
-});
-
-/**
  * Contact — LinkedIn and GitHub connection
  */
 const contact = defineCollection({
@@ -94,10 +55,7 @@ const contact = defineCollection({
 });
 
 export const collections = {
-	hero,
 	experience,
-	selectedImpact,
 	caseStudies,
-	technicalFocus,
 	contact,
 };

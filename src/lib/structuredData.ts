@@ -13,6 +13,7 @@ export const personJsonLd = {
 	email: 'mailto:hello@carlos-olivo.dev',
 	address: {
 		'@type': 'PostalAddress',
+		addressRegion: 'GA',
 		addressCountry: 'US',
 	},
 	knowsAbout: [
@@ -22,7 +23,13 @@ export const personJsonLd = {
 		'Travel technology integrations',
 		'Event-driven systems',
 		'Cloud infrastructure',
-		'AI workflow automation',
+		'AI-assisted software development',
+		'End-to-end product development',
+	],
+	worksFor: { '@type': 'Organization', name: 'PriceTravel Holding', url: 'https://pricetravel.com' },
+	alumniOf: [
+		{ '@type': 'Organization', name: 'ListoApp' },
+		{ '@type': 'Organization', name: 'Drimo' },
 	],
 	sameAs,
 };
@@ -59,7 +66,7 @@ export const spanishProfilePageJsonLd = {
 	url: `${SITE_URL}/es/`,
 	name: `${SITE_TITLE} - Senior Software Engineer`,
 	description:
-		'Ingeniero de software senior que construye sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos en productos travel-tech, SaaS y educación.',
+		'Ingeniero de software en Georgia, EE. UU., que convierte problemas concretos en productos simples y efectivos: backend de oficio, de punta a punta cuando hace falta y con IA como aliada.',
 	inLanguage: 'es',
 };
 
@@ -122,6 +129,17 @@ export const caseStudyJsonLd = [
 		creator: { '@id': `${SITE_URL}/#person` },
 		url: 'https://sektor.app/',
 		keywords: ['Multi-tenant SaaS', 'Platform APIs', 'Workflow systems', 'Product infrastructure'],
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'CreativeWork',
+		'@id': `${SITE_URL}/#real-time-api-case-study`,
+		name: 'Live results from 128 sources, in real time',
+		description:
+			'A concurrent Go collection pipeline and WebSocket API for RoulettesView.com that streams one deduplicated event per change from 128 live sources.',
+		creator: { '@id': `${SITE_URL}/#person` },
+		url: 'https://roulettesview.com',
+		keywords: ['Real-time data', 'Event streaming', 'Go', 'WebSockets'],
 	},
 ];
 

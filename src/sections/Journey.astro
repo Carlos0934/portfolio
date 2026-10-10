@@ -1,0 +1,664 @@
+---
+import { useTranslations, type Locale } from '../lib/i18n';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const t = useTranslations(locale);
+
+// Each step drives one scene on the sticky stage; steps 3 and 4 share the map.
+const steps = [
+	{
+		scene: 'game',
+		where: 'Dominican Republic · Age 14',
+		loc: 'Dominican Republic',
+		title: 'It started with a game.',
+		paragraphs: [
+			"I taught myself to code at 14 by building a small platformer. No courses, just constant practice. The hardest part wasn't the code, it was getting people to actually play it.",
+			'That game opened the first door: someone who played it referred me to the company where he worked.',
+		],
+	},
+	{
+		scene: 'erp',
+		where: 'Softone · 2019',
+		loc: 'Dominican Republic',
+		title: 'Software a business runs on.',
+		paragraphs: [
+			'My first professional work was a desktop ERP at Softone. It taught me that software is something people depend on every day, so it has to be clear, reliable, and easy to use.',
+		],
+	},
+	{
+		scene: 'release',
+		where: 'ITelle · 2020',
+		loc: 'Dominican Republic',
+		title: 'Leading, shipping, operating.',
+		paragraphs: [
+			'My first time leading a team, across very different projects. I learned to take apps all the way out: publishing mobile apps to the stores, deploying, and keeping them running.',
+		],
+		chips: ['Team lead', 'Mobile releases', 'Deployments'],
+	},
+	{
+		scene: 'map',
+		where: 'Remote · 2022',
+		loc: 'Remote · Chile',
+		title: 'Going remote.',
+		paragraphs: [
+			'I moved to fully remote work, first with Drimo and then with ListoApp, a company based in Chile: mobile apps and multi-tenant platforms serving several kinds of users on shared infrastructure.',
+		],
+	},
+	{
+		scene: 'map',
+		where: 'Georgia, United States · 2024',
+		loc: 'Georgia, United States',
+		title: 'A new base.',
+		paragraphs: ['I moved to the United States and kept building remotely, now focused on hotel connectivity at PriceTravel.'],
+	},
+	{
+		scene: 'now',
+		where: 'Now',
+		loc: "What's next",
+		title: "What I'm looking for.",
+		paragraphs: [
+			'A team I can connect with, where I can bring AI-powered ways of building software and ship products that solve concrete problems, end to end.',
+			'Off the clock I vibe-code games, push generative AI to see how far it goes, run, and hit the gym. Never stop learning.',
+		],
+		chips: ['Product-minded', 'AI-assisted development', 'End to end'],
+	},
+];
+
+const scenes = ['game', 'erp', 'release', 'map', 'now'];
+const groundTiles = Array.from({ length: 10 }, (_, index) => index * 40);
+const erpRows = Array.from({ length: 6 }, (_, index) => ({ y: 146 + index * 19, width: 50 + ((index * 23) % 40), accent: index % 2 === 1 }));
+const appIcons = Array.from({ length: 9 }, (_, index) => ({ x: 66 + (index % 3) * 34, y: 124 + Math.floor(index / 3) * 40, accent: index === 4 }));
+const pipeline = ['Build', 'Test', 'Release', 'Live'];
+const pad = (index: number) => String(index + 1).padStart(2, '0');
+---
+
+<section id="journey" class="journey" data-journey>
+	<div class="mx-auto max-w-6xl px-4 lg:px-8">
+		<div class="journey-head" data-reveal>
+			<p class="section-label" data-reveal-item data-i18n="journey.eyebrow">{t('journey.eyebrow', 'Journey')}</p>
+			<h2 class="section-title mt-4" data-reveal-item style="--reveal-delay: 70ms;" data-i18n="journey.title">
+				{t('journey.title', 'From a first game in the Dominican Republic to building products from Georgia.')}
+			</h2>
+		</div>
+
+		<div class="journey-grid">
+			<ol class="journey-steps" role="list">
+				{steps.map((step, index) => (
+					<li class:list={['journey-step', { 'is-active': index === 0 }]} data-step data-scene={step.scene}>
+						<p class="journey-step__where">
+							<b>{pad(index)}</b>
+							<span data-i18n={`journey.${index}.where`}>{t(`journey.${index}.where`, step.where)}</span>
+						</p>
+						<span class="journey-step__loc" hidden data-i18n={`journey.${index}.loc`}>{t(`journey.${index}.loc`, step.loc)}</span>
+						<h3 class="journey-step__title" data-i18n={`journey.${index}.title`}>{t(`journey.${index}.title`, step.title)}</h3>
+						{step.paragraphs.map((paragraph, paragraphIndex) => (
+							<p class="journey-step__text" data-i18n={`journey.${index}.p${paragraphIndex + 1}`}>
+								{t(`journey.${index}.p${paragraphIndex + 1}`, paragraph)}
+							</p>
+						))}
+						{step.chips && (
+							<ul class="journey-step__chips" role="list">
+								{step.chips.map((chip, chipIndex) => (
+									<li data-i18n={`journey.${index}.chip.${chipIndex}`}>{t(`journey.${index}.chip.${chipIndex}`, chip)}</li>
+								))}
+							</ul>
+						)}
+					</li>
+				))}
+			</ol>
+
+			<div class="journey-stage-col">
+				<div class="journey-stage" aria-hidden="true">
+					<div class="bg-dots journey-stage__dots"></div>
+					<div class="journey-stage__top">
+						<span class="journey-stage__loc">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+								<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z" />
+								<circle cx="12" cy="9.5" r="2.5" />
+							</svg>
+							<span data-stage-loc>{t('journey.0.loc', steps[0].loc)}</span>
+						</span>
+						<span class="journey-stage__count" data-stage-count>01 / {pad(steps.length - 1)}</span>
+					</div>
+
+					<!-- 1. Platformer: the character walks as you scroll -->
+					<div class="journey-scene is-active" data-scene-panel="game">
+						<svg viewBox="0 0 400 440" fill="none">
+							<g class="j-cloud">
+								<rect x="40" y="70" width="40" height="12" /><rect x="50" y="60" width="20" height="10" />
+								<rect x="270" y="100" width="56" height="12" /><rect x="282" y="90" width="28" height="10" />
+							</g>
+							<rect x="140" y="200" width="32" height="32" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="172" y="200" width="32" height="32" class="j-qblock" stroke-width="2" />
+							<text x="188" y="223" text-anchor="middle" class="j-qmark" data-game-mark>?</text>
+							<rect x="204" y="200" width="32" height="32" class="j-surf j-stroke" stroke-width="2" />
+							<circle cx="188" cy="186" r="9" class="j-coin" opacity="0" data-game-coin />
+							<rect x="318" y="290" width="44" height="60" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="312" y="278" width="56" height="16" class="j-surf j-stroke" stroke-width="2" />
+							<g class="j-surf j-stroke" stroke-width="2">
+								{groundTiles.map((x) => <rect x={x} y="350" width="40" height="40" />)}
+							</g>
+							<g data-game-character transform="translate(20 310)">
+								<rect x="5" y="0" width="20" height="5" class="j-accent" />
+								<rect x="0" y="5" width="30" height="5" class="j-accent" />
+								<rect x="5" y="10" width="20" height="10" class="j-skin" />
+								<rect x="18" y="12" width="4" height="4" class="j-ink" />
+								<rect x="0" y="20" width="30" height="10" class="j-ink" />
+								<rect x="5" y="30" width="8" height="10" class="j-accent" />
+								<rect x="17" y="30" width="8" height="10" class="j-accent" />
+							</g>
+							<text x="200" y="420" text-anchor="middle" class="j-hint" data-i18n="journey.hint">{t('journey.hint', 'scroll to play')}</text>
+						</svg>
+					</div>
+
+					<!-- 2. Desktop ERP: rows fill in as you scroll -->
+					<div class="journey-scene" data-scene-panel="erp">
+						<svg viewBox="0 0 400 440" fill="none">
+							<rect x="50" y="80" width="300" height="200" rx="12" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="62" y="92" width="276" height="176" rx="6" class="j-band" />
+							<path d="M180 280h40l8 40h-56z" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="140" y="318" width="120" height="10" rx="5" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="100" y="350" width="200" height="22" rx="6" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="62" y="92" width="276" height="18" rx="6" class="j-surf" />
+							<g class="j-line"><circle cx="74" cy="101" r="3" /><circle cx="84" cy="101" r="3" /><circle cx="94" cy="101" r="3" /></g>
+							<rect x="70" y="118" width="54" height="142" rx="4" class="j-surf" />
+							<rect x="78" y="128" width="38" height="6" rx="3" class="j-accent" />
+							<g class="j-line">
+								<rect x="78" y="142" width="32" height="6" rx="3" />
+								<rect x="78" y="156" width="36" height="6" rx="3" />
+								<rect x="78" y="170" width="28" height="6" rx="3" />
+							</g>
+							<rect x="132" y="118" width="198" height="20" rx="4" class="j-surf" />
+							{erpRows.map((row) => (
+								<g data-erp-row opacity="0.15">
+									<rect x="132" y={row.y} width="198" height="15" rx="3" class="j-surf" />
+									<rect x="140" y={row.y + 5} width={row.width} height="5" rx="2.5" class="j-line" />
+									<rect x="290" y={row.y + 5} width="30" height="5" rx="2.5" class={row.accent ? 'j-accent' : 'j-line'} />
+								</g>
+							))}
+						</svg>
+					</div>
+
+					<!-- 3. Team lead: the release pipeline runs and the app gets published -->
+					<div class="journey-scene" data-scene-panel="release">
+						<svg viewBox="0 0 400 440" fill="none">
+							<rect x="50" y="90" width="130" height="250" rx="22" class="j-surf j-stroke" stroke-width="2" />
+							<rect x="95" y="100" width="40" height="6" rx="3" class="j-line" />
+							{appIcons.map((icon) => <rect x={icon.x} y={icon.y} width="26" height="26" rx="7" class={icon.accent ? 'j-accent' : 'j-line'} />)}
+							<g data-release-badge opacity="0">
+								<rect x="66" y="300" width="98" height="26" rx="13" class="j-button" />
+								<text x="115" y="317" text-anchor="middle" class="j-button-text">Published</text>
+							</g>
+							<line x1="280" y1="110" x2="280" y2="330" class="j-stroke" stroke-width="2" />
+							<line x1="280" y1="110" x2="280" y2="110" class="j-accent-stroke" stroke-width="2" data-release-progress />
+							{pipeline.map((label, index) => (
+								<g>
+									<circle cx="280" cy={110 + index * 73} r="9" class="j-surf j-stroke" stroke-width="2" data-release-node />
+									<text x="300" y={114 + index * 73} class="j-label">{label}</text>
+								</g>
+							))}
+						</svg>
+					</div>
+
+					<!-- 4–5. Map: DR → Chile (remote), then DR → Georgia (move) -->
+					<div class="journey-scene" data-scene-panel="map">
+						<div class="journey-map">
+							<div class="journey-map__dots"></div>
+							<svg viewBox="0 0 380 428" fill="none">
+								<path d="M219 125 C 160 190, 160 285, 218 334" class="j-accent-stroke" stroke-width="1.5" stroke-dasharray="4 5" data-route-chile />
+								<path d="M219 125 C 210 80, 185 62, 162 65" class="j-accent-stroke" stroke-width="2" stroke-linecap="round" data-route-us />
+								<circle cx="219" cy="125" r="5" class="j-accent" />
+								<circle cx="219" cy="125" r="5" class="j-accent j-pulse" />
+								<text x="230" y="129" class="j-map-label" data-i18n="journey.map.dr">{t('journey.map.dr', 'Dominican Republic')}</text>
+								<g data-marker-chile opacity="0">
+									<circle cx="218" cy="334" r="4" class="j-accent" />
+									<text x="229" y="338" class="j-map-label" data-i18n="journey.map.cl">{t('journey.map.cl', 'Santiago, Chile · remote')}</text>
+								</g>
+								<g data-marker-us opacity="0">
+									<circle cx="162" cy="65" r="5" class="j-accent" />
+									<circle cx="162" cy="65" r="5" class="j-accent j-pulse" />
+									<text x="152" y="52" text-anchor="end" class="j-map-label" data-i18n="journey.map.us">{t('journey.map.us', 'Georgia, US')}</text>
+								</g>
+								<circle r="4" class="j-surf j-accent-stroke" stroke-width="2" opacity="0" data-traveler />
+							</svg>
+						</div>
+					</div>
+
+					<!-- 6. Now: products, AI, and a team -->
+					<div class="journey-scene" data-scene-panel="now">
+						<svg viewBox="0 0 400 440" fill="none">
+							<circle cx="200" cy="220" r="70" class="j-stroke" stroke-dasharray="3 6" />
+							<circle cx="200" cy="220" r="130" class="j-stroke" stroke-dasharray="3 6" />
+							<g class="j-orbit">
+								<circle cx="330" cy="220" r="6" class="j-accent" />
+								<circle cx="135" cy="107" r="5" class="j-line" />
+								<circle cx="135" cy="333" r="5" class="j-line" />
+								<circle cx="270" cy="220" r="4" class="j-coin" />
+							</g>
+							<circle cx="200" cy="220" r="34" class="j-surf j-stroke" stroke-width="2" />
+							<path d="M200 202c2 10 6 14 16 16-10 2-14 6-16 16-2-10-6-14-16-16 10-2 14-6 16-16Z" class="j-accent" />
+							<text x="200" y="74" text-anchor="middle" class="j-label" data-i18n="journey.now.top">{t('journey.now.top', 'Products that solve real problems')}</text>
+							<text x="200" y="382" text-anchor="middle" class="j-label" data-i18n="journey.now.bottom">{t('journey.now.bottom', 'A team to build with')}</text>
+						</svg>
+					</div>
+
+					<div class="journey-stage__progress">
+						{steps.map(() => <i data-stage-bar></i>)}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.journey {
+		position: relative;
+		padding: 5rem 0 2rem;
+		border-block: 1px solid var(--color-border);
+		background: var(--color-surface-container-lowest);
+	}
+
+	.journey-grid {
+		display: grid;
+		margin-top: 1rem;
+	}
+
+	.journey-steps {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.journey-step {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 70vh;
+		padding: 2rem 0;
+		transition: opacity 0.4s ease;
+	}
+
+	/* Dim inactive steps only once the script is running */
+	.is-enhanced .journey-step {
+		opacity: 0.3;
+	}
+
+	.is-enhanced .journey-step.is-active {
+		opacity: 1;
+	}
+
+	.journey-step__where {
+		display: flex;
+		gap: 0.5rem;
+		margin: 0;
+		font-size: 0.82rem;
+		color: var(--color-text-muted);
+	}
+
+	.journey-step__where b {
+		font-weight: 500;
+		color: var(--color-primary);
+	}
+
+	.journey-step__title {
+		margin: 0.75rem 0 0;
+		font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.9rem);
+		font-weight: 600;
+		line-height: 1.15;
+		letter-spacing: -0.025em;
+	}
+
+	.journey-step__text {
+		max-width: 30rem;
+		margin: 0.9rem 0 0;
+		font-size: 1.05rem;
+		line-height: 1.75;
+		color: var(--color-text-secondary);
+	}
+
+	.journey-step__chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 1.1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.journey-step__chips li {
+		padding: 0.35rem 0.75rem;
+		border: 1px solid var(--color-border);
+		border-radius: 9999px;
+		font-size: 0.8rem;
+		color: var(--color-text-secondary);
+	}
+
+	/* Mobile: the stage pins under the header and the text scrolls beneath it */
+	.journey-stage-col {
+		order: -1;
+		position: sticky;
+		top: 4.25rem;
+		z-index: 2;
+		padding: 0.5rem 0 0.75rem;
+		background: var(--color-surface-container-lowest);
+	}
+
+	.journey-stage {
+		position: relative;
+		height: min(46vh, 24rem);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-2xl);
+		background: var(--color-surface-container-low);
+	}
+
+	.journey-stage__dots {
+		--dots-mask: radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 80%);
+	}
+
+	.journey-stage__top {
+		position: absolute;
+		top: 0.9rem;
+		left: 1rem;
+		right: 1rem;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 0.8rem;
+	}
+
+	.journey-stage__loc {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.7rem 0.3rem 0.55rem;
+		border: 1px solid var(--color-border);
+		border-radius: 9999px;
+		background: var(--color-surface-container-lowest);
+	}
+
+	.journey-stage__loc svg {
+		width: 0.85rem;
+		height: 0.85rem;
+		color: var(--color-primary);
+	}
+
+	.journey-stage__count {
+		color: var(--color-text-muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.journey-stage__progress {
+		position: absolute;
+		left: 1rem;
+		right: 1rem;
+		bottom: 1rem;
+		z-index: 2;
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 0.375rem;
+	}
+
+	.journey-stage__progress i {
+		position: relative;
+		height: 3px;
+		overflow: hidden;
+		border-radius: 3px;
+		background: var(--color-border-strong);
+	}
+
+	.journey-stage__progress i::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: var(--color-primary);
+		transform: scaleX(var(--progress, 0));
+		transform-origin: left;
+	}
+
+	.journey-scene {
+		position: absolute;
+		inset: 2.75rem 0.5rem 2rem;
+		opacity: 0;
+		transform: scale(0.98);
+		transition:
+			opacity 0.5s ease,
+			transform 0.5s ease;
+	}
+
+	.journey-scene.is-active {
+		opacity: 1;
+		transform: none;
+	}
+
+	.journey-scene svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		font-family: var(--font-sans);
+	}
+
+	.journey-map {
+		position: relative;
+		height: 100%;
+		aspect-ratio: 380 / 428;
+		margin: 0 auto;
+	}
+
+	.journey-map__dots {
+		position: absolute;
+		inset: 0;
+		background: var(--color-map-dot);
+		mask: url('/images/americas-dots.svg') center / 100% 100% no-repeat;
+	}
+
+	.journey-map svg {
+		position: absolute;
+		inset: 0;
+	}
+
+	/* Scene palette — all theme tokens, so both modes stay in sync */
+	.j-surf { fill: var(--color-surface-container-lowest); }
+	.j-band { fill: var(--color-surface-container-low); }
+	.j-stroke { stroke: var(--color-border-strong); }
+	.j-line { fill: var(--color-border-strong); }
+	.j-ink { fill: var(--color-text-primary); }
+	.j-accent { fill: var(--color-primary); }
+	.j-accent-stroke { stroke: var(--color-primary); }
+	.j-skin { fill: var(--color-skin); }
+	.j-coin { fill: var(--color-coin); }
+	.j-cloud { fill: var(--color-border); }
+	.j-qblock { fill: var(--color-primary-container); stroke: var(--color-primary); }
+	.j-qmark { fill: var(--color-primary); font-size: 18px; font-weight: 600; }
+	.j-button { fill: var(--color-button); }
+	.j-button-text { fill: var(--color-on-button); font-size: 12px; font-weight: 500; }
+	.j-label { fill: var(--color-text-primary); font-size: 13px; }
+	.j-map-label { fill: var(--color-text-primary); font-size: 11px; }
+	.j-hint { fill: var(--color-text-muted); font-size: 12px; }
+
+	.j-orbit {
+		transform-origin: 200px 220px;
+		animation: journey-spin 40s linear infinite;
+	}
+
+	.j-pulse {
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: journey-pulse 2.4s ease-out infinite;
+	}
+
+	@keyframes journey-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes journey-pulse {
+		from {
+			transform: scale(0.6);
+			opacity: 0.7;
+		}
+		to {
+			transform: scale(2.4);
+			opacity: 0;
+		}
+	}
+
+	@media (min-width: 56rem) {
+		.journey {
+			padding: 7rem 0 3rem;
+		}
+
+		.journey-grid {
+			grid-template-columns: 1fr 1.05fr;
+			gap: 4.5rem;
+		}
+
+		.journey-step {
+			min-height: 78vh;
+		}
+
+		.journey-step__text {
+			font-size: 1.075rem;
+		}
+
+		.journey-stage-col {
+			order: 0;
+			top: auto;
+			padding: 0;
+			background: none;
+		}
+
+		.journey-stage {
+			position: sticky;
+			top: max(5.5rem, calc(50vh - 20rem));
+			height: min(76vh, 40rem);
+		}
+
+		.journey-scene {
+			inset: 3.5rem 1.25rem 2.5rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.journey-step,
+		.journey-scene {
+			transition: none;
+		}
+
+		.j-orbit,
+		.j-pulse {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	function initJourney() {
+		const section = document.querySelector<HTMLElement>('[data-journey]');
+		if (!section) return;
+
+		const steps = Array.from(section.querySelectorAll<HTMLElement>('[data-step]'));
+		const panels = Array.from(section.querySelectorAll<HTMLElement>('[data-scene-panel]'));
+		const bars = Array.from(section.querySelectorAll<HTMLElement>('[data-stage-bar]'));
+		const stage = section.querySelector<HTMLElement>('.journey-stage');
+		const locLabel = section.querySelector<HTMLElement>('[data-stage-loc]');
+		const countLabel = section.querySelector<HTMLElement>('[data-stage-count]');
+		const character = section.querySelector<SVGGElement>('[data-game-character]');
+		const coin = section.querySelector<SVGCircleElement>('[data-game-coin]');
+		const mark = section.querySelector<SVGTextElement>('[data-game-mark]');
+		const erpRows = Array.from(section.querySelectorAll<SVGGElement>('[data-erp-row]'));
+		const releaseProgress = section.querySelector<SVGLineElement>('[data-release-progress]');
+		const releaseNodes = Array.from(section.querySelectorAll<SVGCircleElement>('[data-release-node]'));
+		const releaseBadge = section.querySelector<SVGGElement>('[data-release-badge]');
+		const routeChile = section.querySelector<SVGPathElement>('[data-route-chile]');
+		const routeUs = section.querySelector<SVGPathElement>('[data-route-us]');
+		const markerChile = section.querySelector<SVGGElement>('[data-marker-chile]');
+		const markerUs = section.querySelector<SVGGElement>('[data-marker-us]');
+		const traveler = section.querySelector<SVGCircleElement>('[data-traveler]');
+		if (!steps.length || !stage) return;
+
+		section.classList.add('is-enhanced');
+		const total = String(steps.length).padStart(2, '0');
+		const usLength = routeUs?.getTotalLength() ?? 0;
+		if (routeUs) routeUs.style.strokeDasharray = `${usLength}`;
+		const clamp = (value: number) => Math.min(1, Math.max(0, value));
+		const stackedLayout = window.matchMedia('(max-width: 55.99rem)');
+		let frame = 0;
+
+		function update() {
+			frame = 0;
+			// The reading line sits mid-viewport on desktop, and mid-way below the pinned stage on mobile.
+			const stageBottom = stackedLayout.matches ? stage!.getBoundingClientRect().bottom : 0;
+			const line = stageBottom + (window.innerHeight - stageBottom) / 2;
+
+			let active = 0;
+			let progress = 0;
+			steps.forEach((step, index) => {
+				const rect = step.getBoundingClientRect();
+				if (rect.top <= line) {
+					active = index;
+					progress = clamp((line - rect.top) / rect.height);
+				}
+			});
+
+			steps.forEach((step, index) => step.classList.toggle('is-active', index === active));
+			bars.forEach((bar, index) => bar.style.setProperty('--progress', String(index < active ? 1 : index === active ? progress : 0)));
+			const scene = steps[active].dataset.scene;
+			panels.forEach((panel) => panel.classList.toggle('is-active', panel.dataset.scenePanel === scene));
+			if (locLabel) locLabel.textContent = steps[active].querySelector('[data-i18n$=".loc"]')?.textContent ?? '';
+			if (countLabel) countLabel.textContent = `${String(active + 1).padStart(2, '0')} / ${total}`;
+
+			// 1. Walk right, jump under the ? block, pop a coin.
+			const gameProgress = active === 0 ? progress : 1;
+			const jump = gameProgress > 0.36 && gameProgress < 0.56 ? Math.sin(((gameProgress - 0.36) / 0.2) * Math.PI) * 80 : 0;
+			character?.setAttribute('transform', `translate(${20 + gameProgress * 270} ${310 - jump})`);
+			const hit = gameProgress > 0.46;
+			coin?.setAttribute('opacity', String(hit ? clamp(1 - (gameProgress - 0.46) * 4) : 0));
+			coin?.setAttribute('cy', String(186 - (hit ? (gameProgress - 0.46) * 120 : 0)));
+			mark?.setAttribute('opacity', hit ? '0' : '1');
+
+			// 2. ERP rows fill in.
+			const erpProgress = active === 1 ? progress : active > 1 ? 1 : 0;
+			erpRows.forEach((row, index) => row.setAttribute('opacity', erpProgress * 7 > index ? '1' : '0.15'));
+
+			// 3. Pipeline runs, then the app is published.
+			const releaseProgressValue = active === 2 ? progress : active > 2 ? 1 : 0;
+			releaseProgress?.setAttribute('y2', String(110 + clamp(releaseProgressValue * 1.2) * 219));
+			releaseNodes.forEach((node, index) => {
+				node.setAttribute('class', releaseProgressValue * 3.6 >= index ? 'j-accent' : 'j-surf j-stroke');
+			});
+			releaseBadge?.setAttribute('opacity', releaseProgressValue > 0.8 ? '1' : '0');
+
+			// 4–5. Routes on the map.
+			const chile = active === 3 ? progress : active > 3 ? 1 : 0;
+			const us = active === 4 ? progress : active > 4 ? 1 : 0;
+			if (routeChile) routeChile.style.clipPath = `inset(0 0 ${100 - chile * 100}% 0)`;
+			markerChile?.setAttribute('opacity', chile > 0.9 ? '1' : '0');
+			if (routeUs) routeUs.style.strokeDashoffset = String(usLength * (1 - us));
+			if (routeUs && traveler) {
+				const point = routeUs.getPointAtLength(usLength * us);
+				traveler.setAttribute('cx', String(point.x));
+				traveler.setAttribute('cy', String(point.y));
+				traveler.setAttribute('opacity', us > 0 && us < 1 ? '1' : '0');
+			}
+			markerUs?.setAttribute('opacity', us > 0.95 ? '1' : '0');
+		}
+
+		const schedule = () => {
+			if (!frame) frame = window.requestAnimationFrame(update);
+		};
+		window.addEventListener('scroll', schedule, { passive: true });
+		window.addEventListener('resize', schedule);
+		document.addEventListener('home:locale', schedule);
+		update();
+	}
+
+	initJourney();
+</script>

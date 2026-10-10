@@ -9,9 +9,8 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-	{ label: 'Hero', href: '#hero', id: 'hero' },
-	{ label: 'Case Studies', href: '#case-studies', id: 'case-studies' },
+	{ label: 'Journey', href: '#journey', id: 'journey' },
+	{ label: 'Work', href: '#case-studies', id: 'work' },
 	{ label: 'Experience', href: '#experience', id: 'experience' },
-	{ label: 'How I help', href: '#technical-focus', id: 'technical-focus' },
 	{ label: 'Contact', href: '#contact', id: 'contact' },
 ];

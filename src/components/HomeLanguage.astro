@@ -1,4 +1,6 @@
 ---
+import { es } from '../lib/i18n';
+
 interface Props {
 	locale?: 'auto' | 'en' | 'es';
 }
@@ -6,92 +8,38 @@ interface Props {
 const { locale = 'auto' } = Astro.props;
 ---
 
-<script define:vars={{ forcedLocale: locale }}>
-	type Locale = 'en' | 'es';
-
-	const translations: Record<Locale, Record<string, string>> = {
-		en: {},
-		es: {
-			'nav.copy': 'Copiar',
-			'nav.case-studies': 'Trabajo seleccionado',
-			'nav.experience': 'Experiencia',
-			'nav.technical-focus': 'Cómo ayudo',
-			'nav.contact': 'Contacto',
-			'hero.eyebrow': 'Senior Software Engineer · Abierto a roles remotos o híbridos',
-			'hero.tagline': 'Construyo sistemas backend que ahorran tiempo a los equipos y mantienen rápidos y confiables los flujos que generan ingresos.',
-			'hero.description': 'Ingeniero de software senior en productos travel-tech, SaaS y educación. Trabajo cerca del problema de negocio: conectar los sistemas de los que depende un equipo, eliminar trabajo manual y hacer más rápidos y estables los flujos que generan ingresos.',
-			'hero.cta.primary': 'Ver trabajo seleccionado',
-			'hero.cta.secondary': 'Ver CV',
-			'hero.signal.0.label': 'Menos tiempo de preparación de exámenes con Sócrates',
-			'hero.signal.1.label': 'Integraciones con proveedores hoteleros construidas o reforzadas',
-			'hero.signal.2.label': 'Tiempo de arranque en serverless',
-
-			'cases.eyebrow': 'Trabajo seleccionado',
-			'cases.title': 'Problemas reales, resultados medibles.',
-			'case.socrates-curriculum-grounded-exam-generation.title': 'Exámenes en minutos, no en horas',
-			'case.socrates-curriculum-grounded-exam-generation.summary': 'Docentes dominicanos dedicaban de 40 a 90 minutos a convertir el currículo oficial del MINERD en un examen utilizable. Sócrates genera un examen DOCX editable y alineado al currículo en 10 a 15 minutos.',
-			'case.socrates-curriculum-grounded-exam-generation.sector': 'EdTech · República Dominicana',
-			'case.hotel-connectivity-quote-performance.title': 'Cotizaciones hoteleras sincronizadas con el inventario en vivo',
-			'case.hotel-connectivity-quote-performance.summary': 'La cotización dependía de muchos proveedores hoteleros con comportamientos y latencias distintas. Construí y reforcé las conexiones con proveedores y cacheé tasas de cambio y promociones, para que el motor de cotización obtenga tarifas y disponibilidad actualizadas consultando menos la base de datos.',
-			'case.hotel-connectivity-quote-performance.sector': 'Travel-tech',
-			'case.multi-tenant-saas-platform-apis.title': 'Una plataforma para aseguradoras, proveedores y agentes',
-			'case.multi-tenant-saas-platform-apis.summary': 'Dos productos SaaS en crecimiento necesitaban atender varios roles de usuario sobre infraestructura compartida. Construí los backends de Sektor.app y Centuria.app, con notificaciones orientadas a eventos que mantienen a cada parte informada mientras avanza el trabajo.',
-			'case.multi-tenant-saas-platform-apis.sector': 'SaaS multi-tenant',
-			'case.real-time-streaming-api.title': 'Resultados en vivo de 128 fuentes, en tiempo real',
-			'case.real-time-streaming-api.summary': 'Un producto de datos en vivo necesitaba entregar al instante y sin duplicados resultados cambiantes de 128 mesas. Construí un pipeline de recolección concurrente y una API en tiempo real que emite un evento limpio por cada cambio.',
-			'case.real-time-streaming-api.sector': 'Datos en tiempo real',
-			'case.cta': 'Ver proyecto →',
-
-			'experience.eyebrow': 'Trayectoria',
-			'experience.title': 'Experiencia',
-			'experience.pricetravel-holding.role': 'Backend Developer — Conectividad hotelera y cotización',
-			'experience.pricetravel-holding.location': 'Remoto (US)',
-			'experience.pricetravel-holding.body': 'Responsable de la conectividad con proveedores hoteleros y de las rutas de datos detrás del motor de cotización, trabajando con el equipo de cotización en precisión y tiempo de respuesta.',
-			'experience.listoapp.role': 'Backend Developer — Plataformas SaaS y cloud',
-			'experience.listoapp.location': 'Remoto (US)',
-			'experience.listoapp.body': 'Entrega backend y cloud para los productos SaaS de la empresa y plataformas de clientes, desde el diseño de APIs hasta el rendimiento serverless y CI/CD.',
-			'experience.drimo.role': 'Software Developer',
-			'experience.drimo.location': 'Remoto',
-			'experience.drimo.body': 'Migré el sitio web y el blog de la empresa a un stack más rápido y amigable con SEO mediante una migración automatizada, y mantuve APIs serverless confiables y eficientes en costo mientras entregaba funcionalidades web y móviles.',
-
-			'technical.eyebrow': 'Cómo ayudo',
-			'technical.title': 'Tecnología al servicio del resultado.',
-			'technical.system-integrations.title': 'Conectar los sistemas de los que depende un negocio',
-			'technical.system-integrations.summary': 'Productos, proveedores y socios comparten datos de forma confiable, sin recaptura manual ni registros desincronizados.',
-			'technical.cloud-infrastructure.title': 'Hacer rápidos y confiables los flujos críticos',
-			'technical.cloud-infrastructure.summary': 'Los flujos que generan ingresos responden más rápido, fallan menos y se despliegan de forma automatizada.',
-			'technical.ai-automation.title': 'Convertir trabajo repetitivo en minutos',
-			'technical.ai-automation.summary': 'Automatización e IA que eliminan pasos manuales, mientras las personas siguen a cargo de las decisiones importantes.',
-
-			'contact.eyebrow': 'Siguiente paso',
-			'contact.title': 'Construyamos algo que llegue a producción.',
-			'contact.description': 'Basado en EE. UU., trabajando con equipos y productos en República Dominicana. Abierto a roles backend, plataforma e integraciones complejas, remoto o híbrido. Si necesitas un ingeniero que mejora sistemas y entrega con confiabilidad, conversemos.',
-			'contact.direct': 'Contacto directo',
-			'contact.location': 'Ubicación',
-			'contact.profiles': 'Perfiles',
-			'footer.rights': 'Todos los derechos reservados.',
-		},
-	};
-
-	function pickLocale(): Locale {
+<!-- Plain JS: define:vars scripts are inlined without TypeScript processing. -->
+<script define:vars={{ forcedLocale: locale, es }}>
+	function pickLocale() {
 		if (forcedLocale === 'es' || forcedLocale === 'en') return forcedLocale;
-		const params = new URLSearchParams(window.location.search);
-		const explicit = params.get('lang');
+		const explicit = new URLSearchParams(window.location.search).get('lang');
 		if (explicit === 'es' || explicit === 'en') return explicit;
 		return navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
 	}
 
-	function applyLocale(locale: Locale) {
-		const dictionary = translations[locale];
+	function applyLocale(locale) {
 		document.documentElement.lang = locale;
 		document.documentElement.dataset.locale = locale;
+		if (locale !== 'es') return;
 
-		document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((element) => {
-			const key = element.dataset.i18n;
-			if (!key) return;
-			const value = dictionary[key];
-			if (value) element.textContent = value;
+		document.querySelectorAll('[data-i18n]').forEach((element) => {
+			const value = es[element.dataset.i18n];
+			if (!value) return;
+			if (!element.hasAttribute('data-i18n-emphasis')) {
+				element.textContent = value;
+				return;
+			}
+			// Mirror Experience.astro: wrap numbers in <strong>.
+			element.replaceChildren(
+				...value.split(/(\d[\d.,]*%?)/).filter(Boolean).map((part) => {
+					if (!/^\d/.test(part)) return document.createTextNode(part);
+					const strong = document.createElement('strong');
+					strong.textContent = part;
+					return strong;
+				})
+			);
 		});
+		document.dispatchEvent(new CustomEvent('home:locale', { detail: locale }));
 	}
 
 	if (document.readyState === 'loading') {

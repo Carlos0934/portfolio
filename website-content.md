@@ -1,137 +1,82 @@
 # Carlos Olivo — Portfolio Content
 
 > **Role:** Senior Software Engineer
-> **Focus:** Backend systems that save teams time and keep revenue-critical flows fast and reliable
+> **Positioning:** Turns concrete problems into simple, effective products. Backend by trade, end to end when needed, AI-assisted.
 > **Audience:** Hiring managers, engineering leaders, recruiters
-> **Location:** US & Dominican Republic · Open to remote or hybrid roles
+> **Location:** Georgia, United States · Open to remote or hybrid roles
 > **Website:** https://carlos-olivo.dev
-
----
-
-## Table of Contents
-
-1. [Site Structure & Navigation](#site-structure--navigation)
-2. [Hero](#hero)
-3. [Selected Work](#selected-work)
-4. [Experience](#experience)
-5. [How I Help](#how-i-help)
-6. [Contact](#contact)
-7. [Site Metadata](#site-metadata)
-8. [Content Architecture](#content-architecture)
 
 ---
 
 ## Site Structure & Navigation
 
-Each fact appears in one place: headline numbers in the hero, details in Selected Work, and role scope in Experience.
+Single-page homepage (English at `/`, Spanish at `/es/`) plus CV pages (`/cv/`, `/es/cv/`). Light and dark themes.
 
-Single-page homepage (English at `/`, Spanish at `/es/`) plus CV pages (`/cv/`, `/es/cv/`).
+| # | Section | Anchor | What it holds |
+|---|---------|--------|---------------|
+| 1 | Hero | `#hero` | Who Carlos is. No companies, no numbers. |
+| 2 | Journey | `#journey` | The path from a first game to Georgia, and what he is looking for. No metrics. |
+| 3 | Selected Work | `#case-studies` | Four projects with their links. |
+| 4 | Experience | `#experience` | Roles from Drimo onward, with dates and the improvements per company. Earlier roles (Softone, ITelle) appear only in the Journey. |
+| 5 | Contact | `#contact` | Email, location, LinkedIn, GitHub. |
 
-| # | Section | Anchor |
-|---|---------|--------|
-| 1 | Hero | `#hero` |
-| 2 | Selected Work | `#case-studies` |
-| 3 | Experience | `#experience` |
-| 4 | How I Help | `#technical-focus` |
-| 5 | Contact | `#contact` |
-
-**Header actions:** email with copy button, CV button, LinkedIn, GitHub.
+**Header:** Journey, Work, Experience, Contact, CV button, language switch (EN/ES), theme toggle.
 
 ---
 
 ## Hero
 
-**Eyebrow:** Senior Software Engineer · Open to remote or hybrid roles
+- **Eyebrow:** Senior Software Engineer · Georgia, US
+- **Title:** Hi, I'm Carlos. I turn concrete problems into *simple, effective products.*
+- **Lead:** Backend engineer by trade, comfortable across the stack. I like taking a real problem from idea to production, end to end, and using AI to get there faster.
+- **Buttons:** Follow my journey (`#journey`), Get in touch (`#contact`)
 
-**Name:** Carlos Olivo
+---
 
-**Tagline:** I build backend systems that save teams time and keep revenue-critical flows fast and reliable.
+## Journey
 
-**Description:** Senior software engineer across travel-tech, SaaS, and education products. I work close to the business problem: connecting the systems a team depends on, removing manual work, and making the flows that drive revenue faster and steadier.
-
-**CTAs:** See selected work (`#case-studies`) · View CV (`/cv/`)
-
-**Headline metrics:**
-
-| Value | Label | Source |
-|-------|-------|--------|
-| −75% | Less exam prep time for teachers using Sócrates | 40 → 10 min |
-| 9 | Hotel provider integrations built or hardened | 5 built + 4 optimized at PriceTravel |
-| −50% | Serverless cold-start time | Lambda pre-deployment bundling at ListoApp |
+1. **Dominican Republic · Age 14 — It started with a game.** Self-taught through a small platformer; the game led to a referral for the first job.
+2. **Softone · 2019 — Software a business runs on.** First professional work: a desktop ERP.
+3. **ITelle · 2020 — Leading, shipping, operating.** First team lead role: mobile releases to the stores and deployments.
+4. **Remote · 2022 — Going remote.** Drimo, then ListoApp (Chile): mobile apps and multi-tenant platforms.
+5. **Georgia, United States · 2024 — A new base.** Moved to the US; remote at PriceTravel on hotel connectivity.
+6. **Now — What I'm looking for.** A team to connect with, AI-powered ways of building software, end-to-end products. Hobbies: vibe-coding games, generative AI, running, gym. Never stop learning.
 
 ---
 
 ## Selected Work
 
-**Section title:** Real problems, measurable results.
+Cards are deliberately light: one-sentence summary, short stack line, link.
 
-Each case uses this format: client + sector (left column) → title stating the result → problem and outcome → one muted stack line → project link. The headline numbers live only in the hero, so they are not repeated here.
-
-### 1. Exam prep in minutes, not hours
-- **Client:** Sócrates · EdTech · Dominican Republic
-- **Summary:** Dominican teachers spent 40–90 minutes turning official MINERD curriculum into a usable exam. Sócrates generates an editable, curriculum-grounded DOCX exam in 10–15 minutes.
-- **Stack:** Document AI · OCR · Structured extraction · DOCX generation
-- **URL:** https://socrates.xavely.com
-
-### 2. Hotel quotes that stay in sync with live inventory
-- **Client:** PriceTravel Holding · Travel-tech
-- **Summary:** Quoting depended on many hotel providers with different behaviors and latency. I built and hardened the provider connections and cached exchange rates and promotions, so the quoting engine gets fresh rates and availability while hitting the database less.
-- **Stack:** AWS DAX · Background workers · Hotel provider APIs
-- **URL:** https://pricetravel.com
-
-### 3. One platform for insurers, providers, and agents
-- **Client:** Sektor.app & Centuria.app · Multi-tenant SaaS
-- **Summary:** Two growing SaaS products needed to serve several user roles on shared infrastructure. I built the backends behind Sektor.app and Centuria.app, with event-driven notifications that keep every party in the loop as work moves forward.
-- **Stack:** TypeScript · NestJS · GraphQL · MongoDB · AWS SNS/EventBridge
-- **URL:** https://sektor.app/
-
-### 4. Live results from 128 sources, in real time
-- **Client:** RoulettesView.com · Real-time data
-- **Summary:** A live-data product needed fast-changing results from 128 tables delivered to users instantly and without duplicates. I built a concurrent collection pipeline and a real-time API that streams one clean event per change.
-- **Stack:** Go · WebSockets · Chrome-based scraping
+| Project | Client · Sector | Link |
+|---------|-----------------|------|
+| Exam prep in minutes, not hours | Sócrates · EdTech · Dominican Republic | https://socrates.xavely.com |
+| Hotel quotes that stay in sync with live inventory | PriceTravel Holding · Travel-tech | https://pricetravel.com |
+| One platform for insurers, providers, and agents | Sektor.app & Centuria.app · Multi-tenant SaaS | https://sektor.app/ |
+| Live results from 128 sources, in real time | RoulettesView.com · Real-time data | https://roulettesview.com |
 
 ---
 
 ## Experience
 
-### PriceTravel Holding — Backend Developer, Hotel Connectivity & Quoting
-Jun 2024 – Present · Remote (US)
+| Company | Role | Dates | Location |
+|---------|------|-------|----------|
+| PriceTravel Holding | Backend Developer — Hotel Connectivity & Quoting | Jun 2024 – Present | Remote · US |
+| ListoApp | Backend Developer — SaaS Platforms & Cloud | Feb 2024 – 2026 | Remote · Chile |
+| Drimo | Software Developer | Jul 2022 – Jun 2023 | Remote |
 
-Own hotel provider connectivity and the data paths behind the quoting engine, working with the quoting team on accuracy and response time.
+Earlier roles (Softone, ITelle) are told in the Journey only. Do not show a city in the Dominican Republic anywhere on the site.
 
-### ListoApp (Chile) — Backend Developer, SaaS Platforms & Cloud
-Feb 2024 – Present · Remote (US)
-
-Backend and cloud delivery for the company's SaaS products and client platforms, from API design to serverless performance and CI/CD.
-
-### Drimo — Software Developer
-Jul 2022 – Jun 2023 · Remote
-
-Moved the company website and blog to a faster, SEO-friendly stack through an automated migration, and kept serverless APIs reliable and cost-efficient while shipping web and mobile features.
-
----
-
-## How I Help
-
-**Section title:** Technology in service of the outcome.
-
-| Area | Outcome |
-|------|---------|
-| Connect the systems a business runs on | Products, providers, and partners share data reliably, without manual re-entry or out-of-sync records. |
-| Make critical flows fast and reliable | The flows that drive revenue respond faster, fail less, and ship through automated deployments. |
-| Turn repetitive work into minutes | Automation and AI that remove manual steps, while people stay in charge of the decisions that matter. |
-
-The homepage has no technology list; the full inventory lives on the CV.
+Each role lists its improvements under "What I improved" (`highlights` in the content file).
 
 ---
 
 ## Contact
 
-**Title:** Let's build something that ships.
-
-**Description:** US-based, working with teams and products across the Dominican Republic. Open to backend, platform, and integration-heavy roles — remote or hybrid. If you need an engineer who improves systems and delivers reliably, let's talk.
-
+- **Title:** Let's build something together.
+- **Description:** Open to backend, platform, and end-to-end product roles, remote or hybrid. If your team is solving a concrete problem, I'd like to hear about it.
 - Email: hello@carlos-olivo.dev
+- Location: Georgia, United States
 - LinkedIn: https://www.linkedin.com/in/carlos-engel-olivo-carmona-a1184917b/
 - GitHub: https://github.com/Carlos0934
 
@@ -142,7 +87,7 @@ The homepage has no technology list; the full inventory lives on the CV.
 | Field | Value |
 |-------|-------|
 | Site Title | Carlos Olivo |
-| Site Description | Senior Software Engineer building backend systems that save teams time and keep revenue-critical flows fast and reliable across SaaS, travel-tech, and education products. |
+| Site Description | Software engineer in Georgia, US, who turns concrete problems into simple, effective products: backend by trade, end to end when needed, and AI-assisted. |
 | Site URL | https://carlos-olivo.dev |
 | Languages | English, Spanish |
 | OG Image | `public/og-image.png` (1200×630, logo + name + tagline + domain) |
@@ -155,12 +100,14 @@ The homepage has no technology list; the full inventory lives on the CV.
 
 | Section | Content source | Component |
 |---------|----------------|-----------|
-| Hero | `src/content/hero/index.md` | `src/sections/Hero.astro` |
-| Selected Work | `src/content/case-studies/*.md` (`client`, `sector`, `stack`) | `src/sections/CaseStudies.astro` |
-| Experience | `src/content/experience/*.md` | `src/sections/Experience.astro` |
-| How I Help | `src/content/technical-focus/*.md` | `src/sections/TechnicalFocus.astro` |
+| Hero | inline copy | `src/sections/Hero.astro` |
+| Journey | inline copy (steps array) | `src/sections/Journey.astro` |
+| Selected Work | `src/content/case-studies/*.md` (`client`, `sector`, `stack`, `url`) | `src/sections/CaseStudies.astro` |
+| Experience | `src/content/experience/*.md` (`highlights`, `stack`, `current`, `url`) | `src/sections/Experience.astro` |
 | Contact | `src/content/contact/index.md` | `src/sections/Contact.astro` |
 
-Spanish copy is stored in each section component and also in `src/components/HomeLanguage.astro`. When English copy changes, update both Spanish locations.
+English copy lives in the components and content files. All Spanish home copy lives in `src/lib/i18n.ts`, keyed by the same `data-i18n` keys; `HomeLanguage.astro` uses that dictionary to translate the English page on the client for Spanish browsers.
 
-Design system: see `DESIGN.md` (Editorial Light: warm paper, Instrument Serif + Inter, single navy accent).
+The CV page (`src/components/CvContent.astro`) keeps its own copy in both languages. After changing it, regenerate `src/assets/resume.pdf` by printing `/cv/` (the print stylesheet produces a one-page Letter PDF).
+
+Design system: see `DESIGN.md`.

@@ -1,170 +1,176 @@
 ---
 import { getCollection } from 'astro:content';
+import { useTranslations, type Locale } from '../lib/i18n';
 
-const caseEntries = await getCollection('caseStudies');
-const cases = caseEntries.sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
 interface Props {
-	locale?: 'en' | 'es';
+	locale?: Locale;
 }
+
 const { locale = 'en' } = Astro.props;
-const isSpanish = locale === 'es';
-const caseTranslations: Record<string, { title: string; summary: string; sector: string }> = {
-	'socrates-curriculum-grounded-exam-generation': {
-		title: 'Exámenes en minutos, no en horas',
-		summary: 'Docentes dominicanos dedicaban de 40 a 90 minutos a convertir el currículo oficial del MINERD en un examen utilizable. Sócrates genera un examen DOCX editable y alineado al currículo en 10 a 15 minutos.',
-		sector: 'EdTech · República Dominicana',
-	},
-	'hotel-connectivity-quote-performance': {
-		title: 'Cotizaciones hoteleras sincronizadas con el inventario en vivo',
-		summary: 'La cotización dependía de muchos proveedores hoteleros con comportamientos y latencias distintas. Construí y reforcé las conexiones con proveedores y cacheé tasas de cambio y promociones, para que el motor de cotización obtenga tarifas y disponibilidad actualizadas consultando menos la base de datos.',
-		sector: 'Travel-tech',
-	},
-	'multi-tenant-saas-platform-apis': {
-		title: 'Una plataforma para aseguradoras, proveedores y agentes',
-		summary: 'Dos productos SaaS en crecimiento necesitaban atender varios roles de usuario sobre infraestructura compartida. Construí los backends de Sektor.app y Centuria.app, con notificaciones orientadas a eventos que mantienen a cada parte informada mientras avanza el trabajo.',
-		sector: 'SaaS multi-tenant',
-	},
-	'real-time-streaming-api': {
-		title: 'Resultados en vivo de 128 fuentes, en tiempo real',
-		summary: 'Un producto de datos en vivo necesitaba entregar al instante y sin duplicados resultados cambiantes de 128 mesas. Construí un pipeline de recolección concurrente y una API en tiempo real que emite un evento limpio por cada cambio.',
-		sector: 'Datos en tiempo real',
-	},
-};
-const t = (slug: string, key: 'title' | 'summary' | 'sector', fallback = '') =>
-	isSpanish ? caseTranslations[slug]?.[key] ?? fallback : fallback;
+const t = useTranslations(locale);
+const cases = (await getCollection('caseStudies')).sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999));
+const displayUrl = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 ---
 
-<section id="case-studies" class="border-b border-border bg-background py-16 md:py-24" data-reveal>
-	<div class="mx-auto max-w-6xl px-4 lg:px-8">
-		<div class="mb-10 max-w-3xl md:mb-14">
-			<p class="section-label mb-4" data-reveal-item data-i18n="cases.eyebrow">
-				{isSpanish ? 'Trabajo seleccionado' : 'Selected work'}
-			</p>
-			<h2 class="section-title" data-reveal-item style="--reveal-delay: 70ms;" data-i18n="cases.title">
-				{isSpanish ? 'Problemas reales, resultados medibles.' : 'Real problems, measurable results.'}
-			</h2>
-		</div>
+<section id="case-studies" class="work" data-reveal>
+	<div class="bg-decor" aria-hidden="true">
+		<div class="bg-dots work-dots"></div>
+	</div>
 
-		<ol class="case-list" role="list">
-			{cases.map((item, index) => (
-				<li class="case-row" data-reveal-item style={`--reveal-delay: ${120 + index * 70}ms;`}>
-					<div class="case-row__context">
-						{item.data.client && <span class="case-row__client">{item.data.client}</span>}
-						{item.data.sector && (
-							<span class="case-row__sector" data-i18n={`case.${item.data.slug}.sector`}>
-								{t(item.data.slug, 'sector', item.data.sector)}
-							</span>
-						)}
-					</div>
-					<div class="case-row__body">
-						<h3 class="case-row__title" data-i18n={`case.${item.data.slug}.title`}>
-							{t(item.data.slug, 'title', item.data.title)}
-						</h3>
-						<p class="case-row__summary" data-i18n={`case.${item.data.slug}.summary`}>
-							{t(item.data.slug, 'summary', item.data.summary)}
+	<div class="relative mx-auto max-w-6xl px-4 lg:px-8">
+		<p class="section-label" data-reveal-item data-i18n="cases.eyebrow">{t('cases.eyebrow', 'Selected work')}</p>
+		<h2 class="section-title mt-4" data-reveal-item style="--reveal-delay: 70ms;" data-i18n="cases.title">
+			{t('cases.title', 'Real problems, measurable results.')}
+		</h2>
+
+		<ul class="work-grid" role="list">
+			{cases.map((item, index) => {
+				const key = `case.${item.data.slug}`;
+				return (
+					<li class="work-card" data-reveal-item style={`--reveal-delay: ${120 + index * 70}ms;`}>
+						<p class="work-card__meta">
+							{item.data.client && <b>{item.data.client}</b>}
+							{item.data.sector && <span data-i18n={`${key}.sector`}>{t(`${key}.sector`, item.data.sector)}</span>}
 						</p>
-						<div class="case-row__footer">
-							{item.data.stack && <span class="case-row__stack">{item.data.stack}</span>}
+						<h3 class="work-card__title" data-i18n={`${key}.title`}>{t(`${key}.title`, item.data.title)}</h3>
+						<p class="work-card__summary" data-i18n={`${key}.summary`}>{t(`${key}.summary`, item.data.summary)}</p>
+						<div class="work-card__foot">
+							{item.data.stack && <span class="work-card__stack">{item.data.stack}</span>}
 							{item.data.url && (
-								<a class="case-row__link" href={item.data.url} target="_blank" rel="noreferrer" data-i18n="case.cta">
-									{isSpanish ? 'Ver proyecto →' : 'View project →'}
+								<a class="work-card__link" href={item.data.url} target="_blank" rel="noopener noreferrer">
+									{displayUrl(item.data.url)}
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+										<path d="M7 17 17 7M8 7h9v9" />
+									</svg>
 								</a>
 							)}
 						</div>
-					</div>
-				</li>
-			))}
-		</ol>
+					</li>
+				);
+			})}
+		</ul>
 	</div>
 </section>
 
 <style>
-	.case-list {
-		margin: 0;
+	.work {
+		position: relative;
+		padding: 5rem 0;
+	}
+
+	.work-dots {
+		--dots-mask: radial-gradient(ellipse 50% 50% at 8% 15%, #000 20%, transparent 70%);
+	}
+
+	.work-grid {
+		display: grid;
+		gap: 1rem;
+		margin: 3rem 0 0;
 		padding: 0;
 		list-style: none;
-		border-top: 1px solid var(--color-border-strong);
 	}
 
-	.case-row {
-		display: grid;
-		gap: 1.25rem;
-		padding: 2rem 0;
-		border-bottom: 1px solid var(--color-border);
+	/* Light, flat cards: information, not callouts */
+	.work-card {
+		display: flex;
+		flex-direction: column;
+		padding: 1.25rem 1.35rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--color-surface-container-lowest) 55%, transparent);
+		transition: border-color var(--fx-duration-fast) ease, background-color var(--fx-duration-fast) ease;
 	}
 
-	.case-row__context {
-		display: grid;
-		gap: 0.35rem;
-		align-content: start;
-		padding-top: 0.35rem;
+	.work-card:hover {
+		border-color: var(--color-border-strong);
+		background: var(--color-surface-container-lowest);
 	}
 
-	.case-row__client {
-		font-size: 0.95rem;
-		font-weight: 600;
-		line-height: 1.35;
-		color: var(--color-primary);
-	}
-
-	.case-row__sector {
-		font-size: 0.85rem;
-		line-height: 1.4;
-		color: var(--color-text-muted);
-	}
-
-	.case-row__title {
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
-		font-weight: 400;
-		line-height: 1.15;
-		letter-spacing: -0.01em;
-		color: var(--color-text-primary);
-		text-wrap: balance;
-	}
-
-	.case-row__summary {
-		margin: 0.75rem 0 0;
-		max-width: 44rem;
-		font-size: 1.02rem;
-		line-height: 1.7;
-		color: var(--color-text-secondary);
-		text-wrap: pretty;
-	}
-
-	.case-row__footer {
+	.work-card__meta {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 0.75rem 1.5rem;
-		margin-top: 1.1rem;
-	}
-
-	.case-row__stack {
-		font-size: 0.85rem;
+		margin: 0;
+		font-size: 0.82rem;
 		color: var(--color-text-muted);
 	}
 
-	.case-row__link {
-		font-size: 0.9rem;
-		font-weight: 600;
-		color: var(--color-primary);
-		text-decoration: none;
-		text-underline-offset: 0.25em;
+	.work-card__meta b {
+		font-weight: 500;
+		color: var(--color-text-primary);
 	}
 
-	.case-row__link:hover,
-	.case-row__link:focus-visible {
+	.work-card__meta b + span::before {
+		content: "\00a0·\00a0";
+	}
+
+	.work-card__title {
+		margin: 0.5rem 0 0;
+		font-size: 1.12rem;
+		font-weight: 600;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+	}
+
+	.work-card__summary {
+		margin: 0.4rem 0 0;
+		font-size: 0.94rem;
+		line-height: 1.65;
+		color: var(--color-text-secondary);
+	}
+
+	.work-card__foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-top: auto;
+		padding-top: 1rem;
+	}
+
+	.work-card__stack {
+		font-size: 0.82rem;
+		color: var(--color-text-muted);
+	}
+
+	.work-card__link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--color-primary);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.work-card__link svg {
+		width: 0.9rem;
+		height: 0.9rem;
+		transition: transform var(--fx-duration-fast) ease;
+	}
+
+	.work-card__link:hover,
+	.work-card__link:focus-visible {
 		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.work-card__link:hover svg {
+		transform: translate(2px, -2px);
 	}
 
 	@media (min-width: 48rem) {
-		.case-row {
-			grid-template-columns: 13rem minmax(0, 1fr);
-			gap: 2.5rem;
-			padding: 2.5rem 0;
+		.work {
+			padding: 7rem 0;
+		}
+
+		.work-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.work-card {
+			padding: 1.4rem 1.5rem;
 		}
 	}
 </style>

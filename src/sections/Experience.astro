@@ -1,315 +1,253 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { useTranslations, type Locale } from '../lib/i18n';
+
 interface Props {
-	locale?: 'en' | 'es';
+	locale?: Locale;
 }
+
 const { locale = 'en' } = Astro.props;
-const isSpanish = locale === 'es';
-const experienceTranslations: Record<string, { role: string; location: string; body: string }> = {
-	'pricetravel-holding': {
-		role: 'Backend Developer — Conectividad hotelera y cotización',
-		location: 'Remoto (US)',
-		body: 'Responsable de la conectividad con proveedores hoteleros y de las rutas de datos detrás del motor de cotización, trabajando con el equipo de cotización en precisión y tiempo de respuesta.',
-	},
-	listoapp: {
-		role: 'Backend Developer — Plataformas SaaS y cloud',
-		location: 'Remoto (US)',
-		body: 'Entrega backend y cloud para los productos SaaS de la empresa y plataformas de clientes, desde el diseño de APIs hasta el rendimiento serverless y CI/CD.',
-	},
-	drimo: {
-		role: 'Software Developer',
-		location: 'Remoto',
-		body: 'Migré el sitio web y el blog de la empresa a un stack más rápido y amigable con SEO mediante una migración automatizada, y mantuve APIs serverless confiables y eficientes en costo mientras entregaba funcionalidades web y móviles.',
-	},
-};
+const t = useTranslations(locale);
+const experiences = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 
-const experienceEntries = await getCollection('experience');
-const experiencesWithContent = await Promise.all(
-	experienceEntries.map(async (entry) => {
-		const { Content } = await render(entry);
-		return { ...entry, Content };
-	})
-);
-
-const sortedExperiences = experiencesWithContent.sort((a, b) => a.data.order - b.data.order);
+// Numbers carry the improvement, so they get emphasis. HomeLanguage repeats this for client-side translation.
+const emphasizeNumbers = (text: string) =>
+	text
+		.split(/(\d[\d.,]*%?)/)
+		.map((part, index) => ({ text: part, strong: index % 2 === 1 }))
+		.filter((part) => part.text);
 ---
 
-<section id="experience" class="experience-section border-b border-border bg-surface-container-low py-16 section-reveal md:py-24">
+<section id="experience" class="experience" data-reveal="items">
 	<div class="mx-auto max-w-6xl px-4 lg:px-8">
-		<p class="section-label mb-4" data-i18n="experience.eyebrow">
-			{isSpanish ? 'Trayectoria' : 'Career path'}
-		</p>
-		<h2 class="section-title mb-10" data-i18n="experience.title">
-			{isSpanish ? 'Experiencia' : 'Experience'}
-		</h2>
+		<p class="section-label" data-i18n="experience.eyebrow">{t('experience.eyebrow', 'Experience')}</p>
+		<h2 class="section-title mt-4" data-i18n="experience.title">{t('experience.title', "Where I've worked, and what I improved.")}</h2>
 
-		<div class="experience-list max-w-3xl space-y-10" data-experience-list>
-			{sortedExperiences.map((item, index) => (
-				<article class="experience-entry relative pl-6" style={`--experience-delay: ${index * 90}ms;`}>
-					<div class="experience-marker" aria-hidden="true">
-						<div class="experience-line"></div>
-						<div class="experience-dot"></div>
-					</div>
+		<ol class="timeline" role="list">
+			{experiences.map((item) => {
+				const key = `experience.${item.id}`;
+				return (
+					<li class:list={['job', { 'job--current': item.data.current }]} data-reveal-item>
+						<div class="job__when">
+							<span data-i18n={`${key}.date`}>{t(`${key}.date`, item.data.dateRange)}</span>
+							{item.data.location && <span class="job__where" data-i18n={`${key}.location`}>{t(`${key}.location`, item.data.location)}</span>}
+						</div>
 
-					<div class="experience-entry__header mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-						<h3 class="experience-entry__title text-lg font-semibold tracking-tight text-text-primary" data-i18n={`experience.${item.id}.role`}>
-							{isSpanish ? experienceTranslations[item.id]?.role ?? item.data.role : item.data.role}
-						</h3>
-						<span class="experience-entry__company text-text-muted">
-							@ {item.data.company}
-						</span>
-					</div>
+						<div class="job__body">
+							<h3 class="job__title">
+								{item.data.url ? (
+									<a href={item.data.url} target="_blank" rel="noopener noreferrer">{item.data.company}</a>
+								) : (
+									item.data.company
+								)}{' '}
+								<span class="job__role">
+									· <span data-i18n={`${key}.role`}>{t(`${key}.role`, item.data.role)}</span>
+								</span>
+							</h3>
+							{item.body && <p class="job__summary" data-i18n={`${key}.body`}>{t(`${key}.body`, item.body.trim())}</p>}
 
-					<div class="experience-entry__meta mb-3 text-sm text-text-muted">
-						{item.data.dateRange}
-						{item.data.location && <span> · <span data-i18n={`experience.${item.id}.location`}>{isSpanish ? experienceTranslations[item.id]?.location ?? item.data.location : item.data.location}</span></span>}
-					</div>
+							{item.data.highlights && item.data.highlights.length > 0 && (
+								<div class="job__wins">
+									<p class="job__wins-label" data-i18n="experience.highlights">{t('experience.highlights', 'What I improved')}</p>
+									<ul role="list">
+										{item.data.highlights.map((highlight, index) => (
+											<li>
+												<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+													<path d="M5 12.5 10 17l9-10" />
+												</svg>
+												<span data-i18n={`${key}.highlight.${index}`} data-i18n-emphasis>
+													{emphasizeNumbers(t(`${key}.highlight.${index}`, highlight)).map((part) =>
+														part.strong ? <strong>{part.text}</strong> : part.text
+													)}
+												</span>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
 
-					<div class="experience-entry__body text-readable" data-i18n={`experience.${item.id}.body`}>
-						{isSpanish ? <p>{experienceTranslations[item.id]?.body}</p> : <item.Content />}
-					</div>
-				</article>
-			))}
-		</div>
+							{item.data.stack && <p class="job__stack">{item.data.stack}</p>}
+						</div>
+					</li>
+				);
+			})}
+		</ol>
 	</div>
 </section>
 
-<script>
-	function getExperienceThreshold() {
-		const width = window.innerWidth;
-		if (width < 640) return 0.18;
-		if (width < 1024) return 0.24;
-		return 0.3;
-	}
-
-	function isAlreadyVisible(element: HTMLElement) {
-		const rect = element.getBoundingClientRect();
-		return rect.top < window.innerHeight * 0.92;
-	}
-
-	function updateExperienceMarkers() {
-		const section = document.getElementById('experience');
-		const list = section?.querySelector('[data-experience-list]');
-		if (!section || !list) return;
-
-		const items = Array.from(list.querySelectorAll('.experience-entry')) as HTMLElement[];
-		items.forEach((item) => {
-			const marker = item.querySelector('.experience-marker') as HTMLElement | null;
-			if (!marker) return;
-			const travel = Math.max(marker.offsetHeight - 8, 0);
-			item.style.setProperty('--experience-marker-travel', `${travel}px`);
-		});
-	}
-
-	function initExperienceAppear() {
-		const section = document.getElementById('experience');
-		const list = section?.querySelector('[data-experience-list]');
-		if (!section || !list) return;
-
-		// Guard against double-initialization (e.g. astro:after-swap)
-		if (section.dataset.revealInitialized === 'true') return;
-		section.dataset.revealInitialized = 'true';
-
-		const items = Array.from(list.querySelectorAll('.experience-entry')) as HTMLElement[];
-		if (!items.length) return;
-
-		items.forEach((item) => {
-			const marker = item.querySelector('.experience-marker') as HTMLElement | null;
-			if (!marker) return;
-
-			const travel = Math.max(marker.offsetHeight - 8, 0);
-			item.style.setProperty('--experience-marker-travel', `${travel}px`);
-		});
-
-		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-			section.classList.add('is-visible');
-			items.forEach((item) => item.classList.add('is-visible'));
-			return;
-		}
-
-		section.classList.add('js-reveal-active');
-
-		// If section is already in viewport, reveal immediately
-		if (isAlreadyVisible(section)) {
-			section.classList.add('is-visible');
-			items.forEach((item) => item.classList.add('is-visible'));
-			return;
-		}
-
-		const threshold = getExperienceThreshold();
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) return;
-
-					section.classList.add('is-visible');
-					items.forEach((item) => item.classList.add('is-visible'));
-					observer.disconnect();
-				});
-			},
-			{
-				threshold,
-				rootMargin: '0px 0px -6% 0px',
-			}
-		);
-
-		observer.observe(section);
-	}
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initExperienceAppear);
-	} else {
-		initExperienceAppear();
-	}
-
-	document.addEventListener('astro:after-swap', initExperienceAppear);
-	window.addEventListener('resize', updateExperienceMarkers);
-</script>
-
 <style>
-	.experience-entry {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
-		transition:
-			opacity 420ms var(--fx-easing-out),
-			transform 500ms var(--fx-easing-out),
-			border-color 220ms var(--fx-easing-out);
+	.experience {
+		padding: 5rem 0;
+		border-block: 1px solid var(--color-border);
+		background: var(--color-surface-container-lowest);
 	}
 
-	.js-reveal-active .experience-entry {
-		opacity: 0;
-		transform: translate3d(0, 16px, 0);
+	.timeline {
+		position: relative;
+		margin: 3rem 0 0;
+		padding: 0;
+		list-style: none;
 	}
 
-	.experience-marker {
+	.job {
+		position: relative;
+		display: grid;
+		gap: 0.5rem;
+		padding: 0 0 2.75rem 1.5rem;
+	}
+
+	/* Rail and dot */
+	.job::before {
+		content: "";
+		position: absolute;
+		left: 0.25rem;
+		top: 0.5rem;
+		bottom: -0.5rem;
+		width: 1px;
+		background: var(--color-border);
+	}
+
+	.job:last-child::before {
+		bottom: auto;
+		height: 1.25rem;
+	}
+
+	.job::after {
+		content: "";
 		position: absolute;
 		left: 0;
-		top: 0;
-		bottom: 0;
-		width: 10px;
+		top: 0.4rem;
+		width: 9px;
+		height: 9px;
+		border: 1.5px solid var(--color-primary);
+		border-radius: 9999px;
+		background: var(--color-surface-container-lowest);
 	}
 
-	.experience-line {
-		position: absolute;
-		left: 50%;
-		top: 4px;
-		bottom: 0;
-		width: 2px;
-		transform: translateX(-50%);
-		overflow: hidden;
-	}
-
-	.experience-line::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--color-border);
-		transform-origin: bottom center;
-		transform: scaleY(0);
-		opacity: 0;
-		transition:
-			transform 760ms var(--fx-easing-out),
-			opacity 260ms var(--fx-easing-out);
-		transition-delay: var(--experience-delay, 0ms);
-	}
-
-	.experience-dot {
-		position: absolute;
-		left: 50%;
-		bottom: 0;
-		z-index: 1;
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
+	.job--current::after {
 		background: var(--color-primary);
-		border: 1px solid var(--color-primary);
-		opacity: 0;
-		transform: translateX(-50%) translateY(0) scale(0.45);
-		transition:
-			opacity 320ms var(--fx-easing-out),
-			transform 900ms var(--fx-easing-out);
-		transition-delay: var(--experience-delay, 0ms);
 	}
 
-	.experience-entry__title,
-	.experience-entry__company,
-	.experience-entry__meta,
-	.experience-entry__body {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
+	.job__when {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.75rem;
+		font-size: 0.88rem;
+		color: var(--color-text-secondary);
 	}
 
-	.js-reveal-active .experience-entry__title,
-	.js-reveal-active .experience-entry__company,
-	.js-reveal-active .experience-entry__meta,
-	.js-reveal-active .experience-entry__body {
-		opacity: 0;
-		transform: translate3d(0, 12px, 0);
+	.job__where {
+		font-size: 0.82rem;
+		color: var(--color-text-muted);
 	}
 
-	.experience-entry.is-visible,
-	.js-reveal-active .experience-entry.is-visible {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
-		transition-delay: var(--experience-delay, 0ms);
+	.job__title {
+		margin: 0;
+		font-size: 1.15rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
 	}
 
-	.experience-entry.is-visible .experience-line::before {
-		transform: scaleY(1);
-		opacity: 1;
+	.job__title a {
+		color: inherit;
+		text-decoration: none;
 	}
 
-	.experience-entry.is-visible .experience-dot {
-		opacity: 1;
-		transform: translateX(-50%) translateY(calc(-1 * var(--experience-marker-travel, 40px))) scale(1);
-
+	.job__title a:hover,
+	.job__title a:focus-visible {
+		color: var(--color-primary);
 	}
 
-	.experience-entry.is-visible .experience-entry__title,
-	.experience-entry.is-visible .experience-entry__company,
-	.experience-entry.is-visible .experience-entry__meta,
-	.experience-entry.is-visible .experience-entry__body,
-	.js-reveal-active .experience-entry.is-visible .experience-entry__title,
-	.js-reveal-active .experience-entry.is-visible .experience-entry__company,
-	.js-reveal-active .experience-entry.is-visible .experience-entry__meta,
-	.js-reveal-active .experience-entry.is-visible .experience-entry__body {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
-		transition-property: opacity, transform;
-		transition-duration: 420ms, 520ms;
-		transition-timing-function: var(--fx-easing-out), var(--fx-easing-out);
+	.job__role {
+		font-weight: 400;
+		color: var(--color-text-muted);
 	}
 
-	.experience-entry.is-visible .experience-entry__title,
-	.experience-entry.is-visible .experience-entry__company {
-		transition-delay: calc(var(--experience-delay, 0ms) + 90ms);
+	.job__summary {
+		max-width: 42rem;
+		margin: 0.5rem 0 0;
+		font-size: 0.98rem;
+		line-height: 1.7;
+		color: var(--color-text-secondary);
 	}
 
-	.experience-entry.is-visible .experience-entry__meta {
-		transition-delay: calc(var(--experience-delay, 0ms) + 190ms);
+	/* Improvements: the part of each role worth scanning first */
+	.job__wins {
+		max-width: 42rem;
+		margin-top: 1rem;
+		padding: 1rem 1.15rem;
+		border: 1px solid var(--color-border);
+		border-left: 3px solid var(--color-primary);
+		border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+		background: var(--color-primary-container);
 	}
 
-	.experience-entry.is-visible .experience-entry__body {
-		transition-delay: calc(var(--experience-delay, 0ms) + 310ms);
+	.job__wins-label {
+		margin: 0 0 0.6rem;
+		font-size: 0.72rem;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-primary);
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.experience-entry,
-		.js-reveal-active .experience-entry,
-		.experience-line::before,
-		.experience-dot,
-		.experience-entry__title,
-		.experience-entry__company,
-		.experience-entry__meta,
-		.experience-entry__body,
-		.js-reveal-active .experience-entry__title,
-		.js-reveal-active .experience-entry__company,
-		.js-reveal-active .experience-entry__meta,
-		.js-reveal-active .experience-entry__body {
-			opacity: 1;
-			transform: none;
-			transition: none;
+	.job__wins ul {
+		display: grid;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.job__wins li {
+		display: grid;
+		grid-template-columns: 1rem 1fr;
+		gap: 0.6rem;
+		font-size: 0.94rem;
+		line-height: 1.55;
+		color: var(--color-text-primary);
+	}
+
+	.job__wins svg {
+		width: 1rem;
+		height: 1rem;
+		margin-top: 0.2rem;
+		color: var(--color-primary);
+	}
+
+	.job__wins :global(strong) {
+		font-weight: 600;
+		color: var(--color-primary);
+	}
+
+	.job__stack {
+		margin: 0.85rem 0 0;
+		font-size: 0.82rem;
+		color: var(--color-text-muted);
+	}
+
+	@media (min-width: 48rem) {
+		.experience {
+			padding: 7rem 0;
+		}
+
+		.job {
+			grid-template-columns: 11rem 1fr;
+			gap: 3rem;
+			padding-left: 0;
+		}
+
+		.job::before {
+			left: 12.5rem;
+		}
+
+		.job::after {
+			left: calc(12.5rem - 4px);
+		}
+
+		.job__when {
+			flex-direction: column;
+			gap: 0.2rem;
 		}
 	}
 </style>

@@ -1,55 +1,65 @@
 @import "tailwindcss";
 
-/* Editorial Light Design System — warm paper, ink type, one navy accent */
+/* Journey Design System — cool light and graphite dark, one navy accent */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
 	/* Typography */
-	--font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-	--font-display: "Instrument Serif", ui-serif, Georgia, serif;
-	--font-mono: "JetBrains Mono", ui-monospace, monospace;
+	--font-sans: Geist, ui-sans-serif, system-ui, sans-serif;
+	--font-display: Geist, ui-sans-serif, system-ui, sans-serif;
 
-	/* Core Colors — warm paper base */
-	--color-background: #F5F2EC;
-	--color-foreground: #15171C;
+	/* Core Colors */
+	--color-background: #F3F5F9;
+	--color-foreground: #0F172A;
 
-	/* Surface layers — ink tints over paper */
-	--color-surface: #F5F2EC;
-	--color-surface-dim: rgba(21, 23, 28, 0.03);
-	--color-surface-bright: #FBFAF7;
-	--color-surface-container-lowest: #FBFAF7;
-	--color-surface-container-low: #EFEBE3;
-	--color-surface-container: rgba(21, 23, 28, 0.05);
-	--color-surface-container-high: rgba(21, 23, 28, 0.08);
-	--color-surface-container-highest: rgba(21, 23, 28, 0.10);
-	--color-surface-variant: rgba(21, 23, 28, 0.10);
+	/* Surface layers */
+	--color-surface: #F3F5F9;
+	--color-surface-dim: rgba(15, 23, 42, 0.03);
+	--color-surface-bright: #FFFFFF;
+	--color-surface-container-lowest: #FFFFFF;
+	--color-surface-container-low: #E9EDF4;
+	--color-surface-container: rgba(15, 23, 42, 0.05);
+	--color-surface-container-high: rgba(15, 23, 42, 0.07);
+	--color-surface-container-highest: rgba(15, 23, 42, 0.10);
+	--color-surface-variant: rgba(15, 23, 42, 0.10);
 
 	/* Backward-compatible aliases */
-	--color-surface-alt: #EFEBE3;
-	--color-surface-elevated: #FBFAF7;
-	--color-surface-hover: rgba(21, 23, 28, 0.06);
+	--color-surface-alt: #E9EDF4;
+	--color-surface-elevated: #FFFFFF;
+	--color-surface-hover: rgba(15, 23, 42, 0.05);
 
 	/* Borders */
-	--color-border: rgba(21, 23, 28, 0.10);
-	--color-border-strong: rgba(21, 23, 28, 0.20);
-	--color-outline: rgba(21, 23, 28, 0.20);
-	--color-outline-variant: rgba(21, 23, 28, 0.10);
+	--color-border: #DDE3EC;
+	--color-border-strong: #C5CEDB;
+	--color-outline: #C5CEDB;
+	--color-outline-variant: #DDE3EC;
 	--color-focus-ring: #1F3470;
 
 	/* Text */
-	--color-text-primary: #15171C;
-	--color-text-secondary: rgba(21, 23, 28, 0.74);
-	--color-text-muted: rgba(21, 23, 28, 0.60);
+	--color-text-primary: #0F172A;
+	--color-text-secondary: #4B5568;
+	--color-text-muted: #5B6577;
 
-	/* Accent — a single navy blue */
+	/* Accent — navy from the portrait shirt */
 	--color-primary: #1F3470;
 	--color-primary-hover: #182A5C;
 	--color-primary-active: #12204A;
 	--color-primary-container: rgba(31, 52, 112, 0.10);
-	--color-on-primary: #ffffff;
+	--color-on-primary: #FFFFFF;
 	--color-on-primary-container: #182A5C;
-	--color-signal: #1F3470;
-	--color-secondary: #1F3470;
-	--color-secondary-container: rgba(31, 52, 112, 0.10);
-	--color-on-secondary-container: #182A5C;
+
+	/* Solid buttons: navy in light, neutral in dark so blue never floods the page */
+	--color-button: #1F3470;
+	--color-button-hover: #182A5C;
+	--color-on-button: #FFFFFF;
+
+	/* Decorative layers */
+	--color-dot: rgba(31, 52, 112, 0.16);
+	--color-glow: rgba(78, 116, 217, 0.20);
+	--color-glow-soft: rgba(31, 52, 112, 0.10);
+	--color-map-dot: #C9D2E0;
+	--color-coin: #E3A33B;
+	--color-skin: #E2B08C;
 
 	/* Semantic States */
 	--color-success: #2F7A5F;
@@ -60,12 +70,16 @@
 	/* Radius */
 	--radius-sm: 2px;
 	--radius-DEFAULT: 4px;
-	--radius-md: 6px;
-	--radius-lg: 10px;
-	--radius-xl: 16px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
+	--radius-xl: 20px;
+	--radius-2xl: 24px;
 	--radius-full: 9999px;
-	--radius-interactive: 9999px;
-	--radius-container: 12px;
+	--radius-interactive: 12px;
+	--radius-container: 20px;
+
+	/* Shadows */
+	--shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 20px -16px rgba(15, 23, 42, 0.12);
 
 	/* Spacing Scale — 8px base */
 	--spacing-xs: 4px;
@@ -81,59 +95,54 @@
 	--spacing-margin: 24px;
 }
 
+/* Dark theme — neutral graphite; blue stays a quiet accent */
+[data-theme="dark"] {
+	color-scheme: dark;
+	--color-background: #0E0F11;
+	--color-foreground: #ECEDEF;
+	--color-surface: #0E0F11;
+	--color-surface-dim: rgba(255, 255, 255, 0.02);
+	--color-surface-bright: #16181B;
+	--color-surface-container-lowest: #16181B;
+	--color-surface-container-low: #121316;
+	--color-surface-container: rgba(255, 255, 255, 0.04);
+	--color-surface-container-high: rgba(255, 255, 255, 0.06);
+	--color-surface-container-highest: rgba(255, 255, 255, 0.09);
+	--color-surface-variant: rgba(255, 255, 255, 0.09);
+	--color-surface-alt: #121316;
+	--color-surface-elevated: #16181B;
+	--color-surface-hover: rgba(255, 255, 255, 0.05);
+	--color-border: #25282D;
+	--color-border-strong: #34383F;
+	--color-outline: #34383F;
+	--color-outline-variant: #25282D;
+	--color-focus-ring: #9FB1E3;
+	--color-text-primary: #ECEDEF;
+	--color-text-secondary: #A9ACB3;
+	--color-text-muted: #878B93;
+	--color-primary: #9FB1E3;
+	--color-primary-hover: #B6C4EC;
+	--color-primary-active: #8A9FD9;
+	--color-primary-container: rgba(159, 177, 227, 0.10);
+	--color-on-primary: #0E0F11;
+	--color-on-primary-container: #B6C4EC;
+	--color-button: #ECEDEF;
+	--color-button-hover: #FFFFFF;
+	--color-on-button: #0E0F11;
+	--color-dot: rgba(255, 255, 255, 0.07);
+	--color-glow: rgba(159, 177, 227, 0.07);
+	--color-glow-soft: rgba(255, 255, 255, 0.03);
+	--color-map-dot: #2C3036;
+	--color-coin: #D9A24A;
+	--color-skin: #C99A7A;
+	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
 /* Font Face Declarations */
 @font-face {
-	font-family: "Inter";
-	src: url("/fonts/inter-regular.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Inter";
-	src: url("/fonts/inter-600.woff2") format("woff2");
-	font-weight: 600;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Inter";
-	src: url("/fonts/inter-bold.woff2") format("woff2");
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Instrument Serif";
-	src: url("/fonts/instrument-serif-400.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Instrument Serif";
-	src: url("/fonts/instrument-serif-400-italic.woff2") format("woff2");
-	font-weight: 400;
-	font-style: italic;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "JetBrains Mono";
-	src: url("/fonts/jetbrains-mono-light.woff2") format("woff2");
-	font-weight: 300;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "JetBrains Mono";
-	src: url("/fonts/jetbrains-mono-regular.woff2") format("woff2");
-	font-weight: 400;
+	font-family: "Geist";
+	src: url("/fonts/geist-latin.woff2") format("woff2");
+	font-weight: 400 600;
 	font-style: normal;
 	font-display: swap;
 }
@@ -159,6 +168,7 @@ html {
 
 body {
 	font-family: var(--font-sans);
+	transition: background-color var(--fx-duration-normal) ease, color var(--fx-duration-normal) ease;
 	background-color: var(--color-background);
 	color: var(--color-text-primary);
 	margin: 0;
@@ -742,47 +752,107 @@ button:focus-visible {
    TYPOGRAPHY ENHANCEMENTS
    ============================================================ */
 
-/* Improved description readability */
-.hero-description {
-	line-height: 1.75;
-	letter-spacing: 0.01em;
-	color: var(--color-text-secondary);
-}
 
 /* Editorial type utilities — layered so Tailwind spacing utilities still apply */
 @layer components {
-	/* Section label — small uppercase kicker above headings */
+	/* Kicker above section headings */
 	.section-label {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
 		margin: 0;
 		font-family: var(--font-sans);
-		font-size: 0.75rem;
-		font-weight: 600;
-		letter-spacing: 0.14em;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		color: var(--color-text-muted);
+		color: var(--color-primary);
 	}
 
-	/* Display headings — editorial serif */
-	.font-display {
-		font-family: var(--font-display);
-		font-weight: 400;
-		letter-spacing: -0.01em;
+	.section-label::before {
+		content: "";
+		width: 1.25rem;
+		height: 1.5px;
+		background: currentColor;
 	}
 
 	.section-title {
 		margin: 0;
+		max-width: 44rem;
 		font-family: var(--font-display);
-		font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
-		font-weight: 400;
-		line-height: 1.05;
-		letter-spacing: -0.015em;
+		font-size: clamp(2rem, 1.55rem + 1.6vw, 2.6rem);
+		font-weight: 600;
+		line-height: 1.08;
+		letter-spacing: -0.03em;
 		color: var(--color-text-primary);
 		text-wrap: balance;
 	}
 
-	.section-title em {
-		font-style: italic;
-		color: var(--color-primary);
+	/* Decorative backgrounds: dot grid + soft glows */
+	.bg-decor {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.bg-dots {
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(var(--color-dot) 1px, transparent 1px);
+		background-size: 24px 24px;
+		mask-image: var(--dots-mask, radial-gradient(ellipse 55% 65% at 75% 40%, #000 25%, transparent 75%));
+	}
+
+	.bg-glow {
+		position: absolute;
+		border-radius: 9999px;
+		filter: blur(80px);
+	}
+
+	.button-solid {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		min-height: 3rem;
+		padding: 0 1.4rem;
+		border-radius: var(--radius-interactive);
+		background: var(--color-button);
+		color: var(--color-on-button);
+		font-size: 0.95rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: background-color var(--fx-duration-fast) ease, transform var(--fx-duration-fast) ease;
+	}
+
+	.button-solid:hover,
+	.button-solid:focus-visible {
+		background: var(--color-button-hover);
+		transform: translateY(-1px);
+	}
+
+	.button-outline {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		min-height: 3rem;
+		padding: 0 1.4rem;
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-interactive);
+		background: var(--color-surface-container-lowest);
+		color: var(--color-text-primary);
+		font-size: 0.95rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: border-color var(--fx-duration-fast) ease, transform var(--fx-duration-fast) ease;
+	}
+
+	.button-outline:hover,
+	.button-outline:focus-visible {
+		border-color: var(--color-primary);
+		transform: translateY(-1px);
 	}
 }
 
