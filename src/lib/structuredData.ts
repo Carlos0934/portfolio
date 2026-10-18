@@ -105,7 +105,7 @@ export const caseStudyJsonLd = [
 		description:
 			'Curriculum-grounded exam generation for Dominican teachers. Cuts exam preparation by about 75%, from 40–90 minutes to 10–15 minutes, producing editable DOCX exams grounded in official MINERD teaching sequences.',
 		creator: { '@id': `${SITE_URL}/#person` },
-		url: 'https://socrates.xavely.com',
+		url: 'https://socrates.carlos-olivo.dev',
 		keywords: ['Workflow automation', 'Document intelligence', 'Curriculum grounding', 'Teacher productivity'],
 	},
 	{

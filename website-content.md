@@ -50,7 +50,7 @@ Cards are deliberately light: one-sentence summary, short stack line, link.
 
 | Project | Client · Sector | Link |
 |---------|-----------------|------|
-| Exam prep in minutes, not hours | Sócrates · EdTech · Dominican Republic | https://socrates.xavely.com |
+| Exam prep in minutes, not hours | Sócrates · EdTech · Dominican Republic | https://socrates.carlos-olivo.dev |
 | Hotel quotes that stay in sync with live inventory | PriceTravel Holding · Travel-tech | https://pricetravel.com |
 | One platform for insurers, providers, and agents | Sektor.app & Centuria.app · Multi-tenant SaaS | https://sektor.app/ |
 | Live results from 128 sources, in real time | RoulettesView.com · Real-time data | https://roulettesview.com |

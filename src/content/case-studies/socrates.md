@@ -11,7 +11,7 @@ client: "Sócrates"
 sector: "EdTech · Dominican Republic"
 stack: "Document AI · OCR · DOCX"
 order: 1
-url: "https://socrates.xavely.com"
+url: "https://socrates.carlos-olivo.dev"
 ---
 
 ## Context
